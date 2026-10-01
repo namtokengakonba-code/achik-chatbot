@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A·chik Ku·sik AI | Garo Language Companion</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+          colors: {
+            emerald: { 750: '#035d3d', 850: '#023c28', 950: '#012418' },
+            amber: { 450: '#f59e0b' }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    .rakhe { color: #f59e0b; font-weight: 700; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.2); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.4); }
+  </style>
+</head>
+<body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
+
+  <!-- TOP HEADER -->
+  <header class="border-b border-emerald-100 dark:border-emerald-900/40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-emerald-500/20">
+          A·k
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-lg tracking-tight bg-gradient-to-r from-emerald-800 to-teal-700 dark:from-emerald-300 dark:to-teal-200 bg-clip-text text-transparent">
+              A·chik Ku·sik AI
+            </h1>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 font-semibold">
+              Garo Hills
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Cloudflare Edge + Gemini 2.5 Flash</p>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center gap-2">
+        <button id="themeToggleBtn" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Toggle Dark/Light Mode">
+          <svg id="moonIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        </button>
+        <button id="clearChatBtn" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition" title="Reset Chat History">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN BODY LAYOUT -->
+  <div class="flex-1 max-w-7xl w-full mx-auto flex overflow-hidden">
+
+    <!-- SIDEBAR: Garo Phrases & Culture -->
+    <aside class="hidden lg:flex w-80 flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white/50 dark:bg-slate-900/50 p-4 gap-4 overflow-y-auto">
+      <div>
+        <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-2">Modes</h2>
+        <div class="grid grid-cols-1 gap-1.5" id="modeSelector">
+          <button data-mode="dual" class="mode-btn text-left px-3 py-2 rounded-lg text-sm font-medium transition bg-emerald-600 text-white shadow-sm">
+            💬 Smart Dual (Garo + English)
+          </button>
+          <button data-mode="pure" class="mode-btn text-left px-3 py-2 rounded-lg text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
+            🌿 Pure A·chik Focus
+          </button>
+          <button data-mode="translate" class="mode-btn text-left px-3 py-2 rounded-lg text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
+            🔄 Quick Translator
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-2">Common Expressions</h2>
+        <div class="space-y-1.5">
+          <button onclick="insertPrompt('Namgimin pring! How are you today?')" class="w-full text-left p-2 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition group">
+            <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Namgimin pring</span>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400">Good morning</span>
+          </button>
+          <button onclick="insertPrompt('Mitela for your assistance!')" class="w-full text-left p-2 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition group">
+            <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Mitela</span>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400">Thank you</span>
+          </button>
+          <button onclick="insertPrompt('Na·a senga? (Are you fine?)')" class="w-full text-left p-2 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition group">
+            <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Na·a senga?</span>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400">How are you / Are you well?</span>
+          </button>
+          <button onclick="insertPrompt('Tell me about the 100 Drums Wangala festival')" class="w-full text-left p-2 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition group">
+            <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Wangala Festival</span>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400">Post-harvest festival of the Garos</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Orthography Note -->
+      <div class="mt-auto p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200">
+        <p class="font-bold flex items-center gap-1 mb-1">
+          <span>ℹ️</span> The Ra·khe ( · ) Glottal Stop
+        </p>
+        <p class="text-[11px] leading-relaxed text-amber-800 dark:text-amber-300">
+          The middle dot represents the glottal stop. Distinct meanings: <em>chaa</em> (grow) vs <em>cha·a</em> (eat).
+        </p>
+      </div>
+    </aside>
+
+    <!-- CHAT CONTAINER -->
+    <main class="flex-1 flex flex-col h-[calc(100vh-4rem)] overflow-hidden bg-slate-50/50 dark:bg-slate-950">
+      
+      <!-- Messages List -->
+      <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-5">
+        <!-- Welcome Message -->
+        <div class="flex gap-3 max-w-2xl">
+          <div class="w-8 h-8 rounded-lg bg-emerald-700 text-white flex-shrink-0 flex items-center justify-center font-bold text-xs shadow">
+            A·k
+          </div>
+          <div class="space-y-2">
+            <div class="p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-sm">
+              <p class="font-semibold text-emerald-700 dark:text-emerald-400 text-base mb-1">Namgimin pring! Salam!</p>
+              <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-2">
+                I am your bilingual A·chik ku·sik language assistant. You can chat with me in English or Garo, ask for translations, or learn about the culture and geography of the Garo Hills.
+              </p>
+              <div class="text-xs text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-2 flex items-center gap-1.5">
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+                Securely powered by Cloudflare Workers & Gemini 2.5 Flash
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INPUT BAR -->
+      <div class="p-4 border-t border-slate-200 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md">
+        <form id="chatForm" class="max-w-4xl mx-auto flex items-end gap-2">
+          <div class="relative flex-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-300 dark:border-slate-700 focus-within:border-emerald-500 dark:focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 shadow-sm transition">
+            <textarea
+              id="messageInput"
+              rows="1"
+              placeholder="Ask anything or type text to translate into A·chik ku·sik..."
+              class="w-full px-4 py-3 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-32 text-sm leading-relaxed"
+            ></textarea>
+            
+            <!-- Mid-dot shortcut button for Garo typing -->
+            <button
+              type="button"
+              onclick="insertChar('·')"
+              class="absolute right-10 bottom-2.5 p-1 rounded-md text-xs font-bold text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-950/60 transition"
+              title="Insert Ra·khe Glottal Stop (·)"
+            >
+              [ · ]
+            </button>
+
+            <!-- Voice recognition button -->
+            <button
+              type="button"
+              id="micBtn"
+              class="absolute right-2.5 bottom-2.5 p-1 rounded-md text-slate-400 hover:text-emerald-600 transition"
+              title="Voice Input (English/Dictation)"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 02-3-3V5a3 3 0 116 0v6a3 3 0 02-3 3z"></path></svg>
+            </button>
+          </div>
+
+          <button
+            type="submit"
+            id="sendBtn"
+            class="px-4 py-3 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-medium rounded-xl flex items-center justify-center shadow-md shadow-emerald-600/20 transition disabled:opacity-50 disabled:pointer-events-none"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </button>
+        </form>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // State management
+    let activeMode = 'dual';
+    const messagesContainer = document.getElementById('messagesContainer');
+    const chatForm = document.getElementById('chatForm');
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const clearChatBtn = document.getElementById('clearChatBtn');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const sunIcon = document.getElementById('sunIcon');
+    const moonIcon = document.getElementById('moonIcon');
+    const micBtn = document.getElementById('micBtn');
+
+    // Theme logic
+    function initTheme() {
+      const isDark = localStorage.getItem('achik_theme') === 'dark' ||
+        (!('achik_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        sunIcon.classList.remove('hidden');
+      } else {
+        document.documentElement.classList.remove('dark');
+        moonIcon.classList.remove('hidden');
+      }
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('achik_theme', isDark ? 'dark' : 'light');
+      sunIcon.classList.toggle('hidden', !isDark);
+      moonIcon.classList.toggle('hidden', isDark);
+    });
+
+    // Mode Selector
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.mode-btn').forEach(b => {
+          b.className = "mode-btn text-left px-3 py-2 rounded-lg text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40";
+        });
+        btn.className = "mode-btn text-left px-3 py-2 rounded-lg text-sm font-medium transition bg-emerald-600 text-white shadow-sm";
+        activeMode = btn.getAttribute('data-mode');
+      });
+    });
+
+    // Character inserter
+    function insertChar(char) {
+      const start = messageInput.selectionStart;
+      const end = messageInput.selectionEnd;
+      messageInput.value = messageInput.value.substring(0, start) + char + messageInput.value.substring(end);
+      messageInput.focus();
+      messageInput.selectionStart = messageInput.selectionEnd = start + 1;
+    }
+
+    function insertPrompt(text) {
+      messageInput.value = text;
+      messageInput.focus();
+    }
+
+    // Auto resize textarea
+    messageInput.addEventListener('input', () => {
+      messageInput.style.height = 'auto';
+      messageInput.style.height = Math.min(messageInput.scrollHeight, 128) + 'px';
+    });
+
+    // Voice recognition (Web Speech API)
+    let recognition;
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.lang = 'en-US';
+
+      recognition.onresult = (e) => {
+        messageInput.value += (messageInput.value ? ' ' : '') + e.results[0][0].transcript;
+        micBtn.classList.remove('text-red-500', 'animate-pulse');
+      };
+
+      recognition.onerror = () => {
+        micBtn.classList.remove('text-red-500', 'animate-pulse');
+      };
+
+      recognition.onend = () => {
+        micBtn.classList.remove('text-red-500', 'animate-pulse');
+      };
+
+      micBtn.addEventListener('click', () => {
+        micBtn.classList.add('text-red-500', 'animate-pulse');
+        recognition.start();
+      });
+    } else {
+      micBtn.style.display = 'none';
+    }
+
+    // Text to Speech
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const cleanText = text.replace(/·/g, ''); // strip middle dot for TTS synthesis
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Copy helper
+    function copyToClipboard(str, btn) {
+      navigator.clipboard.writeText(str).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '✓ Copied';
+        setTimeout(() => { btn.innerHTML = orig; }, 1500);
+      });
+    }
+
+    // Render User Message
+    function appendUserMessage(text) {
+      const el = document.createElement('div');
+      el.className = "flex justify-end";
+      el.innerHTML = `
+        <div class="max-w-xl p-4 rounded-2xl rounded-tr-sm bg-emerald-600 text-white shadow-sm text-sm">
+          <p class="whitespace-pre-wrap">${escapeHtml(text)}</p>
+        </div>
+      `;
+      messagesContainer.appendChild(el);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Render AI Structured Response
+    function appendAiMessage(data) {
+      const el = document.createElement('div');
+      el.className = "flex gap-3 max-w-2xl";
+
+      let vocabHtml = '';
+      if (data.vocabulary && data.vocabulary.length > 0) {
+        vocabHtml = `
+          <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Vocabulary</span>
+            <div class="mt-1.5 flex flex-wrap gap-1.5">
+              ${data.vocabulary.map(v => `
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/40 text-xs">
+                  <strong class="text-emerald-800 dark:text-emerald-300">${escapeHtml(v.garo)}</strong>: 
+                  <span class="text-slate-600 dark:text-slate-400">${escapeHtml(v.english)}</span>
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      let culturalHtml = '';
+      if (data.cultural_note) {
+        culturalHtml = `
+          <div class="mt-2 text-xs bg-amber-50/50 dark:bg-amber-950/20 p-2 rounded-lg border border-amber-100 dark:border-amber-900/30 text-amber-900 dark:text-amber-200">
+            💡 <em>${escapeHtml(data.cultural_note)}</em>
+          </div>
+        `;
+      }
+
+      el.innerHTML = `
+        <div class="w-8 h-8 rounded-lg bg-emerald-700 text-white flex-shrink-0 flex items-center justify-center font-bold text-xs shadow">
+          A·k
+        </div>
+        <div class="space-y-2 flex-1">
+          <div class="p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-sm space-y-3">
+            
+            <!-- Garo Segment -->
+            <div class="p-3 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">A·chik Ku·sik</span>
+                <div class="flex items-center gap-1">
+                  <button onclick="speakText('${escapeAttr(data.garo)}')" class="p-1 text-slate-400 hover:text-emerald-600 rounded transition" title="Listen Audio">
+                    🔊
+                  </button>
+                  <button onclick="copyToClipboard('${escapeAttr(data.garo)}', this)" class="text-xs text-slate-400 hover:text-emerald-600 px-1 py-0.5 transition">
+                    Copy
+                  </button>
+                </div>
+              </div>
+              <p class="text-base font-semibold text-emerald-950 dark:text-emerald-100 leading-snug">${highlightRakhe(escapeHtml(data.garo))}</p>
+              ${data.pronunciation ? `<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Phonetic: <em>${escapeHtml(data.pronunciation)}</em></p>` : ''}
+            </div>
+
+            <!-- English Explanation -->
+            <div class="text-slate-700 dark:text-slate-200 text-sm leading-relaxed">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">English</span>
+              <p>${escapeHtml(data.english)}</p>
+            </div>
+
+            ${vocabHtml}
+            ${culturalHtml}
+          </div>
+        </div>
+      `;
+      messagesContainer.appendChild(el);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Render Loading Skeleton
+    function appendLoading() {
+      const id = 'loader-' + Date.now();
+      const el = document.createElement('div');
+      el.id = id;
+      el.className = "flex gap-3 max-w-md animate-pulse";
+      el.innerHTML = `
+        <div class="w-8 h-8 rounded-lg bg-emerald-700/50 text-white flex-shrink-0 flex items-center justify-center font-bold text-xs">A·k</div>
+        <div class="flex-1 bg-white dark:bg-slate-900 p-4 rounded-2xl rounded-tl-sm border border-slate-200 dark:border-slate-800 space-y-2">
+          <div class="h-4 bg-slate-200 dark:bg-slate-800 rounded w-5/6"></div>
+          <div class="h-3 bg-slate-100 dark:bg-slate-800/60 rounded w-1/2"></div>
+        </div>
+      `;
+      messagesContainer.appendChild(el);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      return id;
+    }
+
+    // Utilities
+    function escapeHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function escapeAttr(str) {
+      if (!str) return '';
+      return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    function highlightRakhe(str) {
+      return str.replace(/·/g, '<span class="rakhe">·</span>');
+    }
+
+    // Send Form Submission
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const message = messageInput.value.trim();
+      if (!message) return;
+
+      appendUserMessage(message);
+      messageInput.value = '';
+      messageInput.style.height = 'auto';
+
+      sendBtn.disabled = true;
+      const loaderId = appendLoading();
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message, mode: activeMode })
+        });
+
+        const loader = document.getElementById(loaderId);
+        if (loader) loader.remove();
+
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({ error: 'Unknown server error' }));
+          throw new Error(err.error || `Error ${response.status}`);
+        }
+
+        const data = await response.json();
+        appendAiMessage(data);
+
+      } catch (err) {
+        const loader = document.getElementById(loaderId);
+        if (loader) loader.remove();
+
+        const errEl = document.createElement('div');
+        errEl.className = "flex gap-3 max-w-lg";
+        errEl.innerHTML = `
+          <div class="w-8 h-8 rounded-lg bg-red-600 text-white flex-shrink-0 flex items-center justify-center font-bold text-xs">!</div>
+          <div class="p-4 rounded-2xl rounded-tl-sm bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs leading-relaxed">
+            <strong>Translation Service Error:</strong> ${escapeHtml(err.message)}
+          </div>
+        `;
+        messagesContainer.appendChild(errEl);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      } finally {
+        sendBtn.disabled = false;
+        messageInput.focus();
+      }
+    });
+
+    clearChatBtn.addEventListener('click', () => {
+      if (confirm('Clear the chat session?')) {
+        messagesContainer.innerHTML = '';
+        location.reload();
+      }
+    });
+
+    // Enter key submits without shift
+    messageInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        chatForm.dispatchEvent(new Event('submit'));
+      }
+    });
+
+    initTheme();
+  </script>
+</body>
+</html>
