@@ -33,12 +33,9 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           secrets: |
-            RESEND_API_KEY
-            RESEND_FROM_EMAIL
             GEMINI_API_KEY
             GOOGLE_CLIENT_ID
             GOOGLE_CLIENT_SECRET
-            AUTH_SECRET
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
