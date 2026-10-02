@@ -13,7 +13,8 @@ const MAX_CORRECTION_LENGTH = 2000;
 const MAX_APPROVED_CORRECTIONS = 20;
 const SESSION_COOKIE = "achik_session";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 30;
-const PASSWORD_ITERATIONS = 310000;
+const OAUTH_STATE_COOKIE = "achik_oauth_state";
+const OAUTH_STATE_MAX_AGE = 600;
 
 function jsonResponse(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -37,32 +38,23 @@ function bytesToHex(bytes) {
   return [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-function hexToBytes(hex) {
-  return new Uint8Array(hex.match(/.{2}/g).map((byte) => Number.parseInt(byte, 16)));
-}
-
 async function sha256(value) {
   return bytesToHex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value)));
 }
 
-async function randomToken() {
-  return bytesToHex(crypto.getRandomValues(new Uint8Array(32)));
+function base64Url(bytes) {
+  let binary = "";
+  for (const byte of new Uint8Array(bytes)) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 }
 
-async function hashPassword(password, salt) {
-  const key = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(password),
-    "PBKDF2",
-    false,
-    ["deriveBits"]
-  );
-  const bits = await crypto.subtle.deriveBits(
-    { name: "PBKDF2", hash: "SHA-256", salt: hexToBytes(salt), iterations: PASSWORD_ITERATIONS },
-    key,
-    256
-  );
-  return bytesToHex(bits);
+async function sha256Base64Url(value) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return base64Url(digest);
+}
+
+async function randomToken() {
+  return bytesToHex(crypto.getRandomValues(new Uint8Array(32)));
 }
 
 function constantTimeEqual(left, right) {
@@ -76,6 +68,10 @@ function constantTimeEqual(left, right) {
 
 function authCookie(token, maxAge = SESSION_MAX_AGE) {
   return `${SESSION_COOKIE}=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`;
+}
+
+function oauthStateCookie(state, maxAge = OAUTH_STATE_MAX_AGE) {
+  return `${OAUTH_STATE_COOKIE}=${state}; Path=/api/auth/google; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAge}`;
 }
 
 async function enforceAuthRateLimit(db, request, action, maximum, windowSeconds) {
@@ -134,31 +130,181 @@ async function createSession(userId, env) {
   return token;
 }
 
-async function sendVerificationEmail(email, token, request, env) {
-  if (!env.RESEND_API_KEY || !env.RESEND_FROM_EMAIL) {
-    throw new Error("Email verification is not configured. Set RESEND_API_KEY and RESEND_FROM_EMAIL.");
+function redirectWithCookies(location, cookies = []) {
+  const headers = new Headers({ ...CORS_HEADERS, "Cache-Control": "no-store", Location: location });
+  for (const cookie of cookies) headers.append("Set-Cookie", cookie);
+  return new Response(null, { status: 303, headers });
+}
+
+function authRedirect(request, status) {
+  const destination = new URL("/", request.url);
+  destination.searchParams.set("auth", status);
+  return redirectWithCookies(destination.href, [oauthStateCookie("", 0)]);
+}
+
+function cookieValue(request, name) {
+  const cookies = request.headers.get("Cookie") || "";
+  const match = cookies.match(new RegExp(`(?:^|;\\s*)${name}=([a-f0-9]{64})(?:;|$)`));
+  return match?.[1] || "";
+}
+
+async function startGoogleSignIn(request, env) {
+  if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
+    return authRedirect(request, "google_unconfigured");
+  }
+  if (!await enforceAuthRateLimit(env.DB, request, "google_oauth", 10, 900)) {
+    return authRedirect(request, "google_rate_limited");
   }
 
-  const verificationUrl = new URL("/api/auth/verify", request.url);
-  verificationUrl.searchParams.set("token", token);
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
+  const state = await randomToken();
+  const verifier = base64Url(crypto.getRandomValues(new Uint8Array(32)));
+  const expiresAt = new Date(Date.now() + OAUTH_STATE_MAX_AGE * 1000).toISOString();
+  await env.DB.prepare("DELETE FROM oauth_states WHERE expires_at <= ?")
+    .bind(new Date().toISOString()).run();
+  await env.DB.prepare(`
+    INSERT INTO oauth_states (state_hash, code_verifier, expires_at)
+    VALUES (?, ?, ?)
+  `).bind(await sha256(state), verifier, expiresAt).run();
+
+  const redirectUri = new URL("/api/auth/google/callback", request.url);
+  const authorizationUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+  authorizationUrl.search = new URLSearchParams({
+    client_id: env.GOOGLE_CLIENT_ID,
+    redirect_uri: redirectUri.href,
+    response_type: "code",
+    scope: "openid email profile",
+    state,
+    code_challenge: await sha256Base64Url(verifier),
+    code_challenge_method: "S256",
+    prompt: "select_account",
+  }).toString();
+
+  return new Response(null, {
+    status: 302,
     headers: {
-      Authorization: `Bearer ${env.RESEND_API_KEY}`,
-      "Content-Type": "application/json",
+      ...CORS_HEADERS,
+      "Cache-Control": "no-store",
+      Location: authorizationUrl.href,
+      "Set-Cookie": oauthStateCookie(state),
     },
-    body: JSON.stringify({
-      from: env.RESEND_FROM_EMAIL,
-      to: [email],
-      subject: "Verify your A·chik Chatbot account",
-      html: `<p>Welcome to A·chik Chatbot.</p><p><a href="${verificationUrl.href}">Verify your email address</a></p><p>This link expires in 24 hours. If you did not create this account, you can ignore this email.</p>`,
-      text: `Welcome to A·chik Chatbot. Verify your email address: ${verificationUrl.href}\n\nThis link expires in 24 hours. If you did not create this account, you can ignore this email.`,
-    }),
   });
-  if (!response.ok) {
-    console.error("Resend rejected a verification email with status", response.status);
-    throw new Error("Unable to send verification email. Check your Resend configuration and try again.");
+}
+
+async function completeGoogleSignIn(request, env, url) {
+  if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
+    return authRedirect(request, "google_unconfigured");
   }
+
+  const state = url.searchParams.get("state") || "";
+  const stateCookie = cookieValue(request, OAUTH_STATE_COOKIE);
+  const code = url.searchParams.get("code") || "";
+  if (url.searchParams.has("error") || !code || !/^[a-f0-9]{64}$/.test(state) ||
+      !stateCookie || !constantTimeEqual(state, stateCookie)) {
+    return authRedirect(request, "google_failed");
+  }
+
+  const stateHash = await sha256(state);
+  const oauthState = await env.DB.prepare(`
+    SELECT code_verifier, expires_at FROM oauth_states WHERE state_hash = ?
+  `).bind(stateHash).first();
+  if (!oauthState || Date.parse(oauthState.expires_at) <= Date.now()) {
+    return authRedirect(request, "google_expired");
+  }
+  await env.DB.prepare("DELETE FROM oauth_states WHERE state_hash = ?").bind(stateHash).run();
+
+  const redirectUri = new URL("/api/auth/google/callback", request.url);
+  let tokenResponse;
+  try {
+    tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        code,
+        client_id: env.GOOGLE_CLIENT_ID,
+        client_secret: env.GOOGLE_CLIENT_SECRET,
+        redirect_uri: redirectUri.href,
+        grant_type: "authorization_code",
+        code_verifier: oauthState.code_verifier,
+      }),
+    });
+  } catch (error) {
+    console.error("Google OAuth token exchange request failed:", error.message);
+    return authRedirect(request, "google_failed");
+  }
+  if (!tokenResponse.ok) {
+    console.error("Google OAuth token exchange failed with status", tokenResponse.status);
+    return authRedirect(request, "google_failed");
+  }
+  let tokens;
+  try {
+    tokens = await tokenResponse.json();
+  } catch (error) {
+    console.error("Google OAuth returned an invalid token response:", error.message);
+    return authRedirect(request, "google_failed");
+  }
+  if (typeof tokens.access_token !== "string") {
+    console.error("Google OAuth token response did not include an access token");
+    return authRedirect(request, "google_failed");
+  }
+
+  let profileResponse;
+  try {
+    profileResponse = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
+      headers: { Authorization: `Bearer ${tokens.access_token}` },
+    });
+  } catch (error) {
+    console.error("Google OAuth user profile request failed:", error.message);
+    return authRedirect(request, "google_failed");
+  }
+  if (!profileResponse.ok) {
+    console.error("Google OAuth user profile request failed with status", profileResponse.status);
+    return authRedirect(request, "google_failed");
+  }
+  let profile;
+  try {
+    profile = await profileResponse.json();
+  } catch (error) {
+    console.error("Google OAuth returned an invalid user profile:", error.message);
+    return authRedirect(request, "google_failed");
+  }
+  const email = typeof profile.email === "string" ? profile.email.trim().toLowerCase() : "";
+  const googleSubject = typeof profile.sub === "string" ? profile.sub : "";
+  if (profile.email_verified !== true || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !googleSubject) {
+    console.error("Google OAuth returned an unverified or invalid email identity");
+    return authRedirect(request, "google_unverified");
+  }
+
+  let user = await env.DB.prepare("SELECT id, email FROM users WHERE google_subject = ?")
+    .bind(googleSubject).first();
+  if (!user) {
+    user = await env.DB.prepare("SELECT id, email, google_subject FROM users WHERE email = ?")
+      .bind(email).first();
+    if (user) {
+      if (user.google_subject && user.google_subject !== googleSubject) {
+        return authRedirect(request, "google_account_conflict");
+      }
+      await env.DB.prepare(`
+        UPDATE users SET google_subject = ?, verified_at = COALESCE(verified_at, ?)
+        WHERE id = ?
+      `).bind(googleSubject, new Date().toISOString(), user.id).run();
+    } else {
+      const id = crypto.randomUUID();
+      const now = new Date().toISOString();
+      const placeholderSalt = bytesToHex(crypto.getRandomValues(new Uint8Array(16)));
+      const placeholderHash = bytesToHex(crypto.getRandomValues(new Uint8Array(32)));
+      await env.DB.prepare(`
+        INSERT INTO users (id, email, password_salt, password_hash, created_at, verified_at, google_subject)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `).bind(id, email, placeholderSalt, placeholderHash, now, now, googleSubject).run();
+      user = { id, email };
+    }
+  }
+
+  const sessionToken = await createSession(user.id, env);
+  return redirectWithCookies(new URL("/", request.url).href, [
+    authCookie(sessionToken),
+    oauthStateCookie("", 0),
+  ]);
 }
 
 async function handleAuthRequest(request, env, url) {
@@ -171,135 +317,12 @@ async function handleAuthRequest(request, env, url) {
     return jsonResponse(user ? { authenticated: true, email: user.email } : { authenticated: false });
   }
 
-  if (url.pathname === "/api/auth/verify" && request.method === "GET") {
-    const token = url.searchParams.get("token") || "";
-    if (!/^[a-f0-9]{64}$/i.test(token)) {
-      return Response.redirect(new URL("/?auth=invalid", request.url), 303);
-    }
-    const tokenHash = await sha256(token);
-    const user = await env.DB.prepare(`
-      SELECT id, verification_expires_at
-      FROM users
-      WHERE verification_token_hash = ?
-    `).bind(tokenHash).first();
-    if (!user || Date.parse(user.verification_expires_at) <= Date.now()) {
-      return Response.redirect(new URL("/?auth=expired", request.url), 303);
-    }
-    const verification = await env.DB.prepare(`
-      UPDATE users
-      SET verified_at = ?, verification_token_hash = NULL, verification_expires_at = NULL
-      WHERE id = ? AND verification_token_hash = ? AND verified_at IS NULL
-    `).bind(new Date().toISOString(), user.id, tokenHash).run();
-    if (verification.meta.changes !== 1) {
-      return Response.redirect(new URL("/?auth=expired", request.url), 303);
-    }
-    return Response.redirect(new URL("/?auth=verified", request.url), 303);
+  if (url.pathname === "/api/auth/google" && request.method === "GET") {
+    return startGoogleSignIn(request, env);
   }
 
-  if (url.pathname === "/api/auth/signup" && request.method === "POST") {
-    if (!await enforceAuthRateLimit(env.DB, request, "signup", 5, 3600)) {
-      return jsonResponse({ error: "Too many sign-up attempts. Please try again later." }, 429);
-    }
-
-    let data;
-    try {
-      data = await request.json();
-    } catch {
-      return jsonResponse({ error: "Invalid JSON format in request body." }, 400);
-    }
-
-    const email = typeof data?.email === "string" ? data.email.trim().toLowerCase() : "";
-    const password = typeof data?.password === "string" ? data.password : "";
-    if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return jsonResponse({ error: "Enter a valid email address." }, 400);
-    }
-    if (password.length < 12 || password.length > 128) {
-      return jsonResponse({ error: "Password must be between 12 and 128 characters." }, 400);
-    }
-    if (password !== data.confirmPassword) {
-      return jsonResponse({ error: "Passwords do not match." }, 400);
-    }
-
-    let user = await env.DB.prepare(`
-      SELECT id, verified_at FROM users WHERE email = ?
-    `).bind(email).first();
-    if (user?.verified_at) {
-      return jsonResponse({
-        message: "If this address can be registered, a verification email will be sent.",
-      }, 202);
-    }
-
-    const token = await randomToken();
-    const tokenHash = await sha256(token);
-    const now = new Date().toISOString();
-    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-
-    if (!user) {
-      const id = crypto.randomUUID();
-      const salt = bytesToHex(crypto.getRandomValues(new Uint8Array(16)));
-      const passwordHash = await hashPassword(password, salt);
-      await env.DB.prepare(`
-        INSERT INTO users (id, email, password_salt, password_hash, created_at, verification_token_hash, verification_expires_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-      `).bind(id, email, salt, passwordHash, now, tokenHash, expiresAt).run();
-      user = { id };
-    } else {
-      const salt = bytesToHex(crypto.getRandomValues(new Uint8Array(16)));
-      const passwordHash = await hashPassword(password, salt);
-      await env.DB.prepare(`
-        UPDATE users
-        SET password_salt = ?, password_hash = ?, verification_token_hash = ?, verification_expires_at = ?
-        WHERE id = ?
-      `).bind(salt, passwordHash, tokenHash, expiresAt, user.id).run();
-    }
-
-    try {
-      await sendVerificationEmail(email, token, request, env);
-    } catch (error) {
-      console.error("Verification email delivery failed:", error.message);
-      return jsonResponse({ error: error.message }, 503);
-    }
-    return jsonResponse({
-      message: "If this address can be registered, a verification email will be sent.",
-    }, 202);
-  }
-
-  if (url.pathname === "/api/auth/login" && request.method === "POST") {
-    if (!await enforceAuthRateLimit(env.DB, request, "login", 10, 900)) {
-      return jsonResponse({ error: "Too many login attempts. Please try again later." }, 429);
-    }
-
-    let data;
-    try {
-      data = await request.json();
-    } catch {
-      return jsonResponse({ error: "Invalid JSON format in request body." }, 400);
-    }
-    const email = typeof data?.email === "string" ? data.email.trim().toLowerCase() : "";
-    const password = typeof data?.password === "string" ? data.password : "";
-    const user = await env.DB.prepare(`
-      SELECT id, email, password_salt, password_hash, verified_at
-      FROM users WHERE email = ?
-    `).bind(email).first();
-
-    const passwordHash = await hashPassword(
-      password.slice(0, 128),
-      user?.password_salt || "00000000000000000000000000000000"
-    );
-    if (password.length > 128 || !user ||
-        !constantTimeEqual(passwordHash, user?.password_hash || "0".repeat(64))) {
-      return jsonResponse({ error: "Email or password is incorrect." }, 401);
-    }
-    if (!user.verified_at) {
-      return jsonResponse({ error: "Verify your email before signing in. Check your inbox for the verification link." }, 403);
-    }
-
-    const token = await createSession(user.id, env);
-    return jsonResponse(
-      { authenticated: true, email: user.email },
-      200,
-      { "Set-Cookie": authCookie(token) }
-    );
+  if (url.pathname === "/api/auth/google/callback" && request.method === "GET") {
+    return completeGoogleSignIn(request, env, url);
   }
 
   if (url.pathname === "/api/auth/logout" && request.method === "POST") {

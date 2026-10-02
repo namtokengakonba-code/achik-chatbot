@@ -96,29 +96,14 @@
       <div class="mb-5 text-center">
         <img src="/logo.png" alt="" class="mx-auto mb-3 h-14 w-14 rounded-xl object-contain">
         <h2 id="authTitle" class="text-xl font-bold text-emerald-800 dark:text-emerald-300">Sign in to A·chik Chatbot</h2>
-        <p id="authDescription" class="mt-1 text-sm text-slate-500 dark:text-slate-400">Create an account and verify your email to start chatting.</p>
+        <p id="authDescription" class="mt-1 text-sm text-slate-500 dark:text-slate-400">Sign in with Google to create your account or continue chatting.</p>
       </div>
-      <form id="authForm" class="space-y-3">
-        <label for="authEmail" class="block text-xs font-semibold text-slate-600 dark:text-slate-300">Email address</label>
-        <input id="authEmail" name="email" type="email" required maxlength="254" autocomplete="email" placeholder="you@example.com"
-          class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2.5 text-base outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20">
-        <label for="authPassword" class="block text-xs font-semibold text-slate-600 dark:text-slate-300">Password</label>
-        <input id="authPassword" name="password" type="password" required minlength="12" maxlength="128" autocomplete="current-password" placeholder="At least 12 characters"
-          class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2.5 text-base outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20">
-        <div id="confirmPasswordGroup" class="hidden space-y-2">
-          <label for="authConfirmPassword" class="block text-xs font-semibold text-slate-600 dark:text-slate-300">Confirm password</label>
-          <input id="authConfirmPassword" name="confirmPassword" type="password" minlength="12" maxlength="128" autocomplete="new-password" placeholder="Enter your password again"
-            class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2.5 text-base outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20">
-        </div>
-        <p id="authStatus" role="status" aria-live="polite" class="hidden rounded-lg bg-slate-50 dark:bg-slate-800 p-3 text-sm text-slate-600 dark:text-slate-300"></p>
-        <button id="authSubmitBtn" type="submit" class="w-full rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white shadow-md hover:bg-emerald-500 disabled:cursor-wait disabled:opacity-60">
-          Sign in
-        </button>
-      </form>
-      <p class="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
-        <span id="authModePrompt">New here?</span>
-        <button id="authModeToggle" type="button" class="font-semibold text-emerald-700 hover:underline dark:text-emerald-300">Create an account</button>
-      </p>
+      <p id="authStatus" role="status" aria-live="polite" class="mb-3 hidden rounded-lg bg-slate-50 dark:bg-slate-800 p-3 text-sm text-slate-600 dark:text-slate-300"></p>
+      <a href="/api/auth/google" id="googleSignInBtn" class="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 38.02 46.98 31.86 46.98 24.55Z"/><path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.55 2.56 10.78l7.97-6.19Z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.14 1.44-4.89 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"/></svg>
+        Continue with Google
+      </a>
+      <p class="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">Your Google email is used to create or access your account.</p>
     </div>
   </section>
 
@@ -287,20 +272,9 @@
     const moonIcon = document.getElementById('moonIcon');
     const micBtn = document.getElementById('micBtn');
     const authOverlay = document.getElementById('authOverlay');
-    const authForm = document.getElementById('authForm');
-    const authEmail = document.getElementById('authEmail');
-    const authPassword = document.getElementById('authPassword');
-    const authConfirmPassword = document.getElementById('authConfirmPassword');
-    const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
     const authStatus = document.getElementById('authStatus');
-    const authSubmitBtn = document.getElementById('authSubmitBtn');
-    const authTitle = document.getElementById('authTitle');
-    const authDescription = document.getElementById('authDescription');
-    const authModePrompt = document.getElementById('authModePrompt');
-    const authModeToggle = document.getElementById('authModeToggle');
     const signedInUser = document.getElementById('signedInUser');
     const logoutBtn = document.getElementById('logoutBtn');
-    let authMode = 'login';
 
     function showAuthMessage(message, isError = false) {
       authStatus.textContent = message;
@@ -311,79 +285,24 @@
       );
     }
 
-    function setAuthMode(mode) {
-      authMode = mode;
-      const signingUp = mode === 'signup';
-      authTitle.textContent = signingUp ? 'Create your A·chik Chatbot account' : 'Sign in to A·chik Chatbot';
-      authDescription.textContent = signingUp
-        ? 'Verify your email address to start chatting.'
-        : 'Sign in with your verified email address to continue chatting.';
-      authSubmitBtn.textContent = signingUp ? 'Create account' : 'Sign in';
-      confirmPasswordGroup.classList.toggle('hidden', !signingUp);
-      authConfirmPassword.required = signingUp;
-      authPassword.autocomplete = signingUp ? 'new-password' : 'current-password';
-      authModePrompt.textContent = signingUp ? 'Already have an account?' : 'New here?';
-      authModeToggle.textContent = signingUp ? 'Sign in' : 'Create an account';
-      authStatus.classList.add('hidden');
-    }
-
-    authModeToggle.addEventListener('click', () => {
-      setAuthMode(authMode === 'login' ? 'signup' : 'login');
-    });
-
-    authForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      authSubmitBtn.disabled = true;
-      authSubmitBtn.textContent = authMode === 'signup' ? 'Creating account...' : 'Signing in...';
-      authStatus.classList.add('hidden');
-      try {
-        const response = await fetch(`/api/auth/${authMode}`, {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: authEmail.value.trim(),
-            password: authPassword.value,
-            confirmPassword: authConfirmPassword.value
-          })
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || `HTTP ${response.status}`);
-        if (authMode === 'signup') {
-          showAuthMessage(result.message);
-          authPassword.value = '';
-          authConfirmPassword.value = '';
-        } else {
-          location.reload();
-        }
-      } catch (error) {
-        showAuthMessage(error.message, true);
-      } finally {
-        authSubmitBtn.disabled = false;
-        authSubmitBtn.textContent = authMode === 'signup' ? 'Create account' : 'Sign in';
-      }
-    });
-
     async function initializeAuthentication() {
       const pageUrl = new URL(location.href);
-      const verificationState = pageUrl.searchParams.get('auth');
-      if (verificationState) {
+      const authState = pageUrl.searchParams.get('auth');
+      if (authState) {
         pageUrl.searchParams.delete('auth');
         history.replaceState({}, '', pageUrl.pathname + pageUrl.search + pageUrl.hash);
-        let verificationMessage = '';
-        let verificationError = false;
-        if (verificationState === 'verified') {
-          verificationMessage = 'Email verified. Sign in to start chatting.';
-        } else if (verificationState === 'expired') {
-          verificationMessage = 'That verification link is invalid or expired. Sign up again to receive a new link.';
-          verificationError = true;
-          setAuthMode('signup');
-        } else if (verificationState === 'invalid') {
-          verificationMessage = 'That verification link is invalid. Please sign up again.';
-          verificationError = true;
-          setAuthMode('signup');
+        const authMessages = {
+          google_unconfigured: ['Google sign-in is not configured yet. Add the Google OAuth client ID and secret to the Worker.', true],
+          google_rate_limited: ['Too many sign-in attempts. Please try again in a few minutes.', true],
+          google_failed: ['Google sign-in did not complete. Please try again.', true],
+          google_expired: ['Your Google sign-in session expired. Please try again.', true],
+          google_unverified: ['Google did not confirm this email address. Sign in with a verified Google email.', true],
+          google_account_conflict: ['This email is already linked to another Google account. Contact support for help.', true]
+        };
+        const authMessage = authMessages[authState];
+        if (authMessage) {
+          showAuthMessage(authMessage[0], authMessage[1]);
         }
-        if (verificationMessage) showAuthMessage(verificationMessage, verificationError);
       }
 
       try {
@@ -397,7 +316,6 @@
           logoutBtn.classList.remove('hidden');
         } else {
           authOverlay.classList.remove('hidden');
-          authEmail.focus();
         }
       } catch (error) {
         authOverlay.classList.remove('hidden');

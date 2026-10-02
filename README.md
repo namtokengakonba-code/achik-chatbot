@@ -10,12 +10,13 @@ The `ACHIK_CORRECTIONS` KV namespace is configured in `wrangler.jsonc`. For loca
 
 ## User accounts
 
-Chat and correction submissions require an account with a verified email address. Accounts use email and password; passwords are stored as salted PBKDF2 hashes, verification links expire after 24 hours, and sign-in sessions use secure, HTTP-only cookies.
+Chat and correction submissions require signing in with Google. The Worker uses Google's OpenID Connect user-info endpoint to verify the account email. Sign-in uses OAuth state validation, PKCE, and secure, HTTP-only session cookies.
 
 ### Deployment setup
 
-1. Configure a verified sending domain in Resend.
-2. Add these GitHub Actions secrets: `GEMINI_API_KEY`, `RESEND_API_KEY`, and `RESEND_FROM_EMAIL` (for example, `A·chik Chatbot <verify@your-domain.example>`). Keep the existing `CLOUDFLARE_API_TOKEN` secret.
-3. Push/deploy the app. The deployment workflow applies the D1 migration before deploying the Worker.
+1. In Google Cloud Console, configure the OAuth consent screen and create an OAuth client ID for a Web application.
+2. Add this exact Authorized redirect URI to the Google OAuth client: `https://achik-chatbot.namtokengakonba.workers.dev/api/auth/google/callback`. For local testing, also authorize `http://localhost:8787/api/auth/google/callback`.
+3. Add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` as GitHub Actions secrets. Keep `GEMINI_API_KEY` and a valid `CLOUDFLARE_API_TOKEN`.
+4. Push/deploy the app. The workflow applies D1 migrations before deploying the Worker. If deploying directly with Wrangler instead, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` as Worker secrets.
 
-The D1 database binding and migration are in `wrangler.jsonc` and `migrations/`. For local development, add `GEMINI_API_KEY`, `RESEND_API_KEY`, and `RESEND_FROM_EMAIL` to `.dev.vars`, run `npx wrangler d1 migrations apply achik-chatbot-users --local`, and then run `npm run dev`.
+The D1 database binding and migrations are in `wrangler.jsonc` and `migrations/`. For local development, use a Google OAuth client configured with `http://localhost:8787/api/auth/google/callback`, add `GEMINI_API_KEY`, `GOOGLE_CLIENT_ID`, and `GOOGLE_CLIENT_SECRET` to `.dev.vars`, run `npx wrangler d1 migrations apply achik-chatbot-users --local`, and then run `npm run dev`. The former Resend email-verification configuration is no longer used.
