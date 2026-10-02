@@ -2,8 +2,9 @@
 <html lang="en" class="h-full">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>A·chik Ku·sik AI | Garo Language Companion</title>
+  <link rel="icon" type="image/png" href="/logo.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,90 +18,167 @@
           colors: {
             emerald: { 750: '#035d3d', 850: '#023c28', 950: '#012418' },
             amber: { 450: '#f59e0b' }
+          },
+          screens: {
+            'xs': '380px'
           }
         }
       }
     };
   </script>
   <style>
-    .rakhe { color: #f59e0b; font-weight: 700; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    .raka { color: #f59e0b; font-weight: 700; }
+    
+    /* Support true full viewport height across mobile Safari and Android Chrome */
+    .app-height {
+      height: 100vh;
+      height: 100dvh;
+    }
+
+    /* iOS safe-area padding for bottom bar navigation */
+    .safe-bottom {
+      padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.2); border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.4); }
+    ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.25); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.5); }
   </style>
 </head>
-<body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
+<body class="app-height bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 overflow-hidden">
 
   <!-- TOP HEADER -->
-  <header class="border-b border-emerald-100 dark:border-emerald-900/40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-emerald-500/20">
-          A·k
-        </div>
+  <header class="h-14 sm:h-16 border-b border-emerald-100 dark:border-emerald-900/40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-30 flex-shrink-0">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
+      
+      <!-- Brand & Mobile Drawer Toggle -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Drawer Menu Button (Mobile & Tablet) -->
+        <button id="menuToggleBtn" class="lg:hidden p-2 -ml-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Open Sidebar">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+
+        <img src="/logo.png" alt="Logo" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl object-contain bg-white shadow-sm flex-shrink-0" />
+        
         <div>
-          <div class="flex items-center gap-2">
-            <h1 class="font-bold text-lg tracking-tight bg-gradient-to-r from-emerald-800 to-teal-700 dark:from-emerald-300 dark:to-teal-200 bg-clip-text text-transparent">
-              A·chik Ku·sik AI
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <h1 class="font-bold text-sm sm:text-base md:text-lg tracking-tight bg-gradient-to-r from-emerald-800 to-teal-700 dark:from-emerald-300 dark:to-teal-200 bg-clip-text text-transparent">
+              A·chik Chatbot
             </h1>
-            <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 font-semibold">
-              Garo Hills
+            <span class="text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 font-semibold">
+              North Garo Hills
             </span>
           </div>
-          <p class="text-xs text-slate-500 dark:text-slate-400">Cloudflare Edge + Gemini 2.5 Flash</p>
+          <p class="hidden xs:block text-[11px] text-slate-500 dark:text-slate-400">Wa·sabegipa seng·ani</p>
         </div>
       </div>
 
       <!-- Controls -->
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <span id="signedInUser" class="hidden max-w-32 truncate text-[10px] sm:max-w-48 sm:text-xs text-slate-500 dark:text-slate-400"></span>
+        <button id="logoutBtn" type="button" class="hidden rounded-lg border border-slate-200 dark:border-slate-800 px-2 py-1.5 text-[10px] sm:px-3 sm:text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+          Sign out
+        </button>
         <button id="themeToggleBtn" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Toggle Dark/Light Mode">
-          <svg id="moonIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-          <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+          <svg id="moonIcon" class="w-4 h-4 sm:w-5 sm:h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          <svg id="sunIcon" class="w-4 h-4 sm:w-5 sm:h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
         </button>
         <button id="clearChatBtn" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition" title="Reset Chat History">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- MAIN BODY LAYOUT -->
-  <div class="flex-1 max-w-7xl w-full mx-auto flex overflow-hidden">
+  <section id="authOverlay" class="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl">
+      <div class="mb-5 text-center">
+        <img src="/logo.png" alt="" class="mx-auto mb-3 h-14 w-14 rounded-xl object-contain">
+        <h2 id="authTitle" class="text-xl font-bold text-emerald-800 dark:text-emerald-300">Sign in to A·chik Chatbot</h2>
+        <p id="authDescription" class="mt-1 text-sm text-slate-500 dark:text-slate-400">Create an account and verify your email to start chatting.</p>
+      </div>
+      <form id="authForm" class="space-y-3">
+        <label for="authEmail" class="block text-xs font-semibold text-slate-600 dark:text-slate-300">Email address</label>
+        <input id="authEmail" name="email" type="email" required maxlength="254" autocomplete="email" placeholder="you@example.com"
+          class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2.5 text-base outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20">
+        <label for="authPassword" class="block text-xs font-semibold text-slate-600 dark:text-slate-300">Password</label>
+        <input id="authPassword" name="password" type="password" required minlength="12" maxlength="128" autocomplete="current-password" placeholder="At least 12 characters"
+          class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2.5 text-base outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20">
+        <div id="confirmPasswordGroup" class="hidden space-y-2">
+          <label for="authConfirmPassword" class="block text-xs font-semibold text-slate-600 dark:text-slate-300">Confirm password</label>
+          <input id="authConfirmPassword" name="confirmPassword" type="password" minlength="12" maxlength="128" autocomplete="new-password" placeholder="Enter your password again"
+            class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2.5 text-base outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20">
+        </div>
+        <p id="authStatus" role="status" aria-live="polite" class="hidden rounded-lg bg-slate-50 dark:bg-slate-800 p-3 text-sm text-slate-600 dark:text-slate-300"></p>
+        <button id="authSubmitBtn" type="submit" class="w-full rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white shadow-md hover:bg-emerald-500 disabled:cursor-wait disabled:opacity-60">
+          Sign in
+        </button>
+      </form>
+      <p class="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
+        <span id="authModePrompt">New here?</span>
+        <button id="authModeToggle" type="button" class="font-semibold text-emerald-700 hover:underline dark:text-emerald-300">Create an account</button>
+      </p>
+    </div>
+  </section>
 
-    <!-- SIDEBAR: Garo Phrases & Culture -->
-    <aside class="hidden lg:flex w-80 flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white/50 dark:bg-slate-900/50 p-4 gap-4 overflow-y-auto">
+  <!-- MAIN BODY LAYOUT -->
+  <div class="flex-1 max-w-7xl w-full mx-auto flex overflow-hidden relative">
+
+    <!-- MOBILE & TABLET DRAWER BACKDROP -->
+    <div id="drawerBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
+
+    <!-- SIDEBAR: Stationary on Desktop (lg+), Slide-over Drawer on Mobile & Tablet -->
+    <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-4 gap-4 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none">
+      
+      <!-- Drawer Header (visible on mobile/tablet) -->
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 lg:hidden">
+        <span class="font-bold text-sm text-emerald-800 dark:text-emerald-400">Settings & Culture</span>
+        <button id="closeDrawerBtn" class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Mode Selector -->
       <div>
         <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-2">Modes</h2>
         <div class="grid grid-cols-1 gap-1.5" id="modeSelector">
-          <button data-mode="dual" class="mode-btn text-left px-3 py-2 rounded-lg text-sm font-medium transition bg-emerald-600 text-white shadow-sm">
+          <button data-mode="dual" class="mode-btn text-left px-3 py-2.5 rounded-xl text-sm font-medium transition bg-emerald-600 text-white shadow-sm">
             💬 Smart Dual (Garo + English)
           </button>
-          <button data-mode="pure" class="mode-btn text-left px-3 py-2 rounded-lg text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
+          <button data-mode="pure" class="mode-btn text-left px-3 py-2.5 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
             🌿 Pure A·chik Focus
           </button>
-          <button data-mode="translate" class="mode-btn text-left px-3 py-2 rounded-lg text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
+          <button data-mode="translate" class="mode-btn text-left px-3 py-2.5 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
             🔄 Quick Translator
           </button>
         </div>
       </div>
 
+      <section class="p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50">
+        <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-1">Shared learning</h2>
+        <p class="text-[11px] leading-relaxed text-slate-600 dark:text-slate-400 mb-2">
+          Add a correction below any answer. It is saved immediately and can guide future answers for everyone.
+        </p>
+      </section>
+
+      <!-- Common Expressions -->
       <div>
         <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-2">Common Expressions</h2>
         <div class="space-y-1.5">
-          <button onclick="insertPrompt('Namgimin pring! How are you today?')" class="w-full text-left p-2 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition group">
-            <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Namgimin pring</span>
+          <button onclick="insertPrompt('Pringnam! How are you today?')" class="w-full text-left p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition">
+            <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Pringnam</span>
             <span class="text-[11px] text-slate-500 dark:text-slate-400">Good morning</span>
           </button>
-          <button onclick="insertPrompt('Mitela for your assistance!')" class="w-full text-left p-2 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition group">
+          <button onclick="insertPrompt('Mitela for your assistance!')" class="w-full text-left p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition">
             <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Mitela</span>
             <span class="text-[11px] text-slate-500 dark:text-slate-400">Thank you</span>
           </button>
-          <button onclick="insertPrompt('Na·a senga? (Are you fine?)')" class="w-full text-left p-2 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition group">
-            <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Na·a senga?</span>
+          <button onclick="insertPrompt('Na·a namengama? (Are you fine?)')" class="w-full text-left p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition">
+            <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Na·a namengama?</span>
             <span class="text-[11px] text-slate-500 dark:text-slate-400">How are you / Are you well?</span>
           </button>
-          <button onclick="insertPrompt('Tell me about the 100 Drums Wangala festival')" class="w-full text-left p-2 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition group">
+          <button onclick="insertPrompt('Tell me about the 100 Drums Wangala festival')" class="w-full text-left p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition">
             <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Wangala Festival</span>
             <span class="text-[11px] text-slate-500 dark:text-slate-400">Post-harvest festival of the Garos</span>
           </button>
@@ -110,33 +188,32 @@
       <!-- Orthography Note -->
       <div class="mt-auto p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200">
         <p class="font-bold flex items-center gap-1 mb-1">
-          <span>ℹ️</span> The Ra·khe ( · ) Glottal Stop
+          <span>ℹ️</span> The Raka ( · ) Glottal Stop
         </p>
         <p class="text-[11px] leading-relaxed text-amber-800 dark:text-amber-300">
-          The middle dot represents the glottal stop. Distinct meanings: <em>chaa</em> (grow) vs <em>cha·a</em> (eat).
+          The middle dot represents the glottal stop. Distinct roots: <em>chaa</em> (grow) vs <em>cha·a</em> (eat).
         </p>
       </div>
     </aside>
 
     <!-- CHAT CONTAINER -->
-    <main class="flex-1 flex flex-col h-[calc(100vh-4rem)] overflow-hidden bg-slate-50/50 dark:bg-slate-950">
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50/50 dark:bg-slate-950">
       
       <!-- Messages List -->
-      <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-5">
+      <div id="messagesContainer" class="flex-1 overflow-y-auto p-3 sm:p-5 md:p-6 space-y-4">
+        
         <!-- Welcome Message -->
-        <div class="flex gap-3 max-w-2xl">
-          <div class="w-8 h-8 rounded-lg bg-emerald-700 text-white flex-shrink-0 flex items-center justify-center font-bold text-xs shadow">
-            A·k
-          </div>
+        <div class="flex gap-2.5 sm:gap-3 max-w-[92%] sm:max-w-xl md:max-w-2xl">
+          <img src="/logo.png" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1" />
           <div class="space-y-2">
-            <div class="p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-sm">
-              <p class="font-semibold text-emerald-700 dark:text-emerald-400 text-base mb-1">Namgimin pring! Salam!</p>
+            <div class="p-3.5 sm:p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm">
+              <p class="font-semibold text-emerald-700 dark:text-emerald-400 text-sm sm:text-base mb-1">Rimchaksoa!</p>
               <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-2">
-                I am your bilingual A·chik ku·sik language assistant. You can chat with me in English or Garo, ask for translations, or learn about the culture and geography of the Garo Hills.
+                I am your bilingual A·chik ku·sik (Garo) language companion. You can chat with me in English or Garo, ask for instant translations, or explore the culture and heritage of Meghalaya. Additionally, you can ask me anything you want. U'iakonba?
               </p>
-              <div class="text-xs text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-2 flex items-center gap-1.5">
+              <div class="text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-2 flex items-center gap-1.5">
                 <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-                Securely powered by Cloudflare Workers & Gemini 2.5 Flash
+                Powered by E. S. Nengminza
               </div>
             </div>
           </div>
@@ -144,41 +221,50 @@
       </div>
 
       <!-- INPUT BAR -->
-      <div class="p-4 border-t border-slate-200 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md">
-        <form id="chatForm" class="max-w-4xl mx-auto flex items-end gap-2">
+      <div class="p-2 sm:p-4 border-t border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md safe-bottom flex-shrink-0">
+        <form id="chatForm" class="max-w-4xl mx-auto flex items-end gap-1.5 sm:gap-2">
+          
           <div class="relative flex-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-300 dark:border-slate-700 focus-within:border-emerald-500 dark:focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 shadow-sm transition">
+            
+            <!-- Font-size text-base on mobile prevents iOS Safari zoom -->
             <textarea
               id="messageInput"
               rows="1"
-              placeholder="Ask anything or type text to translate into A·chik ku·sik..."
-              class="w-full px-4 py-3 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-32 text-sm leading-relaxed"
+              placeholder="Ask anything either in English or Garo and I will translate to Garo..."
+              class="w-full pl-3 pr-20 sm:pl-4 sm:pr-24 py-2.5 sm:py-3 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-32 text-base md:text-sm leading-relaxed"
             ></textarea>
             
-            <!-- Mid-dot shortcut button for Garo typing -->
-            <button
-              type="button"
-              onclick="insertChar('·')"
-              class="absolute right-10 bottom-2.5 p-1 rounded-md text-xs font-bold text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-950/60 transition"
-              title="Insert Ra·khe Glottal Stop (·)"
-            >
-              [ · ]
-            </button>
+            <!-- Button Container inside Textarea -->
+            <div class="absolute right-1.5 bottom-1.5 sm:right-2 sm:bottom-2 flex items-center gap-1">
+              
+              <!-- Raka insertion helper -->
+              <button
+                type="button"
+                onclick="insertChar('·')"
+                class="px-2 py-1 rounded-lg text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 transition min-h-[32px] flex items-center justify-center"
+                title="Insert Raka Glottal Stop (·)"
+              >
+                [ · ]
+              </button>
 
-            <!-- Voice recognition button -->
-            <button
-              type="button"
-              id="micBtn"
-              class="absolute right-2.5 bottom-2.5 p-1 rounded-md text-slate-400 hover:text-emerald-600 transition"
-              title="Voice Input (English/Dictation)"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 02-3-3V5a3 3 0 116 0v6a3 3 0 02-3 3z"></path></svg>
-            </button>
+              <!-- Voice Recognition -->
+              <button
+                type="button"
+                id="micBtn"
+                class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 transition min-h-[32px] min-w-[32px] flex items-center justify-center"
+                title="Voice Input"
+              >
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 02-3-3V5a3 3 0 116 0v6a3 3 0 02-3 3z"></path></svg>
+              </button>
+            </div>
           </div>
 
+          <!-- Send Button (min-height 44px ensures high-accuracy touch hitbox) -->
           <button
             type="submit"
             id="sendBtn"
-            class="px-4 py-3 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-medium rounded-xl flex items-center justify-center shadow-md shadow-emerald-600/20 transition disabled:opacity-50 disabled:pointer-events-none"
+            class="h-11 sm:h-12 px-3.5 sm:px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-medium rounded-xl flex items-center justify-center shadow-md shadow-emerald-600/20 transition disabled:opacity-50 disabled:pointer-events-none flex-shrink-0"
+            aria-label="Send message"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
           </button>
@@ -200,6 +286,164 @@
     const sunIcon = document.getElementById('sunIcon');
     const moonIcon = document.getElementById('moonIcon');
     const micBtn = document.getElementById('micBtn');
+    const authOverlay = document.getElementById('authOverlay');
+    const authForm = document.getElementById('authForm');
+    const authEmail = document.getElementById('authEmail');
+    const authPassword = document.getElementById('authPassword');
+    const authConfirmPassword = document.getElementById('authConfirmPassword');
+    const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+    const authStatus = document.getElementById('authStatus');
+    const authSubmitBtn = document.getElementById('authSubmitBtn');
+    const authTitle = document.getElementById('authTitle');
+    const authDescription = document.getElementById('authDescription');
+    const authModePrompt = document.getElementById('authModePrompt');
+    const authModeToggle = document.getElementById('authModeToggle');
+    const signedInUser = document.getElementById('signedInUser');
+    const logoutBtn = document.getElementById('logoutBtn');
+    let authMode = 'login';
+
+    function showAuthMessage(message, isError = false) {
+      authStatus.textContent = message;
+      authStatus.classList.remove('hidden', 'text-red-700', 'dark:text-red-300', 'text-slate-600', 'dark:text-slate-300');
+      authStatus.classList.add(
+        isError ? 'text-red-700' : 'text-slate-600',
+        isError ? 'dark:text-red-300' : 'dark:text-slate-300'
+      );
+    }
+
+    function setAuthMode(mode) {
+      authMode = mode;
+      const signingUp = mode === 'signup';
+      authTitle.textContent = signingUp ? 'Create your A·chik Chatbot account' : 'Sign in to A·chik Chatbot';
+      authDescription.textContent = signingUp
+        ? 'Verify your email address to start chatting.'
+        : 'Sign in with your verified email address to continue chatting.';
+      authSubmitBtn.textContent = signingUp ? 'Create account' : 'Sign in';
+      confirmPasswordGroup.classList.toggle('hidden', !signingUp);
+      authConfirmPassword.required = signingUp;
+      authPassword.autocomplete = signingUp ? 'new-password' : 'current-password';
+      authModePrompt.textContent = signingUp ? 'Already have an account?' : 'New here?';
+      authModeToggle.textContent = signingUp ? 'Sign in' : 'Create an account';
+      authStatus.classList.add('hidden');
+    }
+
+    authModeToggle.addEventListener('click', () => {
+      setAuthMode(authMode === 'login' ? 'signup' : 'login');
+    });
+
+    authForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      authSubmitBtn.disabled = true;
+      authSubmitBtn.textContent = authMode === 'signup' ? 'Creating account...' : 'Signing in...';
+      authStatus.classList.add('hidden');
+      try {
+        const response = await fetch(`/api/auth/${authMode}`, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: authEmail.value.trim(),
+            password: authPassword.value,
+            confirmPassword: authConfirmPassword.value
+          })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || `HTTP ${response.status}`);
+        if (authMode === 'signup') {
+          showAuthMessage(result.message);
+          authPassword.value = '';
+          authConfirmPassword.value = '';
+        } else {
+          location.reload();
+        }
+      } catch (error) {
+        showAuthMessage(error.message, true);
+      } finally {
+        authSubmitBtn.disabled = false;
+        authSubmitBtn.textContent = authMode === 'signup' ? 'Create account' : 'Sign in';
+      }
+    });
+
+    async function initializeAuthentication() {
+      const pageUrl = new URL(location.href);
+      const verificationState = pageUrl.searchParams.get('auth');
+      if (verificationState) {
+        pageUrl.searchParams.delete('auth');
+        history.replaceState({}, '', pageUrl.pathname + pageUrl.search + pageUrl.hash);
+        let verificationMessage = '';
+        let verificationError = false;
+        if (verificationState === 'verified') {
+          verificationMessage = 'Email verified. Sign in to start chatting.';
+        } else if (verificationState === 'expired') {
+          verificationMessage = 'That verification link is invalid or expired. Sign up again to receive a new link.';
+          verificationError = true;
+          setAuthMode('signup');
+        } else if (verificationState === 'invalid') {
+          verificationMessage = 'That verification link is invalid. Please sign up again.';
+          verificationError = true;
+          setAuthMode('signup');
+        }
+        if (verificationMessage) showAuthMessage(verificationMessage, verificationError);
+      }
+
+      try {
+        const response = await fetch('/api/auth/session', { credentials: 'same-origin', cache: 'no-store' });
+        const session = await response.json();
+        if (!response.ok) throw new Error(session.error || `HTTP ${response.status}`);
+        if (session.authenticated) {
+          authOverlay.classList.add('hidden');
+          signedInUser.textContent = session.email;
+          signedInUser.classList.remove('hidden');
+          logoutBtn.classList.remove('hidden');
+        } else {
+          authOverlay.classList.remove('hidden');
+          authEmail.focus();
+        }
+      } catch (error) {
+        authOverlay.classList.remove('hidden');
+        showAuthMessage(`Could not check your sign-in status: ${error.message}`, true);
+      }
+    }
+
+    logoutBtn.addEventListener('click', async () => {
+      logoutBtn.disabled = true;
+      try {
+        const response = await fetch('/api/auth/logout', {
+          method: 'POST',
+          credentials: 'same-origin'
+        });
+        if (!response.ok) {
+          const result = await response.json();
+          throw new Error(result.error || `HTTP ${response.status}`);
+        }
+        location.reload();
+      } catch (error) {
+        logoutBtn.disabled = false;
+        alert(`Could not sign out: ${error.message}`);
+      }
+    });
+
+    // Drawer elements (Responsive Mobile/Tablet)
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+    const sidebarDrawer = document.getElementById('sidebarDrawer');
+    const drawerBackdrop = document.getElementById('drawerBackdrop');
+
+    function openDrawer() {
+      sidebarDrawer.classList.remove('-translate-x-full');
+      drawerBackdrop.classList.remove('hidden');
+      setTimeout(() => drawerBackdrop.classList.remove('opacity-0'), 10);
+    }
+
+    function closeDrawer() {
+      sidebarDrawer.classList.add('-translate-x-full');
+      drawerBackdrop.classList.add('opacity-0');
+      setTimeout(() => drawerBackdrop.classList.add('hidden'), 300);
+    }
+
+    menuToggleBtn.addEventListener('click', openDrawer);
+    closeDrawerBtn.addEventListener('click', closeDrawer);
+    drawerBackdrop.addEventListener('click', closeDrawer);
 
     // Theme logic
     function initTheme() {
@@ -225,10 +469,11 @@
     document.querySelectorAll('.mode-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.mode-btn').forEach(b => {
-          b.className = "mode-btn text-left px-3 py-2 rounded-lg text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40";
+          b.className = "mode-btn text-left px-3 py-2.5 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40";
         });
-        btn.className = "mode-btn text-left px-3 py-2 rounded-lg text-sm font-medium transition bg-emerald-600 text-white shadow-sm";
+        btn.className = "mode-btn text-left px-3 py-2.5 rounded-xl text-sm font-medium transition bg-emerald-600 text-white shadow-sm";
         activeMode = btn.getAttribute('data-mode');
+        if (window.innerWidth < 1024) closeDrawer();
       });
     });
 
@@ -244,34 +489,31 @@
     function insertPrompt(text) {
       messageInput.value = text;
       messageInput.focus();
+      if (window.innerWidth < 1024) closeDrawer();
+      messageInput.dispatchEvent(new Event('input'));
     }
 
-    // Auto resize textarea
+    // Auto resize textarea without overflowing viewport
     messageInput.addEventListener('input', () => {
       messageInput.style.height = 'auto';
-      messageInput.style.height = Math.min(messageInput.scrollHeight, 128) + 'px';
+      messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
     });
 
     // Voice recognition (Web Speech API)
-    let recognition;
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognition = new SpeechRecognition();
+      const recognition = new SpeechRecognition();
       recognition.continuous = false;
       recognition.lang = 'en-US';
 
       recognition.onresult = (e) => {
         messageInput.value += (messageInput.value ? ' ' : '') + e.results[0][0].transcript;
         micBtn.classList.remove('text-red-500', 'animate-pulse');
+        messageInput.dispatchEvent(new Event('input'));
       };
 
-      recognition.onerror = () => {
-        micBtn.classList.remove('text-red-500', 'animate-pulse');
-      };
-
-      recognition.onend = () => {
-        micBtn.classList.remove('text-red-500', 'animate-pulse');
-      };
+      recognition.onerror = () => micBtn.classList.remove('text-red-500', 'animate-pulse');
+      recognition.onend = () => micBtn.classList.remove('text-red-500', 'animate-pulse');
 
       micBtn.addEventListener('click', () => {
         micBtn.classList.add('text-red-500', 'animate-pulse');
@@ -285,13 +527,13 @@
     function speakText(text) {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
-      const cleanText = text.replace(/·/g, ''); // strip middle dot for TTS synthesis
+      const cleanText = text.replace(/·/g, ''); 
       const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.rate = 0.9;
       window.speechSynthesis.speak(utterance);
     }
 
-    // Copy helper
+    // Clipboard copy helper
     function copyToClipboard(str, btn) {
       navigator.clipboard.writeText(str).then(() => {
         const orig = btn.innerHTML;
@@ -305,7 +547,7 @@
       const el = document.createElement('div');
       el.className = "flex justify-end";
       el.innerHTML = `
-        <div class="max-w-xl p-4 rounded-2xl rounded-tr-sm bg-emerald-600 text-white shadow-sm text-sm">
+        <div class="max-w-[88%] sm:max-w-xl p-3 sm:p-4 rounded-2xl rounded-tr-sm bg-emerald-600 text-white shadow-sm text-xs sm:text-sm">
           <p class="whitespace-pre-wrap">${escapeHtml(text)}</p>
         </div>
       `;
@@ -314,18 +556,18 @@
     }
 
     // Render AI Structured Response
-    function appendAiMessage(data) {
+    function appendAiMessage(data, question) {
       const el = document.createElement('div');
-      el.className = "flex gap-3 max-w-2xl";
+      el.className = "flex gap-2.5 sm:gap-3 max-w-[95%] sm:max-w-xl md:max-w-2xl";
 
       let vocabHtml = '';
       if (data.vocabulary && data.vocabulary.length > 0) {
         vocabHtml = `
-          <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Vocabulary</span>
-            <div class="mt-1.5 flex flex-wrap gap-1.5">
+          <div class="mt-2.5 pt-2.5 border-t border-slate-100 dark:border-slate-800">
+            <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Vocabulary</span>
+            <div class="mt-1 flex flex-wrap gap-1 sm:gap-1.5">
               ${data.vocabulary.map(v => `
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/40 text-xs">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/40 text-[11px] sm:text-xs">
                   <strong class="text-emerald-800 dark:text-emerald-300">${escapeHtml(v.garo)}</strong>: 
                   <span class="text-slate-600 dark:text-slate-400">${escapeHtml(v.english)}</span>
                 </span>
@@ -345,33 +587,31 @@
       }
 
       el.innerHTML = `
-        <div class="w-8 h-8 rounded-lg bg-emerald-700 text-white flex-shrink-0 flex items-center justify-center font-bold text-xs shadow">
-          A·k
-        </div>
-        <div class="space-y-2 flex-1">
-          <div class="p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-sm space-y-3">
+        <img src="/logo.png" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1">
+        <div class="space-y-2 flex-1 min-w-0">
+          <div class="p-3.5 sm:p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm space-y-2.5">
             
             <!-- Garo Segment -->
-            <div class="p-3 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50">
+            <div class="p-2.5 sm:p-3 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50">
               <div class="flex items-center justify-between mb-1">
-                <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">A·chik Ku·sik</span>
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">A·chik Ku·sik</span>
                 <div class="flex items-center gap-1">
                   <button onclick="speakText('${escapeAttr(data.garo)}')" class="p-1 text-slate-400 hover:text-emerald-600 rounded transition" title="Listen Audio">
                     🔊
                   </button>
-                  <button onclick="copyToClipboard('${escapeAttr(data.garo)}', this)" class="text-xs text-slate-400 hover:text-emerald-600 px-1 py-0.5 transition">
+                  <button onclick="copyToClipboard('${escapeAttr(data.garo)}', this)" class="text-[11px] sm:text-xs text-slate-400 hover:text-emerald-600 px-1 py-0.5 transition">
                     Copy
                   </button>
                 </div>
               </div>
-              <p class="text-base font-semibold text-emerald-950 dark:text-emerald-100 leading-snug">${highlightRakhe(escapeHtml(data.garo))}</p>
-              ${data.pronunciation ? `<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Phonetic: <em>${escapeHtml(data.pronunciation)}</em></p>` : ''}
+              <p class="text-sm sm:text-base font-semibold text-emerald-950 dark:text-emerald-100 leading-snug break-words">${highlightRakhe(escapeHtml(data.garo))}</p>
+              ${data.pronunciation ? `<p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1">Phonetic: <em>${escapeHtml(data.pronunciation)}</em></p>` : ''}
             </div>
 
             <!-- English Explanation -->
-            <div class="text-slate-700 dark:text-slate-200 text-sm leading-relaxed">
-              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">English</span>
-              <p>${escapeHtml(data.english)}</p>
+            <div class="text-slate-700 dark:text-slate-200 text-xs sm:text-sm leading-relaxed">
+              <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">English</span>
+              <p class="break-words">${escapeHtml(data.english)}</p>
             </div>
 
             ${vocabHtml}
@@ -379,6 +619,65 @@
           </div>
         </div>
       `;
+
+      const responseActions = document.createElement('div');
+      responseActions.className = 'mt-2';
+      const correctionButton = document.createElement('button');
+      correctionButton.type = 'button';
+      correctionButton.className = 'text-[11px] font-medium text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400';
+      correctionButton.textContent = 'Correct this answer';
+      const correctionForm = document.createElement('form');
+      correctionForm.className = 'hidden mt-2 space-y-2';
+      const correctionInput = document.createElement('textarea');
+      correctionInput.required = true;
+      correctionInput.maxLength = 2000;
+      correctionInput.rows = 3;
+      correctionInput.placeholder = 'Write the corrected answer or explain what should change';
+      correctionInput.className = 'w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-2.5 text-xs outline-none focus:border-emerald-500';
+      const submitCorrection = document.createElement('button');
+      submitCorrection.type = 'submit';
+      submitCorrection.className = 'rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-500 disabled:opacity-50';
+      submitCorrection.textContent = 'Save correction';
+      const correctionStatus = document.createElement('p');
+      correctionStatus.setAttribute('role', 'status');
+      correctionStatus.className = 'text-[11px] text-slate-500 dark:text-slate-400';
+      correctionButton.addEventListener('click', () => {
+        correctionForm.classList.toggle('hidden');
+        if (!correctionForm.classList.contains('hidden')) correctionInput.focus();
+      });
+      correctionForm.append(correctionInput, submitCorrection, correctionStatus);
+      correctionForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        submitCorrection.disabled = true;
+        correctionStatus.textContent = 'Saving correction...';
+        try {
+          const response = await fetch('/api/corrections', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              question,
+              originalAnswer: [data.garo, data.english].filter(Boolean).join('\n'),
+              correction: correctionInput.value.trim(),
+              mode: activeMode
+            })
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || `HTTP ${response.status}`);
+          correctionStatus.textContent = 'Saved. This correction can now guide future answers for everyone.';
+          correctionInput.value = '';
+          correctionButton.textContent = 'Correction saved';
+          correctionButton.disabled = true;
+          correctionButton.classList.add('cursor-not-allowed', 'opacity-60');
+        } catch (error) {
+          correctionStatus.textContent = `Could not submit: ${error.message}`;
+          correctionStatus.classList.add('text-red-600', 'dark:text-red-400');
+        } finally {
+          submitCorrection.disabled = false;
+        }
+      });
+      responseActions.append(correctionButton, correctionForm);
+      el.querySelector('.space-y-2.flex-1').appendChild(responseActions);
       messagesContainer.appendChild(el);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
@@ -388,11 +687,11 @@
       const id = 'loader-' + Date.now();
       const el = document.createElement('div');
       el.id = id;
-      el.className = "flex gap-3 max-w-md animate-pulse";
+      el.className = "flex gap-2.5 sm:gap-3 max-w-md animate-pulse";
       el.innerHTML = `
-        <div class="w-8 h-8 rounded-lg bg-emerald-700/50 text-white flex-shrink-0 flex items-center justify-center font-bold text-xs">A·k</div>
-        <div class="flex-1 bg-white dark:bg-slate-900 p-4 rounded-2xl rounded-tl-sm border border-slate-200 dark:border-slate-800 space-y-2">
-          <div class="h-4 bg-slate-200 dark:bg-slate-800 rounded w-5/6"></div>
+        <img src="/logo.png" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 mt-1">
+        <div class="flex-1 bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl rounded-tl-sm border border-slate-200 dark:border-slate-800 space-y-2">
+          <div class="h-3.5 bg-slate-200 dark:bg-slate-800 rounded w-4/6"></div>
           <div class="h-3 bg-slate-100 dark:bg-slate-800/60 rounded w-1/2"></div>
         </div>
       `;
@@ -434,6 +733,7 @@
       try {
         const response = await fetch('/api/chat', {
           method: 'POST',
+          credentials: 'same-origin',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message, mode: activeMode })
         });
@@ -442,30 +742,31 @@
         if (loader) loader.remove();
 
         if (!response.ok) {
-          const err = await response.json().catch(() => ({ error: 'Unknown server error' }));
-          throw new Error(err.error || `Error ${response.status}`);
+          const err = await response.json().catch(() => ({ error: 'Request rejected' }));
+          throw new Error(err.error || `HTTP ${response.status}`);
         }
 
         const data = await response.json();
-        appendAiMessage(data);
+        appendAiMessage(data, message);
 
       } catch (err) {
         const loader = document.getElementById(loaderId);
         if (loader) loader.remove();
 
         const errEl = document.createElement('div');
-        errEl.className = "flex gap-3 max-w-lg";
+        errEl.className = "flex gap-2.5 sm:gap-3 max-w-lg";
         errEl.innerHTML = `
-          <div class="w-8 h-8 rounded-lg bg-red-600 text-white flex-shrink-0 flex items-center justify-center font-bold text-xs">!</div>
-          <div class="p-4 rounded-2xl rounded-tl-sm bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs leading-relaxed">
-            <strong>Translation Service Error:</strong> ${escapeHtml(err.message)}
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-red-600 text-white flex-shrink-0 flex items-center justify-center font-bold text-xs mt-1">!</div>
+          <div class="p-3 sm:p-4 rounded-2xl rounded-tl-sm bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs leading-relaxed">
+            <strong>Service Notification:</strong> ${escapeHtml(err.message)}
           </div>
         `;
         messagesContainer.appendChild(errEl);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       } finally {
         sendBtn.disabled = false;
-        messageInput.focus();
+        // On desktop, keep textarea focused; on mobile touchscreens, avoid forcing keyboard up
+        if (window.innerWidth >= 1024) messageInput.focus();
       }
     });
 
@@ -476,15 +777,16 @@
       }
     });
 
-    // Enter key submits without shift
+    // Enter key submits without shift on desktop only
     messageInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
+      if (e.key === 'Enter' && !e.shiftKey && window.innerWidth >= 768) {
         e.preventDefault();
         chatForm.dispatchEvent(new Event('submit'));
       }
     });
 
     initTheme();
+    initializeAuthentication();
   </script>
 </body>
 </html>

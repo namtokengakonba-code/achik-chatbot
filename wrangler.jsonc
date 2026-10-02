@@ -3,6 +3,20 @@
   "name": "achik-chatbot",
   "main": "worker.js",
   "compatibility_date": "2026-01-01",
+  "kv_namespaces": [
+    {
+      "binding": "ACHIK_CORRECTIONS",
+      "id": "ae938b4132164011a04e79988f71f159"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "achik-chatbot-users",
+      "database_id": "717fbaf2-47ce-4cc0-b688-46ee50b15b32",
+      "migrations_dir": "migrations"
+    }
+  ],
   "assets": {
     "directory": "./public",
     "binding": "ASSETS"
