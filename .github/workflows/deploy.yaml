@@ -13,6 +13,20 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Validate Google OAuth configuration
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID || vars.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        run: |
+          if [ -z "$GOOGLE_CLIENT_ID" ]; then
+            echo "::error::Set GOOGLE_CLIENT_ID as a GitHub Actions secret or repository variable."
+            exit 1
+          fi
+          if [ -z "$GOOGLE_CLIENT_SECRET" ]; then
+            echo "::error::Set GOOGLE_CLIENT_SECRET as a GitHub Actions secret."
+            exit 1
+          fi
+
       - name: Setup Node.js Environment
         uses: actions/setup-node@v4
         with:
@@ -40,5 +54,5 @@ jobs:
             GOOGLE_CLIENT_SECRET
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID || vars.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}

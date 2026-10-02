@@ -16,7 +16,7 @@ Chat and correction submissions require signing in with Google. The Worker uses 
 
 1. In Google Cloud Console, configure the OAuth consent screen and create an OAuth client ID for a Web application.
 2. Add this exact Authorized redirect URI to the Google OAuth client: `https://achik-chatbot.namtokengakonba.workers.dev/api/auth/google/callback`. For local testing, also authorize `http://localhost:8787/api/auth/google/callback`.
-3. Add `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, `GEMINI_API_KEY`, `GOOGLE_CLIENT_ID`, and `GOOGLE_CLIENT_SECRET` as GitHub Actions secrets. The API token must be scoped to the Cloudflare account that owns this Worker.
+3. Add `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, `GEMINI_API_KEY`, and `GOOGLE_CLIENT_SECRET` as GitHub Actions secrets. `GOOGLE_CLIENT_ID` can be an Actions secret or repository variable. The API token must be scoped to the Cloudflare account that owns this Worker.
 4. Push/deploy the app. The workflow applies D1 migrations before deploying the Worker. If deploying directly with Wrangler instead, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` as Worker secrets.
 
 The D1 database binding and migrations are in `wrangler.jsonc` and `migrations/`. For local development, use a Google OAuth client configured with `http://localhost:8787/api/auth/google/callback`, add `GEMINI_API_KEY`, `GOOGLE_CLIENT_ID`, and `GOOGLE_CLIENT_SECRET` to `.dev.vars`, run `npx wrangler d1 migrations apply achik-chatbot-users --local`, and then run `npm run dev`. The former Resend email-verification configuration is no longer used.  
