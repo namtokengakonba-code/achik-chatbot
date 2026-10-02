@@ -1,6 +1,7 @@
 name: Deploy achik-chatbot to Cloudflare Workers
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
