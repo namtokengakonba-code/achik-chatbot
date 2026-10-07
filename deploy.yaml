@@ -23,14 +23,17 @@ jobs:
 
       - name: Configure AdSense Auto ads
         env:
-          ADSENSE_CLIENT_ID: ${{ vars.ADSENSE_CLIENT_ID }}
+          ADSENSE_CLIENT_ID: ${{ secrets.ADSENSE_CLIENT_ID || vars.ADSENSE_CLIENT_ID }}
         run: |
           if [ -z "$ADSENSE_CLIENT_ID" ]; then
-            echo "AdSense is disabled. Set ADSENSE_CLIENT_ID to enable Auto ads."
-            exit 0
+            echo "::error::Set ADSENSE_CLIENT_ID as a GitHub Actions secret or repository variable."
+            exit 1
+          fi
+          if [[ "$ADSENSE_CLIENT_ID" =~ ^pub-([0-9]+)$ ]]; then
+            ADSENSE_CLIENT_ID="ca-pub-${BASH_REMATCH[1]}"
           fi
           if [[ ! "$ADSENSE_CLIENT_ID" =~ ^ca-pub-[0-9]+$ ]]; then
-            echo "::error::ADSENSE_CLIENT_ID must be a valid ca-pub- publisher ID."
+            echo "::error::ADSENSE_CLIENT_ID must be a pub- or ca-pub- publisher ID followed by digits."
             exit 1
           fi
           sed -i "s/__ADSENSE_CLIENT_ID__/${ADSENSE_CLIENT_ID}/g" public/index.html
