@@ -14,5 +14,8 @@
   },
   "main": "worker.js",
   "keywords": [],
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "node": "^22.23.3"
+  }
 }

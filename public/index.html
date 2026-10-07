@@ -114,35 +114,15 @@
     </div>
   </header>
 
-  <section id="adBanner" class="hidden w-full flex-shrink-0 border-b border-slate-200 bg-white/70 px-2 py-2 dark:border-slate-800 dark:bg-slate-900/70" aria-label="Advertisement">
-    <ins class="adsbygoogle mx-auto block w-full max-w-[970px]"
-      style="display:block;min-height:90px"
-      data-ad-client="__ADSENSE_CLIENT_ID__"
-      data-ad-slot="__ADSENSE_SLOT_ID__"
-      data-ad-format="auto"
-      data-full-width-responsive="true"></ins>
-  </section>
-
   <script>
     (() => {
       const clientId = "__ADSENSE_CLIENT_ID__";
-      const slotId = "__ADSENSE_SLOT_ID__";
-      if (!/^ca-pub-\d+$/.test(clientId) || !/^\d+$/.test(slotId)) return;
-
-      const banner = document.getElementById("adBanner");
-      banner.classList.remove("hidden");
+      if (!/^ca-pub-\d+$/.test(clientId)) return;
 
       const script = document.createElement("script");
       script.async = true;
       script.crossOrigin = "anonymous";
       script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(clientId)}`;
-      script.onload = () => {
-        try {
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
-        } catch (error) {
-          console.error("AdSense banner could not be initialized.", error);
-        }
-      };
       script.onerror = () => console.error("AdSense script failed to load.");
       document.head.append(script);
     })();

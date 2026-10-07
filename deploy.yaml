@@ -21,36 +21,34 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Configure AdSense banner
+      - name: Configure AdSense Auto ads
         env:
           ADSENSE_CLIENT_ID: ${{ vars.ADSENSE_CLIENT_ID }}
-          ADSENSE_SLOT_ID: ${{ vars.ADSENSE_SLOT_ID }}
         run: |
-          if [ -z "$ADSENSE_CLIENT_ID" ] && [ -z "$ADSENSE_SLOT_ID" ]; then
-            echo "AdSense is disabled. Set ADSENSE_CLIENT_ID and ADSENSE_SLOT_ID repository variables to enable the banner."
+          if [ -z "$ADSENSE_CLIENT_ID" ]; then
+            echo "AdSense is disabled. Set ADSENSE_CLIENT_ID to enable Auto ads."
             exit 0
           fi
           if [[ ! "$ADSENSE_CLIENT_ID" =~ ^ca-pub-[0-9]+$ ]]; then
             echo "::error::ADSENSE_CLIENT_ID must be a valid ca-pub- publisher ID."
             exit 1
           fi
-          if [[ ! "$ADSENSE_SLOT_ID" =~ ^[0-9]+$ ]]; then
-            echo "::error::ADSENSE_SLOT_ID must contain the numeric AdSense ad-unit ID."
-            exit 1
-          fi
           sed -i "s/__ADSENSE_CLIENT_ID__/${ADSENSE_CLIENT_ID}/g" public/index.html
-          sed -i "s/__ADSENSE_SLOT_ID__/${ADSENSE_SLOT_ID}/g" public/index.html
 
       - name: Apply D1 Migrations
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.147.0"
           command: d1 migrations apply achik-chatbot-users --remote
 
       - name: Deploy Worker to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.147.0"
           secrets: |
             GEMINI_API_KEY
             GOOGLE_CLIENT_ID
