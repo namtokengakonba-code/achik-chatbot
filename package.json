@@ -7,12 +7,12 @@
     "deploy": "wrangler deploy"
   },
   "devDependencies": {
-    "wrangler": "^3.114.17"
+    "wrangler": "^4.147.0"
   },
   "engines": {
     "node": ">=18.0.0"
   },
   "main": "worker.js",
   "keywords": [],
-  "type": "commonjs"
+  "type": "module"
 }

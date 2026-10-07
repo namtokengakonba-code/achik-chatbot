@@ -2,8 +2,8 @@
 <html lang="en" class="h-full">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>A·chik Ku·sik AI | Garo Language Companion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>A·chik Chatbot | Garo Language Companion</title>
   <link rel="icon" type="image/png" href="/logo.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,9 +26,32 @@
       }
     };
   </script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="https://unpkg.com/mammoth@1.9.0/mammoth.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
   <style>
     .raka { color: #f59e0b; font-weight: 700; }
-    
+
+    .brand-logo {
+      width: clamp(1.75rem, 9vw, 2.5rem);
+      height: clamp(1.75rem, 9vw, 2.5rem);
+    }
+
+    .brand-title {
+      color: #065f46;
+      font-size: clamp(0.9rem, 5vw, 1.125rem);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .dark .brand-title { color: #a7f3d0; }
+
+    .header-user-email { display: none; }
+
+    @media (min-width: 640px) {
+      .header-user-email { display: inline-block; }
+    }
+
     /* Support true full viewport height across mobile Safari and Android Chrome */
     .app-height {
       height: 100vh;
@@ -50,23 +73,23 @@
 
   <!-- TOP HEADER -->
   <header class="h-14 sm:h-16 border-b border-emerald-100 dark:border-emerald-900/40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-30 flex-shrink-0">
-    <div class="max-w-7xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
+    <div class="w-full mx-auto px-2 sm:px-4 h-full flex items-center justify-between">
       
       <!-- Brand & Mobile Drawer Toggle -->
-      <div class="flex items-center gap-2 sm:gap-3">
+      <div class="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
         <!-- Drawer Menu Button (Mobile & Tablet) -->
         <button id="menuToggleBtn" class="lg:hidden p-2 -ml-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Open Sidebar">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
 
-        <img src="/logo.png" alt="Logo" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl object-contain bg-white shadow-sm flex-shrink-0" />
+        <img src="/logo.png" alt="Logo" class="brand-logo rounded-xl object-contain bg-white shadow-sm flex-shrink-0" />
         
-        <div>
+        <div class="min-w-0">
           <div class="flex items-center gap-1.5 sm:gap-2">
-            <h1 class="font-bold text-sm sm:text-base md:text-lg tracking-tight bg-gradient-to-r from-emerald-800 to-teal-700 dark:from-emerald-300 dark:to-teal-200 bg-clip-text text-transparent">
+            <h1 class="brand-title font-bold tracking-tight">
               A·chik Chatbot
             </h1>
-            <span class="text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 font-semibold">
+            <span class="hidden sm:inline-flex text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 font-semibold">
               North Garo Hills
             </span>
           </div>
@@ -75,8 +98,8 @@
       </div>
 
       <!-- Controls -->
-      <div class="flex items-center gap-1.5 sm:gap-2">
-        <span id="signedInUser" class="hidden max-w-32 truncate text-[10px] sm:max-w-48 sm:text-xs text-slate-500 dark:text-slate-400"></span>
+      <div class="flex flex-shrink-0 items-center gap-1.5 sm:gap-2">
+        <span id="signedInUser" class="header-user-email max-w-32 truncate text-[10px] sm:max-w-48 sm:text-xs text-slate-500 dark:text-slate-400"></span>
         <button id="logoutBtn" type="button" class="hidden rounded-lg border border-slate-200 dark:border-slate-800 px-2 py-1.5 text-[10px] sm:px-3 sm:text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
           Sign out
         </button>
@@ -90,6 +113,40 @@
       </div>
     </div>
   </header>
+
+  <section id="adBanner" class="hidden w-full flex-shrink-0 border-b border-slate-200 bg-white/70 px-2 py-2 dark:border-slate-800 dark:bg-slate-900/70" aria-label="Advertisement">
+    <ins class="adsbygoogle mx-auto block w-full max-w-[970px]"
+      style="display:block;min-height:90px"
+      data-ad-client="__ADSENSE_CLIENT_ID__"
+      data-ad-slot="__ADSENSE_SLOT_ID__"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
+  </section>
+
+  <script>
+    (() => {
+      const clientId = "__ADSENSE_CLIENT_ID__";
+      const slotId = "__ADSENSE_SLOT_ID__";
+      if (!/^ca-pub-\d+$/.test(clientId) || !/^\d+$/.test(slotId)) return;
+
+      const banner = document.getElementById("adBanner");
+      banner.classList.remove("hidden");
+
+      const script = document.createElement("script");
+      script.async = true;
+      script.crossOrigin = "anonymous";
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(clientId)}`;
+      script.onload = () => {
+        try {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (error) {
+          console.error("AdSense banner could not be initialized.", error);
+        }
+      };
+      script.onerror = () => console.error("AdSense script failed to load.");
+      document.head.append(script);
+    })();
+  </script>
 
   <section id="authOverlay" class="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
     <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl">
@@ -108,7 +165,7 @@
   </section>
 
   <!-- MAIN BODY LAYOUT -->
-  <div class="flex-1 max-w-7xl w-full mx-auto flex overflow-hidden relative">
+  <div class="flex-1 w-full min-w-0 mx-auto flex overflow-hidden relative">
 
     <!-- MOBILE & TABLET DRAWER BACKDROP -->
     <div id="drawerBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
@@ -140,13 +197,6 @@
         </div>
       </div>
 
-      <section class="p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50">
-        <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-1">Shared learning</h2>
-        <p class="text-[11px] leading-relaxed text-slate-600 dark:text-slate-400 mb-2">
-          Add a correction below any answer. It is saved immediately and can guide future answers for everyone.
-        </p>
-      </section>
-
       <!-- Common Expressions -->
       <div>
         <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-2">Common Expressions</h2>
@@ -158,10 +208,6 @@
           <button onclick="insertPrompt('Mitela for your assistance!')" class="w-full text-left p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition">
             <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Mitela</span>
             <span class="text-[11px] text-slate-500 dark:text-slate-400">Thank you</span>
-          </button>
-          <button onclick="insertPrompt('Na·a namengama? (Are you fine?)')" class="w-full text-left p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition">
-            <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Na·a namengama?</span>
-            <span class="text-[11px] text-slate-500 dark:text-slate-400">How are you / Are you well?</span>
           </button>
           <button onclick="insertPrompt('Tell me about the 100 Drums Wangala festival')" class="w-full text-left p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition">
             <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Wangala Festival</span>
@@ -182,13 +228,13 @@
     </aside>
 
     <!-- CHAT CONTAINER -->
-    <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50/50 dark:bg-slate-950">
+    <main class="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-slate-50/50 dark:bg-slate-950">
       
       <!-- Messages List -->
-      <div id="messagesContainer" class="flex-1 overflow-y-auto p-3 sm:p-5 md:p-6 space-y-4">
+      <div id="messagesContainer" class="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 md:p-6 space-y-4">
         
         <!-- Welcome Message -->
-        <div class="flex gap-2.5 sm:gap-3 max-w-[92%] sm:max-w-xl md:max-w-2xl">
+        <div class="flex min-w-0 gap-2.5 sm:gap-3 max-w-[92%] sm:max-w-2xl md:max-w-3xl">
           <img src="/logo.png" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1" />
           <div class="space-y-2">
             <div class="p-3.5 sm:p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm">
@@ -198,7 +244,7 @@
               </p>
               <div class="text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-2 flex items-center gap-1.5">
                 <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-                Powered by E. S. Nengminza
+                Powered by Gitchiesa Matchota
               </div>
             </div>
           </div>
@@ -207,16 +253,23 @@
 
       <!-- INPUT BAR -->
       <div class="p-2 sm:p-4 border-t border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md safe-bottom flex-shrink-0">
-        <form id="chatForm" class="max-w-4xl mx-auto flex items-end gap-1.5 sm:gap-2">
-          
-          <div class="relative flex-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-300 dark:border-slate-700 focus-within:border-emerald-500 dark:focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 shadow-sm transition">
+        <div class="max-w-5xl mx-auto">
+          <div id="filePreview" class="hidden mb-2 flex flex-wrap items-center gap-2" aria-live="polite"></div>
+          <p class="mb-2 text-[10px] text-slate-500 dark:text-slate-400">Attach PDF, Excel, Word, image, or text files (up to 5 files, 12 MB total; up to 500,000 extracted characters per file).</p>
+        </div>
+        <form id="chatForm" class="w-full min-w-0 max-w-5xl mx-auto flex items-end gap-1.5 sm:gap-2">
+          <input id="fileInput" type="file" class="hidden" multiple accept=".pdf,.xlsx,.xls,.csv,.tsv,.docx,.txt,.text,.log,.md,.json,.xml,.html,.jpg,.jpeg,.png,.webp,.gif,application/pdf,image/jpeg,image/png,image/webp,image/gif">
+          <button type="button" id="attachFileBtn" class="h-11 w-11 sm:h-12 sm:w-12 flex-shrink-0 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition" aria-label="Attach files" title="Attach files">
+            <svg class="mx-auto h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.82-2.83l8.49-8.48"></path></svg>
+          </button>
+          <div class="relative min-w-0 flex-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-300 dark:border-slate-700 focus-within:border-emerald-500 dark:focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 shadow-sm transition">
             
             <!-- Font-size text-base on mobile prevents iOS Safari zoom -->
             <textarea
               id="messageInput"
               rows="1"
               placeholder="Ask anything either in English or Garo and I will translate to Garo..."
-              class="w-full pl-3 pr-20 sm:pl-4 sm:pr-24 py-2.5 sm:py-3 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-32 text-base md:text-sm leading-relaxed"
+              class="w-full min-w-0 pl-3 pr-20 sm:pl-4 sm:pr-24 py-2.5 sm:py-3 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-32 text-base md:text-sm leading-relaxed"
             ></textarea>
             
             <!-- Button Container inside Textarea -->
@@ -262,6 +315,9 @@
   <script>
     // State management
     let activeMode = 'dual';
+    const conversationHistory = [];
+    const MAX_CONVERSATION_MESSAGES = 12;
+    const MAX_CONVERSATION_TEXT_LENGTH = 12000;
     const messagesContainer = document.getElementById('messagesContainer');
     const chatForm = document.getElementById('chatForm');
     const messageInput = document.getElementById('messageInput');
@@ -271,6 +327,15 @@
     const sunIcon = document.getElementById('sunIcon');
     const moonIcon = document.getElementById('moonIcon');
     const micBtn = document.getElementById('micBtn');
+    const fileInput = document.getElementById('fileInput');
+    const attachFileBtn = document.getElementById('attachFileBtn');
+    const filePreview = document.getElementById('filePreview');
+    const selectedFiles = [];
+    const MAX_FILES = 5;
+    const MAX_FILE_BYTES = 10 * 1024 * 1024;
+    const MAX_TOTAL_FILE_BYTES = 12 * 1024 * 1024;
+    const MAX_EXTRACTED_TEXT_LENGTH = 500000;
+    const MAX_TOTAL_EXTRACTED_TEXT_LENGTH = 1000000;
     const authOverlay = document.getElementById('authOverlay');
     const authStatus = document.getElementById('authStatus');
     const signedInUser = document.getElementById('signedInUser');
@@ -312,7 +377,6 @@
         if (session.authenticated) {
           authOverlay.classList.add('hidden');
           signedInUser.textContent = session.email;
-          signedInUser.classList.remove('hidden');
           logoutBtn.classList.remove('hidden');
         } else {
           authOverlay.classList.remove('hidden');
@@ -417,6 +481,148 @@
       messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
     });
 
+    function updateFilePreview(message = '') {
+      filePreview.replaceChildren();
+      filePreview.classList.toggle('hidden', selectedFiles.length === 0 && !message);
+      if (message) {
+        const status = document.createElement('p');
+        status.className = 'w-full text-xs text-red-600 dark:text-red-400';
+        status.setAttribute('role', 'status');
+        status.textContent = message;
+        filePreview.appendChild(status);
+      }
+      selectedFiles.forEach((file, index) => {
+        const chip = document.createElement('span');
+        chip.className = 'inline-flex max-w-full items-center gap-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2 py-1 text-xs text-slate-600 dark:text-slate-300';
+        const name = document.createElement('span');
+        name.className = 'max-w-48 truncate';
+        name.textContent = file.name;
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'rounded px-1 text-slate-400 hover:text-red-600';
+        remove.textContent = '×';
+        remove.setAttribute('aria-label', `Remove ${file.name}`);
+        remove.addEventListener('click', () => {
+          selectedFiles.splice(index, 1);
+          updateFilePreview();
+        });
+        chip.append(name, remove);
+        filePreview.appendChild(chip);
+      });
+    }
+
+    attachFileBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      const incoming = [...fileInput.files];
+      fileInput.value = '';
+      let totalBytes = selectedFiles.reduce((total, file) => total + file.size, 0);
+      for (const file of incoming) {
+        if (selectedFiles.length >= MAX_FILES) {
+          updateFilePreview(`You can attach up to ${MAX_FILES} files.`);
+          return;
+        }
+        if (file.size > MAX_FILE_BYTES) {
+          updateFilePreview(`${file.name} is larger than the 10 MB per-file limit.`);
+          return;
+        }
+        if (totalBytes + file.size > MAX_TOTAL_FILE_BYTES) {
+          updateFilePreview('Attachments cannot exceed 12 MB in total.');
+          return;
+        }
+        selectedFiles.push(file);
+        totalBytes += file.size;
+      }
+      updateFilePreview();
+    });
+
+    function fileExtension(file) {
+      return file.name.split('.').pop().toLowerCase();
+    }
+
+    function fileMimeType(file) {
+      const knownTypes = {
+        pdf: 'application/pdf',
+        jpg: 'image/jpeg',
+        jpeg: 'image/jpeg',
+        png: 'image/png',
+        webp: 'image/webp',
+        gif: 'image/gif'
+      };
+      return file.type || knownTypes[fileExtension(file)] || 'text/plain';
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result;
+          if (typeof result !== 'string' || !result.includes(',')) {
+            reject(new Error(`Could not read ${file.name}.`));
+            return;
+          }
+          resolve(result.slice(result.indexOf(',') + 1));
+        };
+        reader.onerror = () => reject(new Error(`Could not read ${file.name}.`));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function prepareAttachment(file) {
+      const extension = fileExtension(file);
+      const mimeType = fileMimeType(file);
+      if (extension === 'pdf' && mimeType === 'application/pdf') {
+        return { name: file.name, mimeType, inlineData: await fileToBase64(file) };
+      }
+      if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(extension) && mimeType.startsWith('image/')) {
+        return { name: file.name, mimeType, inlineData: await fileToBase64(file) };
+      }
+      if (['txt', 'text', 'log', 'md', 'csv', 'tsv', 'json', 'xml', 'html'].includes(extension)) {
+        const text = await file.text();
+        if (text.length > MAX_EXTRACTED_TEXT_LENGTH) {
+          throw new Error(`${file.name} contains more than 500,000 characters.`);
+        }
+        return { name: file.name, mimeType: 'text/plain', text };
+      }
+      if (['xlsx', 'xls'].includes(extension)) {
+        if (!window.XLSX) throw new Error('Spreadsheet parsing is unavailable. Reload the page and try again.');
+        const workbook = window.XLSX.read(await file.arrayBuffer(), { type: 'array' });
+        const sheets = workbook.SheetNames.map((sheetName) => {
+          const rows = window.XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+          return `Sheet: ${sheetName}\n${rows}`;
+        });
+        const text = sheets.join('\n\n');
+        if (text.length > MAX_EXTRACTED_TEXT_LENGTH) {
+          throw new Error(`${file.name} extracts to more than 500,000 characters. Please use a smaller workbook.`);
+        }
+        return { name: file.name, mimeType: 'text/plain', text };
+      }
+      if (extension === 'docx') {
+        if (!window.mammoth) throw new Error('Word document parsing is unavailable. Reload the page and try again.');
+        const result = await window.mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
+        if (result.value.length > MAX_EXTRACTED_TEXT_LENGTH) {
+          throw new Error(`${file.name} contains more than 500,000 characters.`);
+        }
+        return { name: file.name, mimeType: 'text/plain', text: result.value };
+      }
+      throw new Error(`${file.name} is not a supported format. Use PDF, XLSX, XLS, DOCX, CSV, TSV, TXT, MD, JSON, XML, HTML, JPG, PNG, WEBP, or GIF.`);
+    }
+
+    async function prepareAttachments(files) {
+      const attachments = [];
+      let textLength = 0;
+      for (const file of files) {
+        const attachment = await prepareAttachment(file);
+        if (attachment.text) {
+          textLength += attachment.text.length;
+          if (textLength > MAX_TOTAL_EXTRACTED_TEXT_LENGTH) {
+            throw new Error('Extracted text across attachments cannot exceed 1,000,000 characters.');
+          }
+        }
+        attachments.push(attachment);
+      }
+      return attachments;
+    }
+
     // Voice recognition (Web Speech API)
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -461,11 +667,15 @@
     }
 
     // Render User Message
-    function appendUserMessage(text) {
+    function appendUserMessage(text, fileNames = []) {
       const el = document.createElement('div');
       el.className = "flex justify-end";
+      const fileList = fileNames.length
+        ? `<p class="mb-2 border-b border-emerald-400/40 pb-2 text-[11px]">${fileNames.map(escapeHtml).join('<br>')}</p>`
+        : '';
       el.innerHTML = `
-        <div class="max-w-[88%] sm:max-w-xl p-3 sm:p-4 rounded-2xl rounded-tr-sm bg-emerald-600 text-white shadow-sm text-xs sm:text-sm">
+        <div class="min-w-0 max-w-[88%] sm:max-w-2xl p-3 sm:p-4 rounded-2xl rounded-tr-sm bg-emerald-600 text-white shadow-sm text-xs sm:text-sm break-words">
+          ${fileList}
           <p class="whitespace-pre-wrap">${escapeHtml(text)}</p>
         </div>
       `;
@@ -473,10 +683,265 @@
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
+    function renderDashboard(container, dashboard) {
+      if (!dashboard || typeof dashboard !== 'object') return;
+      const card = document.createElement('section');
+      card.className = 'mt-3 rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-white dark:bg-slate-900 p-3 sm:p-4 shadow-sm';
+      const title = document.createElement('h3');
+      title.className = 'text-base font-bold text-slate-800 dark:text-slate-100';
+      title.textContent = typeof dashboard.title === 'string' ? dashboard.title.slice(0, 120) : 'Data dashboard';
+      card.appendChild(title);
+      if (typeof dashboard.summary === 'string' && dashboard.summary) {
+        const summary = document.createElement('p');
+        summary.className = 'mt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300';
+        summary.textContent = dashboard.summary.slice(0, 2000);
+        card.appendChild(summary);
+      }
+
+      if (Array.isArray(dashboard.metrics)) {
+        const metrics = dashboard.metrics.slice(0, 8).filter((metric) =>
+          metric && typeof metric.label === 'string' &&
+          ['string', 'number'].includes(typeof metric.value)
+        );
+        if (metrics.length) {
+          const metricGrid = document.createElement('div');
+          metricGrid.className = 'mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4';
+          metrics.forEach((metric) => {
+            const tile = document.createElement('div');
+            tile.className = 'rounded-xl bg-emerald-50 dark:bg-emerald-950/40 p-3';
+            const label = document.createElement('p');
+            label.className = 'text-[10px] uppercase tracking-wide text-emerald-800 dark:text-emerald-300';
+            label.textContent = metric.label.slice(0, 80);
+            const value = document.createElement('p');
+            value.className = 'mt-1 break-words text-lg font-bold text-slate-800 dark:text-slate-100';
+            value.textContent = String(metric.value).slice(0, 100);
+            tile.append(label, value);
+            if (typeof metric.change === 'string' && metric.change) {
+              const change = document.createElement('p');
+              change.className = 'mt-1 text-[10px] text-slate-500 dark:text-slate-400';
+              change.textContent = metric.change.slice(0, 120);
+              tile.appendChild(change);
+            }
+            metricGrid.appendChild(tile);
+          });
+          card.appendChild(metricGrid);
+        }
+      }
+
+      const chartEntries = Array.isArray(dashboard.charts) ? dashboard.charts.slice(0, 4) : [];
+      chartEntries.forEach((chartData, chartIndex) => {
+        const chartStyles = [
+          { value: 'bar', label: 'Bar' },
+          { value: 'bar3d', label: '3D Columns' },
+          { value: 'horizontalBar', label: 'Horizontal bar' },
+          { value: 'stackedBar', label: 'Stacked bar' },
+          { value: 'line', label: 'Line' },
+          { value: 'area', label: 'Area' },
+          { value: 'pie', label: 'Pie' },
+          { value: 'doughnut', label: 'Doughnut' },
+          { value: 'polarArea', label: 'Polar area' },
+          { value: 'radar', label: 'Radar' }
+        ];
+        const validTypes = chartStyles.map(({ value }) => value);
+        if (!chartData || !Array.isArray(chartData.labels) || chartData.labels.length < 1 ||
+            chartData.labels.length > 50 || !Array.isArray(chartData.datasets) ||
+            !chartData.datasets.length || chartData.datasets.length > 5) return;
+        const datasets = chartData.datasets.filter((dataset) =>
+          dataset && typeof dataset.label === 'string' &&
+          Array.isArray(dataset.data) &&
+          dataset.data.length === chartData.labels.length &&
+          dataset.data.every((value) => typeof value === 'number' && Number.isFinite(value))
+        );
+        if (!datasets.length) return;
+
+        const chartCard = document.createElement('div');
+        chartCard.className = 'mt-4 rounded-xl border border-slate-200 dark:border-slate-700 p-3';
+        const chartHeader = document.createElement('div');
+        chartHeader.className = 'mb-2 flex flex-wrap items-center justify-between gap-2';
+        const chartTitle = document.createElement('h4');
+        chartTitle.className = 'text-sm font-semibold text-slate-700 dark:text-slate-200';
+        chartTitle.textContent = typeof chartData.title === 'string' ? chartData.title.slice(0, 120) : `Chart ${chartIndex + 1}`;
+        const typeSelect = document.createElement('select');
+        typeSelect.className = 'rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-xs';
+        typeSelect.setAttribute('aria-label', `Chart type for ${chartTitle.textContent}`);
+        chartStyles.forEach(({ value, label }) => {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = label;
+          typeSelect.appendChild(option);
+        });
+        const initialType = validTypes.includes(chartData.type) ? chartData.type : 'bar';
+        typeSelect.value = initialType;
+        const chartControls = document.createElement('div');
+        chartControls.className = 'flex flex-wrap items-center gap-2';
+        const downloadButton = document.createElement('button');
+        downloadButton.type = 'button';
+        downloadButton.className = 'rounded-lg border border-slate-300 dark:border-slate-600 px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50';
+        downloadButton.textContent = 'Download PNG';
+        downloadButton.setAttribute('aria-label', `Download ${chartTitle.textContent} as a PNG image`);
+        chartControls.append(typeSelect, downloadButton);
+        chartHeader.append(chartTitle, chartControls);
+        const chartArea = document.createElement('div');
+        chartArea.className = 'relative h-64';
+        const canvas = document.createElement('canvas');
+        canvas.setAttribute('role', 'img');
+        canvas.setAttribute('aria-label', chartTitle.textContent);
+        chartArea.appendChild(canvas);
+        chartCard.append(chartHeader, chartArea);
+
+        const dataTable = document.createElement('details');
+        dataTable.className = 'mt-2 text-xs text-slate-600 dark:text-slate-300';
+        const summary = document.createElement('summary');
+        summary.className = 'cursor-pointer';
+        summary.textContent = 'View chart data';
+        dataTable.appendChild(summary);
+        const table = document.createElement('table');
+        table.className = 'mt-2 w-full text-left';
+        const tableHead = document.createElement('tr');
+        const categoryHeading = document.createElement('th');
+        categoryHeading.textContent = 'Category';
+        tableHead.appendChild(categoryHeading);
+        datasets.forEach((dataset) => {
+          const heading = document.createElement('th');
+          heading.textContent = dataset.label.slice(0, 80);
+          tableHead.appendChild(heading);
+        });
+        const thead = document.createElement('thead');
+        thead.appendChild(tableHead);
+        const tbody = document.createElement('tbody');
+        chartData.labels.forEach((label, rowIndex) => {
+          const row = document.createElement('tr');
+          const category = document.createElement('td');
+          category.textContent = String(label).slice(0, 80);
+          row.appendChild(category);
+          datasets.forEach((dataset) => {
+            const cell = document.createElement('td');
+            cell.textContent = String(dataset.data[rowIndex]);
+            row.appendChild(cell);
+          });
+          tbody.appendChild(row);
+        });
+        table.append(thead, tbody);
+        dataTable.appendChild(table);
+        chartCard.appendChild(dataTable);
+        card.appendChild(chartCard);
+
+        if (window.Chart) {
+          const palette = ['#059669', '#0ea5e9', '#f59e0b', '#8b5cf6', '#ef4444'];
+          const threeDimensionalBars = {
+            id: 'achikThreeDimensionalBars',
+            afterDatasetsDraw(chart, args, options) {
+              if (!options.enabled) return;
+              const context = chart.ctx;
+              const depth = 8;
+              context.save();
+              chart.data.datasets.forEach((dataset, datasetIndex) => {
+                const meta = chart.getDatasetMeta(datasetIndex);
+                if (meta.hidden || meta.type !== 'bar') return;
+                meta.data.forEach((bar) => {
+                  const { x, y, base, width } = bar.getProps(['x', 'y', 'base', 'width'], true);
+                  const left = x - width / 2;
+                  const right = x + width / 2;
+                  const top = Math.min(y, base);
+                  const bottom = Math.max(y, base);
+
+                  context.beginPath();
+                  context.moveTo(right, top);
+                  context.lineTo(right + depth, top - depth);
+                  context.lineTo(right + depth, bottom - depth);
+                  context.lineTo(right, bottom);
+                  context.closePath();
+                  context.fillStyle = 'rgba(0, 0, 0, 0.24)';
+                  context.fill();
+
+                  context.beginPath();
+                  context.moveTo(left, top);
+                  context.lineTo(right, top);
+                  context.lineTo(right + depth, top - depth);
+                  context.lineTo(left + depth, top - depth);
+                  context.closePath();
+                  context.fillStyle = 'rgba(255, 255, 255, 0.30)';
+                  context.fill();
+                });
+              });
+              context.restore();
+            }
+          };
+          const createChart = (style) => {
+            const isCircular = ['pie', 'doughnut', 'polarArea'].includes(style);
+            const isArea = style === 'area';
+            const chartType = isArea ? 'line' :
+              style === 'horizontalBar' || style === 'stackedBar' || style === 'bar3d' ? 'bar' : style;
+            const chartDatasets = datasets.map((dataset, index) => {
+              const color = palette[index % palette.length];
+              return {
+                label: dataset.label.slice(0, 80),
+                data: dataset.data,
+                backgroundColor: isCircular
+                  ? chartData.labels.map((_, pointIndex) => palette[pointIndex % palette.length])
+                  : style === 'radar' ? `${color}55` : color,
+                borderColor: color,
+                borderWidth: 2,
+                tension: 0.25,
+                fill: isArea
+              };
+            });
+            return new window.Chart(canvas, {
+              type: chartType,
+              data: {
+                labels: chartData.labels.map((label) => String(label).slice(0, 80)),
+                datasets: chartDatasets
+              },
+              plugins: [threeDimensionalBars],
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: style === 'horizontalBar' ? 'y' : 'x',
+                layout: { padding: style === 'bar3d' ? { top: 10, right: 10 } : 0 },
+                scales: ['pie', 'doughnut', 'polarArea', 'radar'].includes(chartType)
+                  ? {}
+                  : {
+                      x: { stacked: style === 'stackedBar' },
+                      y: { stacked: style === 'stackedBar' }
+                    },
+                plugins: {
+                  legend: { display: true, position: 'bottom' },
+                  achikThreeDimensionalBars: { enabled: style === 'bar3d' }
+                }
+              }
+            });
+          };
+          let chart = createChart(initialType);
+          typeSelect.addEventListener('change', () => {
+            chart.destroy();
+            chart = createChart(typeSelect.value);
+          });
+          downloadButton.addEventListener('click', () => {
+            const link = document.createElement('a');
+            const safeTitle = chartTitle.textContent
+              .replace(/[^\p{L}\p{N}_-]+/gu, '-')
+              .replace(/^-+|-+$/g, '')
+              .slice(0, 80) || 'visualization';
+            link.href = chart.toBase64Image('image/png', 1);
+            link.download = `${safeTitle}.png`;
+            link.click();
+          });
+        } else {
+          downloadButton.disabled = true;
+          const unavailable = document.createElement('p');
+          unavailable.className = 'text-xs text-amber-700 dark:text-amber-300';
+          unavailable.textContent = 'Chart display is unavailable. The chart data is available above.';
+          chartArea.replaceChildren(unavailable);
+        }
+      });
+
+      if (card.childElementCount > 1) container.appendChild(card);
+    }
+
     // Render AI Structured Response
     function appendAiMessage(data, question) {
       const el = document.createElement('div');
-      el.className = "flex gap-2.5 sm:gap-3 max-w-[95%] sm:max-w-xl md:max-w-2xl";
+      el.className = "flex min-w-0 gap-2.5 sm:gap-3 max-w-[95%] sm:max-w-2xl md:max-w-3xl";
 
       let vocabHtml = '';
       if (data.vocabulary && data.vocabulary.length > 0) {
@@ -537,6 +1002,7 @@
           </div>
         </div>
       `;
+      renderDashboard(el.querySelector('.space-y-2.flex-1'), data.dashboard);
 
       const responseActions = document.createElement('div');
       responseActions.className = 'mt-2';
@@ -635,25 +1101,39 @@
       return str.replace(/·/g, '<span class="rakhe">·</span>');
     }
 
+    function rememberConversationTurn(userText, assistantData) {
+      const historyText = (text) => text.length <= MAX_CONVERSATION_TEXT_LENGTH
+        ? text
+        : `${text.slice(0, MAX_CONVERSATION_TEXT_LENGTH - 45)}\n[Earlier content omitted from memory.]`;
+      conversationHistory.push(
+        { role: 'user', text: historyText(userText) },
+        { role: 'model', text: historyText(JSON.stringify(assistantData)) }
+      );
+      if (conversationHistory.length > MAX_CONVERSATION_MESSAGES) {
+        conversationHistory.splice(0, conversationHistory.length - MAX_CONVERSATION_MESSAGES);
+      }
+    }
+
     // Send Form Submission
     chatForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const message = messageInput.value.trim();
       if (!message) return;
 
-      appendUserMessage(message);
-      messageInput.value = '';
-      messageInput.style.height = 'auto';
-
       sendBtn.disabled = true;
+      attachFileBtn.disabled = true;
       const loaderId = appendLoading();
 
       try {
+        const attachments = await prepareAttachments([...selectedFiles]);
+        appendUserMessage(message, selectedFiles.map((file) => file.name));
+        messageInput.value = '';
+        messageInput.style.height = 'auto';
         const response = await fetch('/api/chat', {
           method: 'POST',
           credentials: 'same-origin',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message, mode: activeMode })
+          body: JSON.stringify({ message, mode: activeMode, attachments, history: conversationHistory })
         });
 
         const loader = document.getElementById(loaderId);
@@ -666,6 +1146,9 @@
 
         const data = await response.json();
         appendAiMessage(data, message);
+        rememberConversationTurn(message, data);
+        selectedFiles.splice(0, selectedFiles.length);
+        updateFilePreview();
 
       } catch (err) {
         const loader = document.getElementById(loaderId);
@@ -683,6 +1166,7 @@
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       } finally {
         sendBtn.disabled = false;
+        attachFileBtn.disabled = false;
         // On desktop, keep textarea focused; on mobile touchscreens, avoid forcing keyboard up
         if (window.innerWidth >= 1024) messageInput.focus();
       }
