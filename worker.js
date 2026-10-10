@@ -428,14 +428,8 @@ function correctionContext(records) {
   return context;
 }
 
-// Active Google AI Studio model sequence
-const GEMINI_MODELS = [
-  "gemini-3.8-flash",      // Flagship workhorse recommended by Google
-  "gemini-3.7-flash",      // First-line fallback
-  "gemini-3.6-flash",      // Second-line fallback
-  "gemini-3.5-flash",      // High-stability fallback
-  "gemini-3.1-flash-lite"  // High-throughput, lowest-latency fallback
-];
+// All requests are served by the current Google AI Studio model.
+const GEMINI_MODELS = ["gemini-3.8-flash"];
 
 const GARO_SYSTEM_PROMPT = `You are a specialist linguist and conversational assistant fluent in Garo (A·chik ku·sik) and English.
 The Garo language is a Sino-Tibetan language of the Bodo-Garo branch spoken predominantly in the Garo Hills of Meghalaya, Assam, and northern Bangladesh.
