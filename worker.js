@@ -711,24 +711,34 @@ export default {
             body: JSON.stringify(payload),
           });
 
-          if (response.ok) {
-            const data = await response.json();
-            const rawJson = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-            if (rawJson) {
-              return new Response(rawJson, {
-                status: 200,
-                headers: {
-                  ...CORS_HEADERS,
-                  "Content-Type": "application/json",
-                  "X-Served-By-Model": model
-                },
-              });
-            }
+          const responseText = await response.text();
+          let data;
+          try {
+            data = JSON.parse(responseText);
+          } catch {
+            data = null;
           }
 
-          const errorText = await response.text();
-          failedAttempts.push({ model, status: response.status, details: errorText });
+          const rawJson = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (response.ok && rawJson) {
+            return new Response(rawJson, {
+              status: 200,
+              headers: {
+                ...CORS_HEADERS,
+                "Content-Type": "application/json",
+                "X-Served-By-Model": model
+              },
+            });
+          }
+
+          const details = data?.error?.message ||
+            data?.promptFeedback?.blockReason ||
+            (response.ok ? "Gemini returned no text content." : response.statusText);
+          failedAttempts.push({
+            model,
+            status: response.status,
+            details: String(details || "No response details provided.").slice(0, 500),
+          });
         } catch (networkError) {
           failedAttempts.push({ model, status: "NetworkError", details: networkError.message });
         }
