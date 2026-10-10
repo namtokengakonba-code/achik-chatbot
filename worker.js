@@ -18,6 +18,7 @@ const MAX_CHAT_FILES = 5;
 const MAX_INLINE_FILE_BYTES = 10 * 1024 * 1024;
 const MAX_ATTACHMENT_TEXT_LENGTH = 500000;
 const MAX_TOTAL_ATTACHMENT_TEXT_LENGTH = 1000000;
+const GROQ_MODEL = "qwen/qwen3.8-27b";
 const SESSION_COOKIE = "achik_session";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 30;
 const OAUTH_STATE_COOKIE = "achik_oauth_state";
@@ -473,7 +474,7 @@ export default {
         JSON.stringify({
           status: "healthy",
           service: "achik-chatbot",
-          models_available: GEMINI_MODELS,
+          models_available: [...GEMINI_MODELS, ...(env.GROQ_API_KEY ? [GROQ_MODEL] : [])],
           shared_corrections: Boolean(env.ACHIK_CORRECTIONS),
           timestamp: new Date().toISOString()
         }),
@@ -744,12 +745,114 @@ export default {
         }
       }
 
-      return new Response(
-        JSON.stringify({
-          error: "All Gemini model endpoints failed.",
+      if (env.GROQ_API_KEY) {
+        const groqMessages = [
+          { role: "system", content: GARO_SYSTEM_PROMPT + correctionContext(approvedCorrections) },
+        ];
+        let groqImageCount = 0;
+        let groqUnsupportedAttachment = "";
+
+        for (const message of payload.contents) {
+          const content = [];
+          for (const part of message.parts) {
+            if (typeof part.text === "string") {
+              content.push({ type: "text", text: part.text });
+            } else if (part.inline_data?.mime_type?.startsWith("image/")) {
+              groqImageCount += 1;
+              content.push({
+                type: "image_url",
+                image_url: {
+                  url: `data:${part.inline_data.mime_type};base64,${part.inline_data.data}`,
+                },
+              });
+            } else if (part.inline_data) {
+              groqUnsupportedAttachment = "Groq fallback does not support PDF attachments.";
+            }
+          }
+
+          if (content.length) {
+            groqMessages.push({
+              role: message.role === "model" ? "assistant" : message.role,
+              content: content.length === 1 && content[0].type === "text" ? content[0].text : content,
+            });
+          }
+        }
+
+        if (groqImageCount > 3) {
+          groqUnsupportedAttachment = "Groq fallback supports up to three images per request.";
+        }
+
+        if (groqUnsupportedAttachment) {
+          failedAttempts.push({
+            model: GROQ_MODEL,
+            status: "UnsupportedAttachment",
+            details: groqUnsupportedAttachment,
+          });
+        } else {
+          try {
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+              method: "POST",
+              headers: {
+                "Authorization": `Bearer ${env.GROQ_API_KEY}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                model: GROQ_MODEL,
+                messages: groqMessages,
+                temperature: 0.3,
+                max_completion_tokens: attachments.length ? 6144 : 2048,
+                response_format: { type: "json_object" },
+              }),
+            });
+
+            const responseText = await response.text();
+            let data;
+            try {
+              data = JSON.parse(responseText);
+            } catch {
+              data = null;
+            }
+
+            const rawJson = data?.choices?.[0]?.message?.content;
+            if (response.ok && rawJson) {
+              return new Response(rawJson, {
+                status: 200,
+                headers: {
+                  ...CORS_HEADERS,
+                  "Content-Type": "application/json",
+                  "X-Served-By-Model": GROQ_MODEL,
+                },
+              });
+            }
+
+            failedAttempts.push({
+              model: GROQ_MODEL,
+              status: response.status,
+              details: String(
+                data?.error?.message ||
+                (response.ok ? "Groq returned no text content." : response.statusText) ||
+                "No response details provided."
+              ).slice(0, 500),
+            });
+          } catch (networkError) {
+            failedAttempts.push({ model: GROQ_MODEL, status: "NetworkError", details: networkError.message });
+          }
+        }
+      }
+
+      const quotaProviders = failedAttempts
+        .filter(({ status }) => status === 429)
+        .map(({ model }) => model === GROQ_MODEL ? "Groq" : "Gemini");
+      return jsonResponse(
+        {
+          error: quotaProviders.length
+            ? `${[...new Set(quotaProviders)].join(" and ")} API quota or rate limit exceeded. Check the provider account's plan, billing, and rate limits.${!env.GROQ_API_KEY ? " Configure GROQ_API_KEY to enable the Groq fallback." : ""}`
+            : env.GROQ_API_KEY
+              ? "All configured AI providers failed."
+              : "All Gemini model endpoints failed.",
           attempts: failedAttempts
-        }),
-        { status: 503, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+        },
+        quotaProviders.length ? 429 : 503
       );
     }
 
