@@ -1,7 +1,46 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
-  <!-- Ad Network Tag (nap5k) -->
+  <!-- Anti-Redirect & Navigation Guard (Keeps ads working while stopping main tab hijacking) -->
+  <script>
+    (function() {
+      // Allow legitimate site navigation and Google auth, but prevent aggressive ad scripts from redirecting the current tab
+      const originalAssign = window.location.assign.bind(window.location);
+      const originalReplace = window.location.replace.bind(window.location);
+      
+      function isExternalAdRedirect(url) {
+        if (!url || typeof url !== 'string') return false;
+        try {
+          const parsed = new URL(url, window.location.href);
+          return parsed.origin !== window.location.origin && !url.includes('/api/auth/');
+        } catch(e) {
+          return false;
+        }
+      }
+
+      window.location.assign = function(url) {
+        if (isExternalAdRedirect(url)) {
+          window.open(url, '_blank');
+          return;
+        }
+        return originalAssign(url);
+      };
+
+      window.location.replace = function(url) {
+        if (isExternalAdRedirect(url)) {
+          window.open(url, '_blank');
+          return;
+        }
+        return originalReplace(url);
+      };
+    })();
+  </script>
+
+  <!-- Monetag & Google Search Console Verification -->
+  <meta name="monetag" content="c3f33c6590315012665c96f5f0a7f676">
+  <meta name="google-site-verification" content="5z7yHu5E9kukmZK9FBM4JmRv1ZcrSxg4mwHyAF8oHGo" />
+
+  <!-- Monetag Smart Tag (nap5k) -->
   <script>
     (function(s) {
       s.dataset.zone = '12017976';
@@ -11,14 +50,10 @@
     })((document.head || document.documentElement).appendChild(document.createElement('script')));
   </script>
 
-  <!-- Monetag Verification & Google Verification -->
-  <meta name="monetag" content="c3f33c6590315012665c96f5f0a7f676">
-  <meta name="google-site-verification" content="5z7yHu5E9kukmZK9FBM4JmRv1ZcrSxg4mwHyAF8oHGo" />
-
-  <!-- Monetag / Tag Scripts -->
+  <!-- Monetag In-Page / Vignette / Push Zones (Loaded sequentially to prevent browser lockup) -->
   <script src="https://quge5.com/88/tag.min.js" data-zone="294657" async data-cfasync="false"></script>
-  <script src="https://quge5.com/88/tag.min.js" data-zone="294862" async data-cfasync="false"></script>
-  <script src="https://quge5.com/88/tag.min.js" data-zone="294861" async data-cfasync="false"></script>
+  <script defer src="https://quge5.com/88/tag.min.js" data-zone="294862" data-cfasync="false"></script>
+  <script defer src="https://quge5.com/88/tag.min.js" data-zone="294861" data-cfasync="false"></script>
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -81,10 +116,14 @@
       padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
     }
 
-    /* Elevate critical interactive overlays above transparent ad capture layers */
-    .ad-safe-overlay {
+    /* Keep app overlays and login dialog strictly above ad click-interception layers */
+    .app-priority-layer {
       z-index: 2147483647 !important;
-      pointer-events: auto !important;
+      position: relative;
+    }
+
+    .app-modal-layer {
+      z-index: 2147483646 !important;
     }
 
     ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -100,7 +139,6 @@
   <header class="h-14 sm:h-16 border-b border-emerald-100 dark:border-emerald-900/40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-30 flex-shrink-0">
     <div class="w-full mx-auto px-2 sm:px-4 h-full flex items-center justify-between">
       
-      <!-- Brand & Mobile Drawer Toggle -->
       <div class="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
         <button id="menuToggleBtn" class="lg:hidden p-2 -ml-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Open Sidebar">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -135,13 +173,10 @@
           </svg>
         </button>
 
-        <!-- Theme Toggle -->
         <button id="themeToggleBtn" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Toggle Dark/Light Mode">
           <svg id="moonIcon" class="w-4 h-4 sm:w-5 sm:h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
           <svg id="sunIcon" class="w-4 h-4 sm:w-5 sm:h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
         </button>
-
-        <!-- Clear Chat -->
         <button id="clearChatBtn" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition" title="Reset Chat History">
           <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
         </button>
@@ -149,9 +184,9 @@
     </div>
   </header>
 
-  <!-- FEEDBACK & RATING MODAL (Protected with ad-safe z-index) -->
-  <section id="feedbackModal" class="ad-safe-overlay fixed inset-0 hidden flex items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
-    <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl relative">
+  <!-- FEEDBACK & RATING MODAL -->
+  <section id="feedbackModal" class="app-modal-layer fixed inset-0 hidden flex items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+    <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl relative app-priority-layer">
       <button id="closeFeedbackBtn" class="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition" aria-label="Close dialog">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
       </button>
@@ -211,16 +246,16 @@
     </div>
   </section>
 
-  <!-- AUTH DIALOG OVERLAY (Protected with ad-safe z-index so visitors can always sign in) -->
-  <section id="authOverlay" class="ad-safe-overlay fixed inset-0 flex items-center justify-center overflow-y-auto bg-slate-950/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-    <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl relative z-10">
+  <!-- AUTH DIALOG OVERLAY (Priority z-index prevents transparent ad clicks from stealing login taps) -->
+  <section id="authOverlay" class="app-modal-layer fixed inset-0 flex items-center justify-center overflow-y-auto bg-slate-950/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl relative app-priority-layer">
       <div class="mb-5 text-center">
         <img src="/logo.png" alt="" class="mx-auto mb-3 h-14 w-14 rounded-xl object-contain">
         <h2 id="authTitle" class="text-xl font-bold text-emerald-800 dark:text-emerald-300">Sign in to A·chik Chatbot</h2>
         <p id="authDescription" class="mt-1 text-sm text-slate-500 dark:text-slate-400">Sign in with Google to create your account or continue chatting.</p>
       </div>
       <p id="authStatus" role="status" aria-live="polite" class="mb-3 hidden rounded-lg bg-slate-50 dark:bg-slate-800 p-3 text-sm text-slate-600 dark:text-slate-300"></p>
-      <a href="/api/auth/google" id="googleSignInBtn" class="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 relative z-20">
+      <a href="/api/auth/google" id="googleSignInBtn" class="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 app-priority-layer">
         <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 38.02 46.98 31.86 46.98 24.55Z"/><path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.55 2.56 10.78l7.97-6.19Z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.14 1.44-4.89 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"/></svg>
         Continue with Google
       </a>
@@ -231,13 +266,11 @@
   <!-- MAIN BODY LAYOUT -->
   <div class="flex-1 w-full min-w-0 mx-auto flex overflow-hidden relative">
 
-    <!-- MOBILE & TABLET DRAWER BACKDROP -->
     <div id="drawerBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
 
     <!-- SIDEBAR -->
     <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-4 gap-4 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none">
       
-      <!-- Drawer Header (visible on mobile/tablet) -->
       <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 lg:hidden">
         <span class="font-bold text-sm text-emerald-800 dark:text-emerald-400">Settings & Culture</span>
         <button id="closeDrawerBtn" class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
@@ -245,7 +278,6 @@
         </button>
       </div>
 
-      <!-- Mode Selector -->
       <div>
         <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-2">Modes</h2>
         <div class="grid grid-cols-1 gap-1.5" id="modeSelector">
@@ -261,7 +293,6 @@
         </div>
       </div>
 
-      <!-- Common Expressions -->
       <div>
         <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-2">Common Expressions</h2>
         <div class="space-y-1.5">
@@ -280,7 +311,6 @@
         </div>
       </div>
 
-      <!-- Orthography Note -->
       <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200">
         <p class="font-bold flex items-center gap-1 mb-1">
           <span>ℹ️</span> The Raka ( · ) Glottal Stop
@@ -325,8 +355,6 @@
 
       <!-- Messages List -->
       <div id="messagesContainer" class="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 md:p-6 space-y-4">
-        
-        <!-- Welcome Message -->
         <div class="flex min-w-0 gap-2.5 sm:gap-3 max-w-[92%] sm:max-w-2xl md:max-w-3xl">
           <img src="/logo.png" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1" />
           <div class="space-y-2">
@@ -345,7 +373,7 @@
       </div>
 
       <!-- INPUT BAR -->
-      <div class="p-2 sm:p-4 border-t border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md safe-bottom flex-shrink-0">
+      <div class="p-2 sm:p-4 border-t border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md safe-bottom flex-shrink-0 app-priority-layer">
         <div class="max-w-5xl mx-auto">
           <div id="filePreview" class="hidden mb-2 flex flex-wrap items-center gap-2" aria-live="polite"></div>
           <p class="mb-2 text-[10px] text-slate-500 dark:text-slate-400">Attach PDF, Excel, Word, image, or text files (up to 5 files, 12 MB total; up to 500,000 extracted characters per file).</p>
@@ -444,7 +472,7 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const googleSignInBtn = document.getElementById('googleSignInBtn');
 
-    // Protect Google Sign-in button so ad overlays cannot intercept the login tap
+    // Prevent ad overlays from hijacking Google Sign-in taps
     if (googleSignInBtn) {
       googleSignInBtn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -1280,7 +1308,7 @@
     initializeAuthentication();
   </script>
 
-  <!-- Bottom Scripts (Popunder / Monetag / Push tags preserved) -->
+  <!-- Bottom Scripts (abscloud & bauval popunder scripts preserved) -->
   <script data-cfasync="false" src="https://abscloud.org/1/e85d8a7dbb8a68f4bd3609ce7fb052df"></script>
   <script data-cfasync="false" src="https://bauval.org/14/2e1a15baec4e7432bbfe0c65467289da"></script>
 </body>
