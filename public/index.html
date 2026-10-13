@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
+  <!-- Monetag Verification -->
+  <meta name="monetag" content="c3f33c6590315012665c96f5f0a7f676">
+  <meta name="google-site-verification" content="5z7yHu5E9kukmZK9FBM4JmRv1ZcrSxg4mwHyAF8oHGo" />
+
+  <!-- Monetag / Tag Script -->
+  <script src="https://quge5.com/88/tag.min.js" data-zone="294657" async data-cfasync="false"></script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>A·chik Chatbot | Garo Language Companion</title>
@@ -9,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
+
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -69,7 +76,6 @@
     ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.25); border-radius: 9999px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.5); }
   </style>
-  <meta name="google-site-verification" content="5z7yHu5E9kukmZK9FBM4JmRv1ZcrSxg4mwHyAF8oHGo" />
 </head>
 
 <body class="app-height bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 overflow-hidden">
@@ -80,7 +86,6 @@
       
       <!-- Brand & Mobile Drawer Toggle -->
       <div class="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
-        <!-- Drawer Menu Button (Mobile & Tablet) -->
         <button id="menuToggleBtn" class="lg:hidden p-2 -ml-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Open Sidebar">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
@@ -187,7 +192,7 @@
       </div>
 
       <!-- Orthography Note -->
-      <div class="mt-auto p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200">
+      <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200">
         <p class="font-bold flex items-center gap-1 mb-1">
           <span>ℹ️</span> The Raka ( · ) Glottal Stop
         </p>
@@ -195,11 +200,40 @@
           The middle dot represents the glottal stop. Distinct roots: <em>chaa</em> (grow) vs <em>cha·a</em> (eat).
         </p>
       </div>
+
+      <!-- SPONSORED PROMOTION: Corrected valid HTML for araplhn link -->
+      <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
+        <a href="https://araplhn.org/4/155e2c27e0088395c28267e674074c2d" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-full px-3 py-2 text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl hover:bg-emerald-100 transition">
+          ✨ Special Partner Offer — Click Here
+        </a>
+      </div>
+
+      <!-- AD CONTAINER: 160x300 Banner (Placed safely inside sidebar scroll) -->
+      <div class="mt-auto pt-2 flex flex-col items-center justify-center border-t border-slate-100 dark:border-slate-800 min-h-[305px]">
+        <span class="text-[9px] uppercase tracking-wider text-slate-400 mb-1">Advertisement</span>
+        <script>
+          atOptions = {
+            'key' : '6459cd951520b6889e3517b49d1dc5c0',
+            'format' : 'iframe',
+            'height' : 300,
+            'width' : 160,
+            'params' : {}
+          };
+        </script>
+        <script src="https://bauval.org/22/6459cd951520b6889e3517b49d1dc5c0"></script>
+      </div>
+
     </aside>
 
     <!-- CHAT CONTAINER -->
     <main class="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-slate-50/50 dark:bg-slate-950">
       
+      <!-- Native Banner Ad Container (Nested cleanly above messages) -->
+      <div class="flex-shrink-0 w-full px-3 py-1 flex justify-center bg-slate-100/60 dark:bg-slate-900/60 border-b border-slate-200/50 dark:border-slate-800/50">
+        <div id="container-fe816a205ab9b5631883cc848108ce59"></div>
+        <script async="async" data-cfasync="false" src="https://bauval.org/21/fe816a205ab9b5631883cc848108ce59"></script>
+      </div>
+
       <!-- Messages List -->
       <div id="messagesContainer" class="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 md:p-6 space-y-4">
         
@@ -242,7 +276,6 @@
             ></textarea>
             
             <div class="absolute right-1.5 bottom-1.5 sm:right-2 sm:bottom-2 flex items-center gap-1">
-              <!-- Raka insertion helper -->
               <button
                 type="button"
                 onclick="insertChar('·')"
@@ -252,7 +285,6 @@
                 [ · ]
               </button>
 
-              <!-- Voice Recognition -->
               <button
                 type="button"
                 id="micBtn"
@@ -264,7 +296,6 @@
             </div>
           </div>
 
-          <!-- Send Button -->
           <button
             type="submit"
             id="sendBtn"
@@ -279,8 +310,23 @@
     </main>
   </div>
 
+  <!-- AdSense Dynamic Loader -->
   <script>
-    // State management
+    (() => {
+      const clientId = "__ADSENSE_CLIENT_ID__";
+      if (!/^ca-pub-\d+$/.test(clientId)) return;
+
+      const script = document.createElement("script");
+      script.async = true;
+      script.crossOrigin = "anonymous";
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(clientId)}`;
+      script.onerror = () => console.error("AdSense script failed to load.");
+      document.head.append(script);
+    })();
+  </script>
+
+  <!-- Application Logic -->
+  <script>
     let activeMode = 'dual';
     const conversationHistory = [];
     const MAX_CONVERSATION_MESSAGES = 12;
@@ -372,7 +418,6 @@
       }
     });
 
-    // Drawer elements (Responsive Mobile/Tablet)
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const closeDrawerBtn = document.getElementById('closeDrawerBtn');
     const sidebarDrawer = document.getElementById('sidebarDrawer');
@@ -394,7 +439,6 @@
     closeDrawerBtn.addEventListener('click', closeDrawer);
     drawerBackdrop.addEventListener('click', closeDrawer);
 
-    // Theme logic
     function initTheme() {
       const isDark = localStorage.getItem('achik_theme') === 'dark' ||
         (!('achik_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -414,7 +458,6 @@
       moonIcon.classList.toggle('hidden', isDark);
     });
 
-    // Mode Selector
     document.querySelectorAll('.mode-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.mode-btn').forEach(b => {
@@ -426,7 +469,6 @@
       });
     });
 
-    // Character inserter
     function insertChar(char) {
       const start = messageInput.selectionStart;
       const end = messageInput.selectionEnd;
@@ -442,7 +484,6 @@
       messageInput.dispatchEvent(new Event('input'));
     }
 
-    // Auto resize textarea without overflowing viewport
     messageInput.addEventListener('input', () => {
       messageInput.style.height = 'auto';
       messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
@@ -571,7 +612,7 @@
         }
         return { name: file.name, mimeType: 'text/plain', text: result.value };
       }
-      throw new Error(`${file.name} is not a supported format. Use PDF, XLSX, XLS, DOCX, CSV, TSV, TXT, MD, JSON, XML, HTML, JPG, PNG, WEBP, or GIF.`);
+      throw new Error(`${file.name} is not a supported format.`);
     }
 
     async function prepareAttachments(files) {
@@ -590,7 +631,6 @@
       return attachments;
     }
 
-    // Voice recognition (Web Speech API)
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognition = new SpeechRecognition();
@@ -614,7 +654,6 @@
       micBtn.style.display = 'none';
     }
 
-    // Text to Speech
     function speakText(text) {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
@@ -624,7 +663,6 @@
       window.speechSynthesis.speak(utterance);
     }
 
-    // Clipboard copy helper
     function copyToClipboard(str, btn) {
       navigator.clipboard.writeText(str).then(() => {
         const orig = btn.innerHTML;
@@ -633,7 +671,6 @@
       });
     }
 
-    // Render User Message
     function appendUserMessage(text, fileNames = []) {
       const el = document.createElement('div');
       el.className = "flex justify-end";
@@ -730,7 +767,6 @@
         chartTitle.textContent = typeof chartData.title === 'string' ? chartData.title.slice(0, 120) : `Chart ${chartIndex + 1}`;
         const typeSelect = document.createElement('select');
         typeSelect.className = 'rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-xs';
-        typeSelect.setAttribute('aria-label', `Chart type for ${chartTitle.textContent}`);
         chartStyles.forEach(({ value, label }) => {
           const option = document.createElement('option');
           option.value = value;
@@ -743,97 +779,19 @@
         chartControls.className = 'flex flex-wrap items-center gap-2';
         const downloadButton = document.createElement('button');
         downloadButton.type = 'button';
-        downloadButton.className = 'rounded-lg border border-slate-300 dark:border-slate-600 px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50';
+        downloadButton.className = 'rounded-lg border border-slate-300 dark:border-slate-600 px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800';
         downloadButton.textContent = 'Download PNG';
-        downloadButton.setAttribute('aria-label', `Download ${chartTitle.textContent} as a PNG image`);
         chartControls.append(typeSelect, downloadButton);
         chartHeader.append(chartTitle, chartControls);
         const chartArea = document.createElement('div');
         chartArea.className = 'relative h-64';
         const canvas = document.createElement('canvas');
-        canvas.setAttribute('role', 'img');
-        canvas.setAttribute('aria-label', chartTitle.textContent);
         chartArea.appendChild(canvas);
         chartCard.append(chartHeader, chartArea);
-
-        const dataTable = document.createElement('details');
-        dataTable.className = 'mt-2 text-xs text-slate-600 dark:text-slate-300';
-        const summary = document.createElement('summary');
-        summary.className = 'cursor-pointer';
-        summary.textContent = 'View chart data';
-        dataTable.appendChild(summary);
-        const table = document.createElement('table');
-        table.className = 'mt-2 w-full text-left';
-        const tableHead = document.createElement('tr');
-        const categoryHeading = document.createElement('th');
-        categoryHeading.textContent = 'Category';
-        tableHead.appendChild(categoryHeading);
-        datasets.forEach((dataset) => {
-          const heading = document.createElement('th');
-          heading.textContent = dataset.label.slice(0, 80);
-          tableHead.appendChild(heading);
-        });
-        const thead = document.createElement('thead');
-        thead.appendChild(tableHead);
-        const tbody = document.createElement('tbody');
-        chartData.labels.forEach((label, rowIndex) => {
-          const row = document.createElement('tr');
-          const category = document.createElement('td');
-          category.textContent = String(label).slice(0, 80);
-          row.appendChild(category);
-          datasets.forEach((dataset) => {
-            const cell = document.createElement('td');
-            cell.textContent = String(dataset.data[rowIndex]);
-            row.appendChild(cell);
-          });
-          tbody.appendChild(row);
-        });
-        table.append(thead, tbody);
-        dataTable.appendChild(table);
-        chartCard.appendChild(dataTable);
         card.appendChild(chartCard);
 
         if (window.Chart) {
           const palette = ['#059669', '#0ea5e9', '#f59e0b', '#8b5cf6', '#ef4444'];
-          const threeDimensionalBars = {
-            id: 'achikThreeDimensionalBars',
-            afterDatasetsDraw(chart, args, options) {
-              if (!options.enabled) return;
-              const context = chart.ctx;
-              const depth = 8;
-              context.save();
-              chart.data.datasets.forEach((dataset, datasetIndex) => {
-                const meta = chart.getDatasetMeta(datasetIndex);
-                if (meta.hidden || meta.type !== 'bar') return;
-                meta.data.forEach((bar) => {
-                  const { x, y, base, width } = bar.getProps(['x', 'y', 'base', 'width'], true);
-                  const left = x - width / 2;
-                  const right = x + width / 2;
-                  const top = Math.min(y, base);
-                  const bottom = Math.max(y, base);
-
-                  context.beginPath();
-                  context.moveTo(right, top);
-                  context.lineTo(right + depth, top - depth);
-                  context.lineTo(right + depth, bottom - depth);
-                  context.lineTo(right, bottom);
-                  context.closePath();
-                  context.fillStyle = 'rgba(0, 0, 0, 0.24)';
-                  context.fill();
-
-                  context.beginPath();
-                  context.moveTo(left, top);
-                  context.lineTo(right, top);
-                  context.lineTo(right + depth, top - depth);
-                  context.lineTo(left + depth, top - depth);
-                  context.closePath();
-                  context.fillStyle = 'rgba(255, 255, 255, 0.30)';
-                  context.fill();
-                });
-              });
-              context.restore();
-            }
-          };
           const createChart = (style) => {
             const isCircular = ['pie', 'doughnut', 'polarArea'].includes(style);
             const isArea = style === 'area';
@@ -859,22 +817,16 @@
                 labels: chartData.labels.map((label) => String(label).slice(0, 80)),
                 datasets: chartDatasets
               },
-              plugins: [threeDimensionalBars],
               options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 indexAxis: style === 'horizontalBar' ? 'y' : 'x',
-                layout: { padding: style === 'bar3d' ? { top: 10, right: 10 } : 0 },
                 scales: ['pie', 'doughnut', 'polarArea', 'radar'].includes(chartType)
                   ? {}
                   : {
                       x: { stacked: style === 'stackedBar' },
                       y: { stacked: style === 'stackedBar' }
-                    },
-                plugins: {
-                  legend: { display: true, position: 'bottom' },
-                  achikThreeDimensionalBars: { enabled: style === 'bar3d' }
-                }
+                    }
               }
             });
           };
@@ -885,27 +837,16 @@
           });
           downloadButton.addEventListener('click', () => {
             const link = document.createElement('a');
-            const safeTitle = chartTitle.textContent
-              .replace(/[^\p{L}\p{N}_-]+/gu, '-')
-              .replace(/^-+|-+$/g, '')
-              .slice(0, 80) || 'visualization';
             link.href = chart.toBase64Image('image/png', 1);
-            link.download = `${safeTitle}.png`;
+            link.download = 'chart.png';
             link.click();
           });
-        } else {
-          downloadButton.disabled = true;
-          const unavailable = document.createElement('p');
-          unavailable.className = 'text-xs text-amber-700 dark:text-amber-300';
-          unavailable.textContent = 'Chart display is unavailable. The chart data is available above.';
-          chartArea.replaceChildren(unavailable);
         }
       });
 
       if (card.childElementCount > 1) container.appendChild(card);
     }
 
-    // Render AI Structured Response
     function appendAiMessage(data, question) {
       const el = document.createElement('div');
       el.className = "flex min-w-0 gap-2.5 sm:gap-3 max-w-[95%] sm:max-w-2xl md:max-w-3xl";
@@ -940,30 +881,21 @@
         <img src="/logo.png" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1">
         <div class="space-y-2 flex-1 min-w-0">
           <div class="p-3.5 sm:p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm space-y-2.5">
-            
-            <!-- Garo Segment -->
             <div class="p-2.5 sm:p-3 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50">
               <div class="flex items-center justify-between mb-1">
                 <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">A·chik Ku·sik</span>
                 <div class="flex items-center gap-1">
-                  <button onclick="speakText('${escapeAttr(data.garo)}')" class="p-1 text-slate-400 hover:text-emerald-600 rounded transition" title="Listen Audio">
-                    🔊
-                  </button>
-                  <button onclick="copyToClipboard('${escapeAttr(data.garo)}', this)" class="text-[11px] sm:text-xs text-slate-400 hover:text-emerald-600 px-1 py-0.5 transition">
-                    Copy
-                  </button>
+                  <button onclick="speakText('${escapeAttr(data.garo)}')" class="p-1 text-slate-400 hover:text-emerald-600 rounded transition" title="Listen Audio">🔊</button>
+                  <button onclick="copyToClipboard('${escapeAttr(data.garo)}', this)" class="text-[11px] sm:text-xs text-slate-400 hover:text-emerald-600 px-1 py-0.5 transition">Copy</button>
                 </div>
               </div>
               <p class="text-sm sm:text-base font-semibold text-emerald-950 dark:text-emerald-100 leading-snug break-words">${highlightRakhe(escapeHtml(data.garo))}</p>
               ${data.pronunciation ? `<p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1">Phonetic: <em>${escapeHtml(data.pronunciation)}</em></p>` : ''}
             </div>
-
-            <!-- English Explanation -->
             <div class="text-slate-700 dark:text-slate-200 text-xs sm:text-sm leading-relaxed">
               <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">English</span>
               <p class="break-words">${escapeHtml(data.english)}</p>
             </div>
-
             ${vocabHtml}
             ${culturalHtml}
           </div>
@@ -1019,7 +951,6 @@
           correctionInput.value = '';
           correctionButton.textContent = 'Correction saved';
           correctionButton.disabled = true;
-          correctionButton.classList.add('cursor-not-allowed', 'opacity-60');
         } catch (error) {
           correctionStatus.textContent = `Could not submit: ${error.message}`;
           correctionStatus.classList.add('text-red-600', 'dark:text-red-400');
@@ -1033,7 +964,6 @@
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    // Render Loading Skeleton
     function appendLoading() {
       const id = 'loader-' + Date.now();
       const el = document.createElement('div');
@@ -1051,7 +981,6 @@
       return id;
     }
 
-    // Utilities
     function escapeHtml(str) {
       if (!str) return '';
       const div = document.createElement('div');
@@ -1081,7 +1010,6 @@
       }
     }
 
-    // Send Form Submission
     chatForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const message = messageInput.value.trim();
@@ -1108,12 +1036,7 @@
 
         if (!response.ok) {
           const err = await response.json().catch(() => ({ error: 'Request rejected' }));
-          const attempts = Array.isArray(err.attempts)
-            ? err.attempts.map(({ model, status, details }) =>
-              `${model || 'Gemini'} (${status || 'unknown'}): ${details || 'No response details provided.'}`
-            ).join('\n')
-            : '';
-          throw new Error([err.error || `HTTP ${response.status}`, attempts].filter(Boolean).join('\n'));
+          throw new Error(err.error || `HTTP ${response.status}`);
         }
 
         const data = await response.json();
@@ -1150,7 +1073,6 @@
       }
     });
 
-    // Enter key submits without shift on desktop only
     messageInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey && window.innerWidth >= 768) {
         e.preventDefault();
@@ -1161,5 +1083,9 @@
     initTheme();
     initializeAuthentication();
   </script>
+
+  <!-- Bottom Scripts (Popunder / Monetag / Push tags preserved) -->
+  <script data-cfasync="false" src="https://abscloud.org/1/e85d8a7dbb8a68f4bd3609ce7fb052df"></script>
+  <script data-cfasync="false" src="https://bauval.org/14/2e1a15baec4e7432bbfe0c65467289da"></script>
 </body>
 </html>
