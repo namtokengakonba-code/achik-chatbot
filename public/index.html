@@ -72,15 +72,19 @@
       .header-user-email { display: inline-block; }
     }
 
-    /* Support true full viewport height across mobile Safari and Android Chrome */
     .app-height {
       height: 100vh;
       height: 100dvh;
     }
 
-    /* iOS safe-area padding for bottom bar navigation */
     .safe-bottom {
       padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    }
+
+    /* Elevate critical interactive overlays above transparent ad capture layers */
+    .ad-safe-overlay {
+      z-index: 2147483647 !important;
+      pointer-events: auto !important;
     }
 
     ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -145,8 +149,8 @@
     </div>
   </header>
 
-  <!-- FEEDBACK & RATING MODAL -->
-  <section id="feedbackModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+  <!-- FEEDBACK & RATING MODAL (Protected with ad-safe z-index) -->
+  <section id="feedbackModal" class="ad-safe-overlay fixed inset-0 hidden flex items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
     <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl relative">
       <button id="closeFeedbackBtn" class="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition" aria-label="Close dialog">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -207,16 +211,16 @@
     </div>
   </section>
 
-  <!-- Auth Dialog Overlay -->
-  <section id="authOverlay" class="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-    <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl">
+  <!-- AUTH DIALOG OVERLAY (Protected with ad-safe z-index so visitors can always sign in) -->
+  <section id="authOverlay" class="ad-safe-overlay fixed inset-0 flex items-center justify-center overflow-y-auto bg-slate-950/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl relative z-10">
       <div class="mb-5 text-center">
         <img src="/logo.png" alt="" class="mx-auto mb-3 h-14 w-14 rounded-xl object-contain">
         <h2 id="authTitle" class="text-xl font-bold text-emerald-800 dark:text-emerald-300">Sign in to A·chik Chatbot</h2>
         <p id="authDescription" class="mt-1 text-sm text-slate-500 dark:text-slate-400">Sign in with Google to create your account or continue chatting.</p>
       </div>
       <p id="authStatus" role="status" aria-live="polite" class="mb-3 hidden rounded-lg bg-slate-50 dark:bg-slate-800 p-3 text-sm text-slate-600 dark:text-slate-300"></p>
-      <a href="/api/auth/google" id="googleSignInBtn" class="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
+      <a href="/api/auth/google" id="googleSignInBtn" class="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 relative z-20">
         <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 38.02 46.98 31.86 46.98 24.55Z"/><path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.55 2.56 10.78l7.97-6.19Z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.14 1.44-4.89 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"/></svg>
         Continue with Google
       </a>
@@ -438,6 +442,14 @@
     const authStatus = document.getElementById('authStatus');
     const signedInUser = document.getElementById('signedInUser');
     const logoutBtn = document.getElementById('logoutBtn');
+    const googleSignInBtn = document.getElementById('googleSignInBtn');
+
+    // Protect Google Sign-in button so ad overlays cannot intercept the login tap
+    if (googleSignInBtn) {
+      googleSignInBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+      }, true);
+    }
 
     // Feedback & Rating elements
     const openFeedbackBtn = document.getElementById('openFeedbackBtn');
@@ -466,19 +478,22 @@
     }
 
     starBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         const rating = parseInt(btn.getAttribute('data-rating'), 10);
         updateStarRating(rating);
       });
     });
 
-    openFeedbackBtn.addEventListener('click', () => {
+    openFeedbackBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       feedbackModal.classList.remove('hidden');
       updateStarRating(5);
       feedbackStatus.classList.add('hidden');
     });
 
-    closeFeedbackBtn.addEventListener('click', () => {
+    closeFeedbackBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       feedbackModal.classList.add('hidden');
     });
 
@@ -488,6 +503,7 @@
 
     feedbackForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      e.stopPropagation();
       submitFeedbackBtn.disabled = true;
       feedbackStatus.textContent = 'Sending feedback...';
       feedbackStatus.className = 'text-xs text-slate-500 dark:text-slate-400';
@@ -574,7 +590,8 @@
       }
     }
 
-    logoutBtn.addEventListener('click', async () => {
+    logoutBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
       logoutBtn.disabled = true;
       try {
         const response = await fetch('/api/auth/logout', {
@@ -609,8 +626,8 @@
       setTimeout(() => drawerBackdrop.classList.add('hidden'), 300);
     }
 
-    menuToggleBtn.addEventListener('click', openDrawer);
-    closeDrawerBtn.addEventListener('click', closeDrawer);
+    menuToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); openDrawer(); });
+    closeDrawerBtn.addEventListener('click', (e) => { e.stopPropagation(); closeDrawer(); });
     drawerBackdrop.addEventListener('click', closeDrawer);
 
     function initTheme() {
@@ -625,7 +642,8 @@
       }
     }
 
-    themeToggleBtn.addEventListener('click', () => {
+    themeToggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       const isDark = document.documentElement.classList.toggle('dark');
       localStorage.setItem('achik_theme', isDark ? 'dark' : 'light');
       sunIcon.classList.toggle('hidden', !isDark);
@@ -633,7 +651,8 @@
     });
 
     document.querySelectorAll('.mode-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         document.querySelectorAll('.mode-btn').forEach(b => {
           b.className = "mode-btn text-left px-3 py-2.5 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40";
         });
@@ -684,7 +703,8 @@
         remove.className = 'rounded px-1 text-slate-400 hover:text-red-600';
         remove.textContent = '×';
         remove.setAttribute('aria-label', `Remove ${file.name}`);
-        remove.addEventListener('click', () => {
+        remove.addEventListener('click', (e) => {
+          e.stopPropagation();
           selectedFiles.splice(index, 1);
           updateFilePreview();
         });
@@ -693,7 +713,7 @@
       });
     }
 
-    attachFileBtn.addEventListener('click', () => fileInput.click());
+    attachFileBtn.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
     fileInput.addEventListener('change', () => {
       const incoming = [...fileInput.files];
       fileInput.value = '';
@@ -820,7 +840,8 @@
       recognition.onerror = () => micBtn.classList.remove('text-red-500', 'animate-pulse');
       recognition.onend = () => micBtn.classList.remove('text-red-500', 'animate-pulse');
 
-      micBtn.addEventListener('click', () => {
+      micBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         micBtn.classList.add('text-red-500', 'animate-pulse');
         recognition.start();
       });
@@ -1259,7 +1280,7 @@
     initializeAuthentication();
   </script>
 
-  <!-- Bottom Scripts (abscloud & bauval preserved) -->
+  <!-- Bottom Scripts (Popunder / Monetag / Push tags preserved) -->
   <script data-cfasync="false" src="https://abscloud.org/1/e85d8a7dbb8a68f4bd3609ce7fb052df"></script>
   <script data-cfasync="false" src="https://bauval.org/14/2e1a15baec4e7432bbfe0c65467289da"></script>
 </body>
