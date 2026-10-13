@@ -2,29 +2,6 @@
  * Cloudflare Worker: A·chik Ku·sik (Garo) Language Gateway & Secure Multi-Model Gemini Proxy
  */
 
-export default {
-  async fetch(request, env, ctx) {
-    const url = new URL(request.url);
-
-    if (url.pathname === "/sitemap.xml") {
-      const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://achik-chatbot.namtokengakonba.workers.dev/</loc>
-    <lastmod>2026-10-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-</urlset>`;
-
-      return new Response(sitemap, {
-        headers: {
-          "Content-Type": "application/xml; charset=utf-8",
-          "Cache-Control": "public, max-age=86400"
-        }
-      });
-    }
-
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -452,7 +429,6 @@ function correctionContext(records) {
   return context;
 }
 
-// All requests are served by the current Google AI Studio model.
 const GEMINI_MODELS = ["gemini-3.8-flash"];
 
 const GARO_SYSTEM_PROMPT = `You are a specialist linguist and conversational assistant fluent in Garo (A·chik ku·sik) and English.
@@ -486,12 +462,46 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
-    // 1. CORS Preflight
+    // 1. Sitemap Route
+    if (url.pathname === "/sitemap.xml") {
+      const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://achik-chatbot.namtokengakonba.workers.dev/</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>`;
+
+      return new Response(sitemap, {
+        headers: {
+          "Content-Type": "application/xml; charset=utf-8",
+          "Cache-Control": "public, max-age=86400",
+        },
+      });
+    }
+
+    // 2. Robots.txt Route
+    if (url.pathname === "/robots.txt") {
+      const robots = `User-agent: *
+Allow: /
+
+Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
+      return new Response(robots, {
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          "Cache-Control": "public, max-age=86400",
+        },
+      });
+    }
+
+    // 3. CORS Preflight
     if (request.method === "OPTIONS") {
       return new Response(null, { headers: CORS_HEADERS });
     }
 
-    // 2. Health & Diagnostic Check
+    // 4. Health & Diagnostic Check
     if (url.pathname === "/api/health") {
       return new Response(
         JSON.stringify({
@@ -499,7 +509,7 @@ export default {
           service: "achik-chatbot",
           models_available: [...GEMINI_MODELS, ...(env.GROQ_API_KEY ? [GROQ_MODEL] : [])],
           shared_corrections: Boolean(env.ACHIK_CORRECTIONS),
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         }),
         { headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
       );
@@ -575,7 +585,7 @@ export default {
       if (!env.GEMINI_API_KEY) {
         return new Response(
           JSON.stringify({
-            error: "GEMINI_API_KEY secret is not set in Cloudflare Worker environment variables."
+            error: "GEMINI_API_KEY secret is not set in Cloudflare Worker environment variables.",
           }),
           { status: 500, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
         );
@@ -593,7 +603,7 @@ export default {
           return jsonResponse({ error: "The request exceeds the 18 MB upload limit." }, 413);
         }
         reqData = JSON.parse(requestBody);
-      } catch (parseErr) {
+      } catch {
         return new Response(
           JSON.stringify({ error: "Invalid JSON format in request body." }),
           { status: 400, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
@@ -724,7 +734,6 @@ export default {
 
       const failedAttempts = [];
 
-      // Attempt models sequentially until one succeeds
       for (const model of GEMINI_MODELS) {
         const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${env.GEMINI_API_KEY}`;
 
@@ -750,7 +759,7 @@ export default {
               headers: {
                 ...CORS_HEADERS,
                 "Content-Type": "application/json",
-                "X-Served-By-Model": model
+                "X-Served-By-Model": model,
               },
             });
           }
@@ -816,7 +825,7 @@ export default {
             const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
               method: "POST",
               headers: {
-                "Authorization": `Bearer ${env.GROQ_API_KEY}`,
+                Authorization: `Bearer ${env.GROQ_API_KEY}`,
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
@@ -865,7 +874,7 @@ export default {
 
       const quotaProviders = failedAttempts
         .filter(({ status }) => status === 429)
-        .map(({ model }) => model === GROQ_MODEL ? "Groq" : "Gemini");
+        .map(({ model }) => (model === GROQ_MODEL ? "Groq" : "Gemini"));
       return jsonResponse(
         {
           error: quotaProviders.length
@@ -873,13 +882,13 @@ export default {
             : env.GROQ_API_KEY
               ? "All configured AI providers failed."
               : "All Gemini model endpoints failed.",
-          attempts: failedAttempts
+          attempts: failedAttempts,
         },
         quotaProviders.length ? 429 : 503
       );
     }
 
-    // 4. Cloudflare Static Assets (public/ directory)
+    // 5. Cloudflare Static Assets (public/ directory)
     if (env.ASSETS) {
       return env.ASSETS.fetch(request);
     }
