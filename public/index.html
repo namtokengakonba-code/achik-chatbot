@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
-  <script src="https://quge5.com/88/tag.min.js" data-zone="294657" async data-cfasync="false"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>A·chik Chatbot | Garo Language Companion</title>
@@ -10,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <a href="https://https://achik-chatbot.namtokengakonba.workers.dev/">Clickable Text</a>
+  
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -71,23 +70,9 @@
     ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.5); }
   </style>
   <meta name="google-site-verification" content="5z7yHu5E9kukmZK9FBM4JmRv1ZcrSxg4mwHyAF8oHGo" />
-<meta name="monetag" content="c3f33c6590315012665c96f5f0a7f676">
 </head>
 
 <body class="app-height bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 overflow-hidden">
-<script async="async" data-cfasync="false" src="https://bauval.org/21/fe816a205ab9b5631883cc848108ce59"></script>
-<div id="container-fe816a205ab9b5631883cc848108ce59"></div>
-
-<script>
-  atOptions = {
-    'key' : '6459cd951520b6889e3517b49d1dc5c0',
-    'format' : 'iframe',
-    'height' : 300,
-    'width' : 160,
-    'params' : {}
-  };
-</script>
-<script src="https://bauval.org/22/6459cd951520b6889e3517b49d1dc5c0"></script>
 
   <!-- TOP HEADER -->
   <header class="h-14 sm:h-16 border-b border-emerald-100 dark:border-emerald-900/40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-30 flex-shrink-0">
@@ -130,23 +115,9 @@
         </button>
       </div>
     </div>
-    <script data-cfasync="false" src="https://abscloud.org/1/e85d8a7dbb8a68f4bd3609ce7fb052df"></script>
-    </header>
+  </header>
 
-  <script>
-    (() => {
-      const clientId = "__ADSENSE_CLIENT_ID__";
-      if (!/^ca-pub-\d+$/.test(clientId)) return;
-
-      const script = document.createElement("script");
-      script.async = true;
-      script.crossOrigin = "anonymous";
-      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(clientId)}`;
-      script.onerror = () => console.error("AdSense script failed to load.");
-      document.head.append(script);
-    })();
-  </script>
-
+  <!-- Auth Dialog Overlay -->
   <section id="authOverlay" class="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
     <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl">
       <div class="mb-5 text-center">
@@ -169,7 +140,7 @@
     <!-- MOBILE & TABLET DRAWER BACKDROP -->
     <div id="drawerBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
 
-    <!-- SIDEBAR: Stationary on Desktop (lg+), Slide-over Drawer on Mobile & Tablet -->
+    <!-- SIDEBAR -->
     <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-4 gap-4 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none">
       
       <!-- Drawer Header (visible on mobile/tablet) -->
@@ -263,7 +234,6 @@
           </button>
           <div class="relative min-w-0 flex-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-300 dark:border-slate-700 focus-within:border-emerald-500 dark:focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 shadow-sm transition">
             
-            <!-- Font-size text-base on mobile prevents iOS Safari zoom -->
             <textarea
               id="messageInput"
               rows="1"
@@ -271,9 +241,7 @@
               class="w-full min-w-0 pl-3 pr-20 sm:pl-4 sm:pr-24 py-2.5 sm:py-3 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-32 text-base md:text-sm leading-relaxed"
             ></textarea>
             
-            <!-- Button Container inside Textarea -->
             <div class="absolute right-1.5 bottom-1.5 sm:right-2 sm:bottom-2 flex items-center gap-1">
-              
               <!-- Raka insertion helper -->
               <button
                 type="button"
@@ -296,7 +264,7 @@
             </div>
           </div>
 
-          <!-- Send Button (min-height 44px ensures high-accuracy touch hitbox) -->
+          <!-- Send Button -->
           <button
             type="submit"
             id="sendBtn"
@@ -331,8 +299,8 @@
     const filePreview = document.getElementById('filePreview');
     const selectedFiles = [];
     const MAX_FILES = 5;
-    const MAX_FILE_BYTES = 10 * 1024 * 1024;
-    const MAX_TOTAL_FILE_BYTES = 12 * 1024 * 1024;
+    const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
+    const MAX_TOTAL_FILE_BYTES = 12 * 1024 * 1024; // 12 MB
     const MAX_EXTRACTED_TEXT_LENGTH = 500000;
     const MAX_TOTAL_EXTRACTED_TEXT_LENGTH = 1000000;
     const authOverlay = document.getElementById('authOverlay');
@@ -1097,7 +1065,7 @@
     }
 
     function highlightRakhe(str) {
-      return str.replace(/·/g, '<span class="rakhe">·</span>');
+      return str.replace(/·/g, '<span class="raka">·</span>');
     }
 
     function rememberConversationTurn(userText, assistantData) {
@@ -1171,7 +1139,6 @@
       } finally {
         sendBtn.disabled = false;
         attachFileBtn.disabled = false;
-        // On desktop, keep textarea focused; on mobile touchscreens, avoid forcing keyboard up
         if (window.innerWidth >= 1024) messageInput.focus();
       }
     });
@@ -1194,6 +1161,5 @@
     initTheme();
     initializeAuthentication();
   </script>
-  <script data-cfasync="false" src="https://bauval.org/14/2e1a15baec4e7432bbfe0c65467289da"></script>
 </body>
 </html>
