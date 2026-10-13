@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
-  <!-- Anti-Redirect & Navigation Guard (Keeps ads working while stopping main tab hijacking) -->
+  <!-- VIGNETTE & REDIRECT SAFEGUARD: Keeps all ads active while ensuring 'Close' always dismisses the popup without navigating away from your website -->
   <script>
     (function() {
-      // Allow legitimate site navigation and Google auth, but prevent aggressive ad scripts from redirecting the current tab
-      const originalAssign = window.location.assign.bind(window.location);
-      const originalReplace = window.location.replace.bind(window.location);
-      
-      function isExternalAdRedirect(url) {
+      // 1. Prevent ads from redirecting or replacing the current window
+      const originalOpen = window.open;
+      window.open = function(url, target, features) {
+        if (!url || typeof url !== 'string') {
+          return originalOpen.call(window, url, target, features);
+        }
+        try {
+          const parsed = new URL(url, window.location.href);
+          if (parsed.origin !== window.location.origin && !url.includes('/api/auth/')) {
+            return originalOpen.call(window, url, '_blank', features);
+          }
+        } catch(e) {}
+        return originalOpen.call(window, url, target, features);
+      };
+
+      const originalAssign = window.location.assign ? window.location.assign.bind(window.location) : null;
+      const originalReplace = window.location.replace ? window.location.replace.bind(window.location) : null;
+
+      function isExternalAd(url) {
         if (!url || typeof url !== 'string') return false;
         try {
           const parsed = new URL(url, window.location.href);
@@ -18,21 +32,115 @@
         }
       }
 
-      window.location.assign = function(url) {
-        if (isExternalAdRedirect(url)) {
-          window.open(url, '_blank');
-          return;
-        }
-        return originalAssign(url);
-      };
+      if (originalAssign) {
+        window.location.assign = function(url) {
+          if (isExternalAd(url)) {
+            window.open(url, '_blank');
+            return;
+          }
+          return originalAssign(url);
+        };
+      }
 
-      window.location.replace = function(url) {
-        if (isExternalAdRedirect(url)) {
-          window.open(url, '_blank');
+      if (originalReplace) {
+        window.location.replace = function(url) {
+          if (isExternalAd(url)) {
+            window.open(url, '_blank');
+            return;
+          }
+          return originalReplace(url);
+        };
+      }
+
+      function dismissAdOverlay(overlay) {
+        if (!overlay) return;
+        if (overlay.id === 'authOverlay' || overlay.id === 'feedbackModal' || overlay.closest('#authOverlay') || overlay.closest('#feedbackModal')) {
           return;
         }
-        return originalReplace(url);
-      };
+        overlay.remove();
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+      }
+
+      // 2. Capture-phase click interceptor for the ad's "Close" button
+      function handleAdCloseClick(e) {
+        const target = e.target;
+        if (!target) return;
+
+        const text = (target.textContent || '').trim().toLowerCase();
+        const isCloseText = text === 'close' || text === 'skip' || text === '✕' || text === '×' || text === 'close ad';
+        const isCloseAttr = target.getAttribute('aria-label') === 'Close' || (target.className && typeof target.className === 'string' && target.className.toLowerCase().includes('close'));
+
+        if (isCloseText || isCloseAttr) {
+          let curr = target.parentElement;
+          let overlayToDismiss = null;
+
+          while (curr && curr !== document.body && curr !== document.documentElement) {
+            if (curr.id === 'authOverlay' || curr.id === 'feedbackModal') return;
+            const pos = window.getComputedStyle(curr).position;
+            const zIndex = parseInt(window.getComputedStyle(curr).zIndex, 10);
+            if ((pos === 'fixed' || pos === 'absolute') && (zIndex > 100 || isNaN(zIndex))) {
+              overlayToDismiss = curr;
+            }
+            curr = curr.parentElement;
+          }
+
+          if (overlayToDismiss) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            dismissAdOverlay(overlayToDismiss);
+            return false;
+          }
+        }
+
+        const link = target.closest ? target.closest('a') : null;
+        if (link && link.href && isExternalAd(link.href)) {
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+        }
+      }
+
+      window.addEventListener('click', handleAdCloseClick, true);
+      window.addEventListener('touchend', handleAdCloseClick, true);
+
+      // 3. MutationObserver: Injects an unblockable top-right "✕ Skip Ad" button on any full-screen vignette/popup
+      const observer = new MutationObserver(function() {
+        const overlays = document.querySelectorAll('body > div, body > section');
+        overlays.forEach(function(el) {
+          if (el.id === 'authOverlay' || el.id === 'feedbackModal' || el.id === 'drawerBackdrop' || el.id === 'sidebarDrawer') return;
+          const style = window.getComputedStyle(el);
+          const isFixed = style.position === 'fixed' || style.position === 'absolute';
+          const isHighZ = parseInt(style.zIndex, 10) > 1000;
+
+          if (isFixed && isHighZ && !el.dataset.safeCloseAdded) {
+            const hasAdContent = el.querySelector('iframe, img, a') || el.textContent.includes('Ad') || el.textContent.includes('BONUS') || el.textContent.includes('Close');
+            if (hasAdContent) {
+              el.dataset.safeCloseAdded = 'true';
+
+              const skipBtn = document.createElement('button');
+              skipBtn.type = 'button';
+              skipBtn.innerHTML = '✕ Skip Ad';
+              skipBtn.style.cssText = 'position:fixed;top:16px;right:16px;z-index:2147483647;background:rgba(0,0,0,0.85);color:#fff;border:1px solid rgba(255,255,255,0.4);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;font-family:sans-serif;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.5);';
+              skipBtn.addEventListener('click', function(ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                ev.stopImmediatePropagation();
+                dismissAdOverlay(el);
+              }, true);
+              el.appendChild(skipBtn);
+            }
+          }
+        });
+      });
+
+      if (document.body) {
+        observer.observe(document.body, { childList: true, subtree: true });
+      } else {
+        document.addEventListener('DOMContentLoaded', function() {
+          observer.observe(document.body, { childList: true, subtree: true });
+        });
+      }
     })();
   </script>
 
@@ -50,7 +158,7 @@
     })((document.head || document.documentElement).appendChild(document.createElement('script')));
   </script>
 
-  <!-- Monetag In-Page / Vignette / Push Zones (Loaded sequentially to prevent browser lockup) -->
+  <!-- Monetag Vignette / In-Page / Push Zones -->
   <script src="https://quge5.com/88/tag.min.js" data-zone="294657" async data-cfasync="false"></script>
   <script defer src="https://quge5.com/88/tag.min.js" data-zone="294862" data-cfasync="false"></script>
   <script defer src="https://quge5.com/88/tag.min.js" data-zone="294861" data-cfasync="false"></script>
@@ -116,7 +224,6 @@
       padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
     }
 
-    /* Keep app overlays and login dialog strictly above ad click-interception layers */
     .app-priority-layer {
       z-index: 2147483647 !important;
       position: relative;
@@ -246,7 +353,7 @@
     </div>
   </section>
 
-  <!-- AUTH DIALOG OVERLAY (Priority z-index prevents transparent ad clicks from stealing login taps) -->
+  <!-- AUTH DIALOG OVERLAY -->
   <section id="authOverlay" class="app-modal-layer fixed inset-0 flex items-center justify-center overflow-y-auto bg-slate-950/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
     <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl relative app-priority-layer">
       <div class="mb-5 text-center">
@@ -472,7 +579,6 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const googleSignInBtn = document.getElementById('googleSignInBtn');
 
-    // Prevent ad overlays from hijacking Google Sign-in taps
     if (googleSignInBtn) {
       googleSignInBtn.addEventListener('click', (e) => {
         e.stopPropagation();
