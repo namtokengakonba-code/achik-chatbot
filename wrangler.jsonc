@@ -7,6 +7,10 @@
     {
       "binding": "ACHIK_CORRECTIONS",
       "id": "ae938b4132164011a04e79988f71f159"
+    },
+    {
+      "binding": "KV",
+      "id": "18ba9ba9fb744603848cc8818190f3d9"
     }
   ],
   "d1_databases": [
@@ -24,19 +28,4 @@
   "observability": {
     "enabled": true
   }
-}
-{
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "achik-chatbot",
-  "main": "worker.js",
-  "compatibility_date": "2025-02-04",
-  "observability": {
-    "enabled": true
-  },
-  "kv_namespaces": [
-    {
-      "binding": "KV",
-      "id": "18ba9ba9fb744603848cc8818190f3d9"
-    }
-  ]
 }
