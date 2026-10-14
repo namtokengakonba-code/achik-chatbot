@@ -9,7 +9,9 @@ const CORS_HEADERS = {
 };
 
 const CORRECTION_PREFIX = "correction:";
+const FEEDBACK_PREFIX = "feedback:";
 const MAX_CORRECTION_LENGTH = 2000;
+const MAX_FEEDBACK_LENGTH = 2000;
 const MAX_APPROVED_CORRECTIONS = 20;
 const MAX_CHAT_BODY_BYTES = 18 * 1024 * 1024;
 const MAX_CHAT_HISTORY_MESSAGES = 12;
@@ -515,10 +517,97 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
       );
     }
 
+    // 5. Authentication Routes
     if (url.pathname.startsWith("/api/auth/")) {
       return handleAuthRequest(request, env, url);
     }
 
+    // 6. Feedback & Rating Route
+    if (url.pathname === "/api/feedback") {
+      if (request.method !== "POST") {
+        return jsonResponse({ error: "Method not allowed." }, 405);
+      }
+
+      let data;
+      try {
+        data = await request.json();
+      } catch {
+        return jsonResponse({ error: "Invalid JSON format in request body." }, 400);
+      }
+
+      const message = getText(data?.message, MAX_FEEDBACK_LENGTH);
+      if (!message) {
+        return jsonResponse(
+          { error: "A feedback message is required and must not exceed 2000 characters." },
+          400
+        );
+      }
+
+      const ratingNum = Number(data?.rating);
+      const rating = Number.isInteger(ratingNum) && ratingNum >= 1 && ratingNum <= 5 ? ratingNum : 5;
+      const category = getText(data?.category, 50) || "general";
+
+      // If user has an active session, use their verified email; otherwise use the frontend payload or 'anonymous'
+      let userEmail = "anonymous";
+      if (env.DB) {
+        const sessionUser = await authenticatedUser(request, env);
+        if (sessionUser?.email) {
+          userEmail = sessionUser.email;
+        }
+      }
+      if (userEmail === "anonymous" && typeof data?.userEmail === "string" && data.userEmail.trim()) {
+        userEmail = getText(data.userEmail, 120);
+      }
+
+      const feedbackRecord = {
+        id: crypto.randomUUID(),
+        rating,
+        category,
+        message,
+        userEmail,
+        timestamp: new Date().toISOString(),
+      };
+
+      // 1. Save to KV (checks for FEEDBACK_KV, ACHIK_FEEDBACK, or falls back to ACHIK_CORRECTIONS)
+      const kv = env.FEEDBACK_KV || env.ACHIK_FEEDBACK || env.ACHIK_CORRECTIONS;
+      if (kv) {
+        await kv.put(
+          `${FEEDBACK_PREFIX}${Date.now()}_${feedbackRecord.id}`,
+          JSON.stringify(feedbackRecord),
+          {
+            metadata: {
+              rating,
+              category,
+              userEmail,
+              timestamp: feedbackRecord.timestamp,
+            },
+          }
+        );
+      }
+
+      // 2. Optional: Instant Discord Webhook Notification (if DISCORD_WEBHOOK_URL secret is set)
+      if (env.DISCORD_WEBHOOK_URL && ctx?.waitUntil) {
+        const starIcons = "⭐".repeat(rating);
+        ctx.waitUntil(
+          fetch(env.DISCORD_WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              content: `📬 **New User Feedback Received!**\n**Rating:** ${rating}/5 ${starIcons}\n**Category:** ${category}\n**User:** ${userEmail}\n**Message:**\n> ${message.replace(/\n/g, "\n> ")}\n*Time:* ${feedbackRecord.timestamp}`,
+            }),
+          }).catch((err) => console.error("Discord webhook dispatch error:", err.message))
+        );
+      }
+
+      console.log("[User Feedback Received]:", JSON.stringify(feedbackRecord));
+
+      return jsonResponse({
+        success: true,
+        message: "Thank you! Your feedback has been sent to the developer.",
+      }, 201);
+    }
+
+    // 7. Community Corrections Route
     if (url.pathname === "/api/corrections") {
       if (!env.ACHIK_CORRECTIONS) {
         return jsonResponse({ error: "Shared correction storage is not configured." }, 503);
@@ -573,7 +662,7 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
       return jsonResponse({ error: "Method not allowed." }, 405);
     }
 
-    // Main Chat and Translation Route
+    // 8. Main Chat and Translation Route
     if (url.pathname === "/api/chat" && request.method === "POST") {
       if (!env.DB) {
         return jsonResponse({ error: "User account storage is not configured." }, 503);
@@ -888,7 +977,7 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
       );
     }
 
-    // 5. Cloudflare Static Assets (public/ directory)
+    // 9. Cloudflare Static Assets (public/ directory)
     if (env.ASSETS) {
       return env.ASSETS.fetch(request);
     }
