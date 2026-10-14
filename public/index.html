@@ -76,24 +76,50 @@
       padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
     }
 
-    /* Compact scaling rules for the Adsterra Native Banner */
+    /* Strict slim strip: locks Adsterra Native Banner above the blue line */
+    .ad-banner-strip {
+      height: 52px !important;
+      max-height: 52px !important;
+      overflow: hidden !important;
+    }
+
     #container-fe816a205ab9b5631883cc848108ce59 {
-      max-width: 320px !important;
+      height: 50px !important;
+      max-height: 50px !important;
+      max-width: 480px !important;
       margin: 0 auto !important;
+      overflow: hidden !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    #container-fe816a205ab9b5631883cc848108ce59 iframe {
+      max-height: 50px !important;
+      height: 50px !important;
+      overflow: hidden !important;
     }
 
     #container-fe816a205ab9b5631883cc848108ce59 img {
-      max-height: 85px !important;
+      max-height: 44px !important;
+      height: 44px !important;
       width: auto !important;
       object-fit: cover !important;
-      border-radius: 8px !important;
-      margin: 0 auto !important;
+      border-radius: 6px !important;
+      margin: 0 8px 0 0 !important;
+      display: inline-block !important;
     }
 
-    #container-fe816a205ab9b5631883cc848108ce59 a,
-    #container-fe816a205ab9b5631883cc848108ce59 div {
+    #container-fe816a205ab9b5631883cc848108ce59 div,
+    #container-fe816a205ab9b5631883cc848108ce59 a {
+      max-height: 50px !important;
       font-size: 11px !important;
-      line-height: 1.25 !important;
+      line-height: 1.2 !important;
+      display: flex !important;
+      align-items: center !important;
+      overflow: hidden !important;
+      white-space: nowrap !important;
+      text-overflow: ellipsis !important;
     }
 
     ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -326,9 +352,9 @@
     <!-- CHAT CONTAINER -->
     <main class="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-slate-50/50 dark:bg-slate-950">
       
-      <!-- Native Banner Ad Container (Scaled down and constrained) -->
-      <div class="flex-shrink-0 w-full px-3 py-1.5 flex justify-center bg-slate-100/60 dark:bg-slate-900/60 border-b border-slate-200/50 dark:border-slate-800/50">
-        <div class="w-full max-w-xs text-center overflow-hidden">
+      <!-- Native Banner Ad Container (Locked strictly to a slim horizontal strip above blue line) -->
+      <div class="ad-banner-strip flex-shrink-0 w-full px-2 py-0.5 flex justify-center items-center bg-slate-100/60 dark:bg-slate-900/60 border-b border-slate-200/50 dark:border-slate-800/50">
+        <div class="w-full max-w-lg h-full flex items-center justify-center overflow-hidden">
           <div id="container-fe816a205ab9b5631883cc848108ce59"></div>
           <script async="async" data-cfasync="false" src="https://bauval.org/21/fe816a205ab9b5631883cc848108ce59"></script>
         </div>
