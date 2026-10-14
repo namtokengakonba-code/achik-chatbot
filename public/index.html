@@ -76,6 +76,26 @@
       padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
     }
 
+    /* Compact scaling rules for the Adsterra Native Banner */
+    #container-fe816a205ab9b5631883cc848108ce59 {
+      max-width: 320px !important;
+      margin: 0 auto !important;
+    }
+
+    #container-fe816a205ab9b5631883cc848108ce59 img {
+      max-height: 85px !important;
+      width: auto !important;
+      object-fit: cover !important;
+      border-radius: 8px !important;
+      margin: 0 auto !important;
+    }
+
+    #container-fe816a205ab9b5631883cc848108ce59 a,
+    #container-fe816a205ab9b5631883cc848108ce59 div {
+      font-size: 11px !important;
+      line-height: 1.25 !important;
+    }
+
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.25); border-radius: 9999px; }
@@ -306,10 +326,12 @@
     <!-- CHAT CONTAINER -->
     <main class="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-slate-50/50 dark:bg-slate-950">
       
-      <!-- Native Banner Ad Container -->
-      <div class="flex-shrink-0 w-full px-3 py-1 flex justify-center bg-slate-100/60 dark:bg-slate-900/60 border-b border-slate-200/50 dark:border-slate-800/50">
-        <div id="container-fe816a205ab9b5631883cc848108ce59"></div>
-        <script async="async" data-cfasync="false" src="https://bauval.org/21/fe816a205ab9b5631883cc848108ce59"></script>
+      <!-- Native Banner Ad Container (Scaled down and constrained) -->
+      <div class="flex-shrink-0 w-full px-3 py-1.5 flex justify-center bg-slate-100/60 dark:bg-slate-900/60 border-b border-slate-200/50 dark:border-slate-800/50">
+        <div class="w-full max-w-xs text-center overflow-hidden">
+          <div id="container-fe816a205ab9b5631883cc848108ce59"></div>
+          <script async="async" data-cfasync="false" src="https://bauval.org/21/fe816a205ab9b5631883cc848108ce59"></script>
+        </div>
       </div>
 
       <!-- Messages List -->
