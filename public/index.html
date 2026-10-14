@@ -1,154 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
-  <!-- Prevent third-party ad iframes from navigating the parent window away -->
+  <!-- 1. HARD BLOCKS: Prevents ad iframes from hijacking or redirecting the main window -->
   <script>
     window.onbeforeunload = function(e) {
       if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
-        return "Do you want to leave this site?";
+        return "Stay on page?";
       }
     };
   </script>
 
-  <!-- Anti-Redirect & Navigation Guard -->
-  <script>
-    (function() {
-      const originalOpen = window.open;
-      window.open = function(url, target, features) {
-        if (!url || typeof url !== 'string') {
-          return originalOpen.call(window, url, target, features);
-        }
-        try {
-          const parsed = new URL(url, window.location.href);
-          if (parsed.origin !== window.location.origin && !url.includes('/api/auth/')) {
-            return originalOpen.call(window, url, '_blank', features);
-          }
-        } catch(e) {}
-        return originalOpen.call(window, url, target, features);
-      };
-
-      const originalAssign = window.location.assign ? window.location.assign.bind(window.location) : null;
-      const originalReplace = window.location.replace ? window.location.replace.bind(window.location) : null;
-
-      function isExternalAd(url) {
-        if (!url || typeof url !== 'string') return false;
-        try {
-          const parsed = new URL(url, window.location.href);
-          return parsed.origin !== window.location.origin && !url.includes('/api/auth/');
-        } catch(e) {
-          return false;
-        }
-      }
-
-      if (originalAssign) {
-        window.location.assign = function(url) {
-          if (isExternalAd(url)) {
-            window.open(url, '_blank');
-            return;
-          }
-          return originalAssign(url);
-        };
-      }
-
-      if (originalReplace) {
-        window.location.replace = function(url) {
-          if (isExternalAd(url)) {
-            window.open(url, '_blank');
-            return;
-          }
-          return originalReplace(url);
-        };
-      }
-
-      function dismissAdOverlay(overlay) {
-        if (!overlay) return;
-        if (overlay.id === 'authOverlay' || overlay.id === 'feedbackModal' || overlay.closest('#authOverlay') || overlay.closest('#feedbackModal')) {
-          return;
-        }
-        overlay.remove();
-        document.body.style.overflow = '';
-        document.documentElement.style.overflow = '';
-      }
-
-      function handleAdCloseClick(e) {
-        const target = e.target;
-        if (!target) return;
-
-        const text = (target.textContent || '').trim().toLowerCase();
-        const isCloseText = text === 'close' || text === 'skip' || text === '✕' || text === '×' || text === 'close ad';
-        const isCloseAttr = target.getAttribute('aria-label') === 'Close' || (target.className && typeof target.className === 'string' && target.className.toLowerCase().includes('close'));
-
-        if (isCloseText || isCloseAttr) {
-          let curr = target.parentElement;
-          let overlayToDismiss = null;
-
-          while (curr && curr !== document.body && curr !== document.documentElement) {
-            if (curr.id === 'authOverlay' || curr.id === 'feedbackModal') return;
-            const pos = window.getComputedStyle(curr).position;
-            const zIndex = parseInt(window.getComputedStyle(curr).zIndex, 10);
-            if ((pos === 'fixed' || pos === 'absolute') && (zIndex > 100 || isNaN(zIndex))) {
-              overlayToDismiss = curr;
-            }
-            curr = curr.parentElement;
-          }
-
-          if (overlayToDismiss) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            dismissAdOverlay(overlayToDismiss);
-            return false;
-          }
-        }
-
-        const link = target.closest ? target.closest('a') : null;
-        if (link && link.href && isExternalAd(link.href)) {
-          link.target = '_blank';
-          link.rel = 'noopener noreferrer';
-        }
-      }
-
-      window.addEventListener('click', handleAdCloseClick, true);
-      window.addEventListener('touchend', handleAdCloseClick, true);
-
-      const observer = new MutationObserver(function() {
-        const overlays = document.querySelectorAll('body > div, body > section');
-        overlays.forEach(function(el) {
-          if (el.id === 'authOverlay' || el.id === 'feedbackModal' || el.id === 'drawerBackdrop' || el.id === 'sidebarDrawer') return;
-          const style = window.getComputedStyle(el);
-          const isFixed = style.position === 'fixed' || style.position === 'absolute';
-          const isHighZ = parseInt(style.zIndex, 10) > 1000;
-
-          if (isFixed && isHighZ && !el.dataset.safeCloseAdded) {
-            const hasAdContent = el.querySelector('iframe, img, a') || el.textContent.includes('Ad') || el.textContent.includes('BONUS') || el.textContent.includes('Close');
-            if (hasAdContent) {
-              el.dataset.safeCloseAdded = 'true';
-
-              const skipBtn = document.createElement('button');
-              skipBtn.type = 'button';
-              skipBtn.innerHTML = '✕ Skip Ad';
-              skipBtn.style.cssText = 'position:fixed;top:16px;right:16px;z-index:2147483647;background:rgba(0,0,0,0.85);color:#fff;border:1px solid rgba(255,255,255,0.4);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;font-family:sans-serif;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.5);';
-              skipBtn.addEventListener('click', function(ev) {
-                ev.preventDefault();
-                ev.stopPropagation();
-                ev.stopImmediatePropagation();
-                dismissAdOverlay(el);
-              }, true);
-              el.appendChild(skipBtn);
-            }
-          }
-        });
-      });
-
-      if (document.body) {
-        observer.observe(document.body, { childList: true, subtree: true });
-      } else {
-        document.addEventListener('DOMContentLoaded', function() {
-          observer.observe(document.body, { childList: true, subtree: true });
-        });
-      }
-    })();
-  </script>
+  <!-- 2. CSS OVERLAY SUPPRESSION: Hides forced full-screen Vignette ad backdrops -->
+  <style>
+    /* Prevent Monetag Vignette backdrops from darkening and locking the screen */
+    div[class*="vignette"], 
+    div[id*="vignette"],
+    iframe[src*="quge5.com"][style*="fixed"],
+    div[style*="position: fixed"][style*="2147483647"]:not(#authOverlay):not(#feedbackModal) {
+      display: none !important;
+      pointer-events: none !important;
+      visibility: hidden !important;
+    }
+  </style>
 
   <!-- Monetag & Google Search Console Verification -->
   <meta name="monetag" content="c3f33c6590315012665c96f5f0a7f676">
@@ -164,10 +37,13 @@
     })((document.head || document.documentElement).appendChild(document.createElement('script')));
   </script>
 
-  <!-- Monetag Vignette / In-Page / Push Zones -->
-  <script src="https://quge5.com/88/tag.min.js" data-zone="294657" async data-cfasync="false"></script>
+  <!-- Monetag Zones:
+       NOTE: Check your Monetag dashboard to see which ID is 'Vignette Banner' 
+       and remove that specific line. -->
   <script defer src="https://quge5.com/88/tag.min.js" data-zone="294862" data-cfasync="false"></script>
   <script defer src="https://quge5.com/88/tag.min.js" data-zone="294861" data-cfasync="false"></script>
+  <!-- If 294657 was NOT the vignette, you can re-enable it below: -->
+  <!-- <script src="https://quge5.com/88/tag.min.js" data-zone="294657" async data-cfasync="false"></script> -->
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -200,45 +76,15 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
   <style>
     .raka { color: #f59e0b; font-weight: 700; }
-
-    .brand-logo {
-      width: clamp(1.75rem, 9vw, 2.5rem);
-      height: clamp(1.75rem, 9vw, 2.5rem);
-    }
-
-    .brand-title {
-      color: #065f46;
-      font-size: clamp(0.9rem, 5vw, 1.125rem);
-      line-height: 1.2;
-      white-space: nowrap;
-    }
-
+    .brand-logo { width: clamp(1.75rem, 9vw, 2.5rem); height: clamp(1.75rem, 9vw, 2.5rem); }
+    .brand-title { color: #065f46; font-size: clamp(0.9rem, 5vw, 1.125rem); line-height: 1.2; white-space: nowrap; }
     .dark .brand-title { color: #a7f3d0; }
-
     .header-user-email { display: none; }
-
-    @media (min-width: 640px) {
-      .header-user-email { display: inline-block; }
-    }
-
-    .app-height {
-      height: 100vh;
-      height: 100dvh;
-    }
-
-    .safe-bottom {
-      padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-    }
-
-    .app-priority-layer {
-      z-index: 2147483647 !important;
-      position: relative;
-    }
-
-    .app-modal-layer {
-      z-index: 2147483646 !important;
-    }
-
+    @media (min-width: 640px) { .header-user-email { display: inline-block; } }
+    .app-height { height: 100vh; height: 100dvh; }
+    .safe-bottom { padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); }
+    .app-priority-layer { z-index: 2147483647 !important; position: relative; }
+    .app-modal-layer { z-index: 2147483646 !important; }
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.25); border-radius: 9999px; }
@@ -261,9 +107,7 @@
         
         <div class="min-w-0">
           <div class="flex items-center gap-1.5 sm:gap-2">
-            <h1 class="brand-title font-bold tracking-tight">
-              A·chik Chatbot
-            </h1>
+            <h1 class="brand-title font-bold tracking-tight">A·chik Chatbot</h1>
             <span class="hidden sm:inline-flex text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 font-semibold">
               North Garo Hills
             </span>
@@ -279,7 +123,6 @@
           Sign out
         </button>
 
-        <!-- Feedback & Rating Button -->
         <button id="openFeedbackBtn" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-600 dark:hover:text-amber-400 transition" title="Feedback & Rating">
           <svg class="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -575,8 +418,8 @@
     const filePreview = document.getElementById('filePreview');
     const selectedFiles = [];
     const MAX_FILES = 5;
-    const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
-    const MAX_TOTAL_FILE_BYTES = 12 * 1024 * 1024; // 12 MB
+    const MAX_FILE_BYTES = 10 * 1024 * 1024;
+    const MAX_TOTAL_FILE_BYTES = 12 * 1024 * 1024;
     const MAX_EXTRACTED_TEXT_LENGTH = 500000;
     const MAX_TOTAL_EXTRACTED_TEXT_LENGTH = 1000000;
     const authOverlay = document.getElementById('authOverlay');
@@ -591,7 +434,6 @@
       }, true);
     }
 
-    // Feedback & Rating elements
     const openFeedbackBtn = document.getElementById('openFeedbackBtn');
     const closeFeedbackBtn = document.getElementById('closeFeedbackBtn');
     const feedbackModal = document.getElementById('feedbackModal');
