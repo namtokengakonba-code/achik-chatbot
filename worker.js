@@ -522,89 +522,107 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
       return handleAuthRequest(request, env, url);
     }
 
-    // 6. Feedback & Rating Route
+    // 6. Feedback & Rating Route (Supports GET to view feedback and POST to submit feedback)
     if (url.pathname === "/api/feedback") {
-      if (request.method !== "POST") {
-        return jsonResponse({ error: "Method not allowed." }, 405);
-      }
+      const kv = env.KV || env.FEEDBACK_KV || env.ACHIK_FEEDBACK || env.ACHIK_CORRECTIONS;
 
-      let data;
-      try {
-        data = await request.json();
-      } catch {
-        return jsonResponse({ error: "Invalid JSON format in request body." }, 400);
-      }
-
-      const message = getText(data?.message, MAX_FEEDBACK_LENGTH);
-      if (!message) {
-        return jsonResponse(
-          { error: "A feedback message is required and must not exceed 2000 characters." },
-          400
-        );
-      }
-
-      const ratingNum = Number(data?.rating);
-      const rating = Number.isInteger(ratingNum) && ratingNum >= 1 && ratingNum <= 5 ? ratingNum : 5;
-      const category = getText(data?.category, 50) || "general";
-
-      // If user has an active session, use their verified email; otherwise use the frontend payload or 'anonymous'
-      let userEmail = "anonymous";
-      if (env.DB) {
-        const sessionUser = await authenticatedUser(request, env);
-        if (sessionUser?.email) {
-          userEmail = sessionUser.email;
+      // GET: View submitted feedback directly in your browser
+      if (request.method === "GET") {
+        if (!kv) {
+          return jsonResponse({ error: "KV storage is not bound." }, 503);
         }
-      }
-      if (userEmail === "anonymous" && typeof data?.userEmail === "string" && data.userEmail.trim()) {
-        userEmail = getText(data.userEmail, 120);
+
+        const list = await kv.list({ prefix: FEEDBACK_PREFIX, limit: 100 });
+        const items = await Promise.all(
+          list.keys.map(async (key) => await kv.get(key.name, "json"))
+        );
+
+        return jsonResponse({
+          total: items.length,
+          feedback: items.filter(Boolean),
+        });
       }
 
-      const feedbackRecord = {
-        id: crypto.randomUUID(),
-        rating,
-        category,
-        message,
-        userEmail,
-        timestamp: new Date().toISOString(),
-      };
+      // POST: Save feedback from users
+      if (request.method === "POST") {
+        let data;
+        try {
+          data = await request.json();
+        } catch {
+          return jsonResponse({ error: "Invalid JSON format in request body." }, 400);
+        }
 
-      // 1. Save to KV (checks for FEEDBACK_KV, ACHIK_FEEDBACK, or falls back to ACHIK_CORRECTIONS)
-      const kv = env.FEEDBACK_KV || env.ACHIK_FEEDBACK || env.ACHIK_CORRECTIONS;
-      if (kv) {
-        await kv.put(
-          `${FEEDBACK_PREFIX}${Date.now()}_${feedbackRecord.id}`,
-          JSON.stringify(feedbackRecord),
-          {
-            metadata: {
-              rating,
-              category,
-              userEmail,
-              timestamp: feedbackRecord.timestamp,
-            },
+        const message = getText(data?.message, MAX_FEEDBACK_LENGTH);
+        if (!message) {
+          return jsonResponse(
+            { error: "A feedback message is required and must not exceed 2000 characters." },
+            400
+          );
+        }
+
+        const ratingNum = Number(data?.rating);
+        const rating = Number.isInteger(ratingNum) && ratingNum >= 1 && ratingNum <= 5 ? ratingNum : 5;
+        const category = getText(data?.category, 50) || "general";
+
+        let userEmail = "anonymous";
+        if (env.DB) {
+          const sessionUser = await authenticatedUser(request, env);
+          if (sessionUser?.email) {
+            userEmail = sessionUser.email;
           }
-        );
+        }
+        if (userEmail === "anonymous" && typeof data?.userEmail === "string" && data.userEmail.trim()) {
+          userEmail = getText(data.userEmail, 120);
+        }
+
+        const feedbackRecord = {
+          id: crypto.randomUUID(),
+          rating,
+          category,
+          message,
+          userEmail,
+          timestamp: new Date().toISOString(),
+        };
+
+        if (kv) {
+          await kv.put(
+            `${FEEDBACK_PREFIX}${Date.now()}_${feedbackRecord.id}`,
+            JSON.stringify(feedbackRecord),
+            {
+              metadata: {
+                rating,
+                category,
+                userEmail,
+                timestamp: feedbackRecord.timestamp,
+              },
+            }
+          );
+        } else {
+          return jsonResponse({ error: "Storage binding 'KV' is not configured." }, 503);
+        }
+
+        if (env.DISCORD_WEBHOOK_URL && ctx?.waitUntil) {
+          const starIcons = "⭐".repeat(rating);
+          ctx.waitUntil(
+            fetch(env.DISCORD_WEBHOOK_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                content: `📬 **New User Feedback Received!**\n**Rating:** ${rating}/5 ${starIcons}\n**Category:** ${category}\n**User:** ${userEmail}\n**Message:**\n> ${message.replace(/\n/g, "\n> ")}\n*Time:* ${feedbackRecord.timestamp}`,
+              }),
+            }).catch((err) => console.error("Discord webhook dispatch error:", err.message))
+          );
+        }
+
+        console.log("[User Feedback Received]:", JSON.stringify(feedbackRecord));
+
+        return jsonResponse({
+          success: true,
+          message: "Thank you! Your feedback has been sent to the developer.",
+        }, 201);
       }
 
-      // 2. Optional: Instant Discord Webhook Notification (if DISCORD_WEBHOOK_URL secret is set)
-      if (env.DISCORD_WEBHOOK_URL && ctx?.waitUntil) {
-        const starIcons = "⭐".repeat(rating);
-        ctx.waitUntil(
-          fetch(env.DISCORD_WEBHOOK_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              content: `📬 **New User Feedback Received!**\n**Rating:** ${rating}/5 ${starIcons}\n**Category:** ${category}\n**User:** ${userEmail}\n**Message:**\n> ${message.replace(/\n/g, "\n> ")}\n*Time:* ${feedbackRecord.timestamp}`,
-            }),
-          }).catch((err) => console.error("Discord webhook dispatch error:", err.message))
-        );
-      }
-
-      console.log("[User Feedback Received]:", JSON.stringify(feedbackRecord));
-
-      return jsonResponse({
-        success: true,
-        message: "Thank you! Your feedback has been sent to the developer.",
-      }, 201);
+      return jsonResponse({ error: "Method not allowed." }, 405);
     }
 
     // 7. Community Corrections Route

@@ -25,3 +25,18 @@
     "enabled": true
   }
 }
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "achik-chatbot",
+  "main": "worker.js",
+  "compatibility_date": "2025-02-04",
+  "observability": {
+    "enabled": true
+  },
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "18ba9ba9fb744603848cc8818190f3d9"
+    }
+  ]
+}
