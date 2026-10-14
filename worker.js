@@ -26,6 +26,12 @@ const SESSION_MAX_AGE = 60 * 60 * 24 * 30;
 const OAUTH_STATE_COOKIE = "achik_oauth_state";
 const OAUTH_STATE_MAX_AGE = 600;
 
+export default {
+  async fetch(request, env, ctx) {
+    await env.FEEDBACK_KV.put('KEY', 'VALUE');
+  },
+
+
 function jsonResponse(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
     status,
