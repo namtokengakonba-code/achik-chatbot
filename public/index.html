@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
-  <!-- VIGNETTE & REDIRECT SAFEGUARD: Keeps all ads active while ensuring 'Close' always dismisses the popup without navigating away from your website -->
+  <!-- Prevent third-party ad iframes from navigating the parent window away -->
+  <script>
+    window.onbeforeunload = function(e) {
+      if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
+        return "Do you want to leave this site?";
+      }
+    };
+  </script>
+
+  <!-- Anti-Redirect & Navigation Guard -->
   <script>
     (function() {
-      // 1. Prevent ads from redirecting or replacing the current window
       const originalOpen = window.open;
       window.open = function(url, target, features) {
         if (!url || typeof url !== 'string') {
@@ -62,7 +70,6 @@
         document.documentElement.style.overflow = '';
       }
 
-      // 2. Capture-phase click interceptor for the ad's "Close" button
       function handleAdCloseClick(e) {
         const target = e.target;
         if (!target) return;
@@ -104,7 +111,6 @@
       window.addEventListener('click', handleAdCloseClick, true);
       window.addEventListener('touchend', handleAdCloseClick, true);
 
-      // 3. MutationObserver: Injects an unblockable top-right "✕ Skip Ad" button on any full-screen vignette/popup
       const observer = new MutationObserver(function() {
         const overlays = document.querySelectorAll('body > div, body > section');
         overlays.forEach(function(el) {
