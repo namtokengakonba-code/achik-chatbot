@@ -152,19 +152,19 @@
     }
 
     .safe-bottom {
-      padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+      padding-bottom: max(0.4rem, env(safe-area-inset-bottom));
     }
 
     /* Top Native Banner Strip */
     .ad-banner-strip {
-      height: 48px !important;
-      max-height: 48px !important;
+      height: 46px !important;
+      max-height: 46px !important;
       overflow: hidden !important;
     }
 
     #container-fe816a205ab9b5631883cc848108ce59 {
-      height: 46px !important;
-      max-height: 46px !important;
+      height: 44px !important;
+      max-height: 44px !important;
       max-width: 480px !important;
       margin: 0 auto !important;
       overflow: hidden !important;
@@ -173,11 +173,11 @@
       justify-content: center !important;
     }
 
-    /* Sidebar small line banner (320x50 scaled) */
+    /* Sidebar small line banner */
     .sidebar-ad-box {
       width: 100%;
-      height: 44px;
-      max-height: 46px;
+      height: 42px;
+      max-height: 44px;
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -187,7 +187,7 @@
     .sidebar-ad-scaler {
       width: 320px;
       height: 50px;
-      transform: scale(0.78);
+      transform: scale(0.76);
       transform-origin: center center;
       display: flex;
       align-items: center;
@@ -195,21 +195,24 @@
       flex-shrink: 0;
     }
 
-    /* --- ULTRA-SLIM BOTTOM LINE BANNER (Height: 42px) --- */
+    /* --- ULTRA-SLIM BOTTOM LINE BANNER (Strictly 38px) --- */
     .bottom-ad-strip {
-      height: 42px !important;
-      max-height: 42px !important;
-      min-height: 42px !important;
+      height: 38px !important;
+      max-height: 38px !important;
+      min-height: 38px !important;
+      width: 100% !important;
       overflow: hidden !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
+      flex-shrink: 0 !important;
+      z-index: 20;
     }
 
     .bottom-ad-scaler {
       width: 728px;
       height: 90px;
-      transform: scale(0.44);
+      transform: scale(0.41);
       transform-origin: center center;
       display: flex;
       align-items: center;
@@ -217,24 +220,14 @@
       flex-shrink: 0;
     }
 
-    /* STRICT GUARD: Prevent third-party injected video ads from hijacking screen height */
+    /* Guard: Force third-party video ads and unwanted injected blocks out of normal layout */
     body > *:not(header):not(#drawerBackdrop):not(#feedbackModal):not(#authOverlay):not(#mainContentLayout):not(.bottom-ad-strip):not(script):not(style) {
-      position: fixed !important;
-      bottom: 48px !important;
-      right: 12px !important;
-      max-width: 200px !important;
-      max-height: 110px !important;
-      width: auto !important;
-      height: auto !important;
-      z-index: 45 !important;
-      border-radius: 8px !important;
-      overflow: hidden !important;
+      display: none !important;
     }
 
-    video {
-      max-height: 110px !important;
-      max-width: 200px !important;
-      object-fit: cover !important;
+    /* Prevent any injected iframe from exceeding 38px at the bottom */
+    .bottom-ad-strip iframe {
+      max-height: 38px !important;
     }
 
     /* In-Page Push cards positioning */
@@ -243,7 +236,7 @@
     div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal) {
       top: 68px !important;
       right: 12px !important;
-      max-width: 320px !important;
+      max-width: 300px !important;
     }
 
     @media (max-width: 640px) {
@@ -251,7 +244,7 @@
       div[id*="push"],
       div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal) {
         top: auto !important;
-        bottom: 60px !important;
+        bottom: 50px !important;
         right: 8px !important;
         transform: scale(0.8) !important;
         transform-origin: bottom right !important;
@@ -468,7 +461,7 @@
         </a>
       </div>
 
-      <!-- SCALED SMALL LINE BANNER (320x50 in Sidebar) -->
+      <!-- SCALED SMALL SIDEBAR LINE BANNER (320x50) -->
       <div class="mt-auto pt-2 flex flex-col items-center justify-center border-t border-slate-100 dark:border-slate-800 flex-shrink-0">
         <span class="text-[9px] uppercase tracking-wider text-slate-400 mb-1">Advertisement</span>
         <div class="sidebar-ad-box">
@@ -576,7 +569,7 @@
     </main>
   </div>
 
-  <!-- SLIM HORIZONTAL LINE BANNER STRIP (Strict 42px height line along bottom) -->
+  <!-- ULTRA-SLIM BOTTOM LINE BANNER STRIP (Strict 38px line docked at bottom) -->
   <div class="bottom-ad-strip w-full flex-shrink-0 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800/80 z-20">
     <div class="bottom-ad-scaler" id="bottomAdScaler">
       <script>
@@ -678,19 +671,19 @@
     const signedInUser = document.getElementById('signedInUser');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // Dynamic Ad Scaler: guarantees strict slim line sizing (max 40px height)
+    // Strict 38px Dynamic Line Scaler
     function autoScaleBannerAds() {
       const bottomScaler = document.getElementById('bottomAdScaler');
       if (bottomScaler && bottomScaler.parentElement) {
         const availableW = bottomScaler.parentElement.clientWidth - 16;
-        const scale = Math.min(0.44, availableW / 728);
+        const scale = Math.min(0.41, availableW / 728);
         bottomScaler.style.transform = `scale(${scale.toFixed(3)})`;
         bottomScaler.style.transformOrigin = 'center center';
       }
       const sidebarScaler = document.getElementById('sidebarAdScaler');
       if (sidebarScaler && sidebarScaler.parentElement) {
         const availableW = sidebarScaler.parentElement.clientWidth;
-        const scale = Math.min(0.82, Math.max(0.65, (availableW - 8) / 320));
+        const scale = Math.min(0.80, Math.max(0.65, (availableW - 8) / 320));
         sidebarScaler.style.transform = `scale(${scale.toFixed(3)})`;
         sidebarScaler.style.transformOrigin = 'center center';
       }
