@@ -34,7 +34,6 @@
         }
       }
 
-      // 1. Prevent scripts from replacing the current active tab
       const originalAssign = window.location.assign ? window.location.assign.bind(window.location) : null;
       const originalReplace = window.location.replace ? window.location.replace.bind(window.location) : null;
 
@@ -58,7 +57,6 @@
         };
       }
 
-      // 2. Intercept window.open so popunders cannot steal active tab on Android
       const originalOpen = window.open;
       window.open = function(url, target, features) {
         if (isExternalAd(url)) {
@@ -67,7 +65,6 @@
         return originalOpen.call(window, url, target, features);
       };
 
-      // 3. Force any external ad link click into a separate tab
       document.addEventListener('click', function(e) {
         const link = e.target.closest('a');
         if (link && link.href && isExternalAd(link.href)) {
@@ -76,7 +73,6 @@
         }
       }, true);
 
-      // 4. Remove invisible clickjack overlays (transparent fixed divs used by popunder scripts)
       const purgeInvisibleOverlays = () => {
         document.querySelectorAll('div, a').forEach(el => {
           if (el.id === 'drawerBackdrop' || el.id === 'feedbackModal' || el.id === 'authOverlay') return;
@@ -93,7 +89,6 @@
       };
       setInterval(purgeInvisibleOverlays, 1200);
 
-      // 5. Clean up lingering closed ad notifications
       const adCleaner = new MutationObserver(function() {
         const elements = document.querySelectorAll('div, span, p');
         elements.forEach(function(el) {
@@ -153,13 +148,13 @@
     .raka { color: #f59e0b; font-weight: 700; }
 
     .brand-logo {
-      width: clamp(1.6rem, 8vw, 2.25rem);
-      height: clamp(1.6rem, 8vw, 2.25rem);
+      width: clamp(1.5rem, 7vw, 2.1rem);
+      height: clamp(1.5rem, 7vw, 2.1rem);
     }
 
     .brand-title {
       color: #065f46;
-      font-size: clamp(0.875rem, 4.5vw, 1.05rem);
+      font-size: clamp(0.85rem, 4vw, 1rem);
       line-height: 1.2;
       white-space: nowrap;
     }
@@ -178,27 +173,27 @@
     }
 
     .safe-bottom {
-      padding-bottom: max(0.4rem, env(safe-area-inset-bottom));
+      padding-bottom: max(0.35rem, env(safe-area-inset-bottom));
     }
 
-    /* --- SYMMETRICAL TOP & BOTTOM LINE BANNERS (STRICT 38px EACH) --- */
-    .ad-banner-strip-balanced {
-      height: 38px !important;
-      max-height: 38px !important;
-      min-height: 38px !important;
+    /* --- ULTRA-SLIM 30px MICRO LINE BANNERS (TOP & BOTTOM) --- */
+    .ad-banner-micro {
+      height: 30px !important;
+      max-height: 30px !important;
+      min-height: 30px !important;
       overflow: hidden !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       flex-shrink: 0 !important;
       z-index: 20 !important;
-      transition: all 0.3s ease-out;
+      transition: all 0.25s ease-out;
     }
 
     #container-fe816a205ab9b5631883cc848108ce59 {
-      height: 36px !important;
-      max-height: 36px !important;
-      max-width: 480px !important;
+      height: 28px !important;
+      max-height: 28px !important;
+      max-width: 420px !important;
       margin: 0 auto !important;
       overflow: hidden !important;
       display: flex !important;
@@ -209,7 +204,7 @@
     .bottom-ad-scaler {
       width: 728px !important;
       height: 90px !important;
-      transform: scale(0.40) !important;
+      transform: scale(0.33) !important;
       transform-origin: center center !important;
       display: flex !important;
       align-items: center !important;
@@ -221,9 +216,9 @@
     div[class*="push"],
     div[id*="push"],
     div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal):not(#topRightAdBadge) {
-      top: 60px !important;
+      top: 54px !important;
       right: 12px !important;
-      max-width: 310px !important;
+      max-width: 280px !important;
       z-index: 55 !important;
       display: block !important;
       visibility: visible !important;
@@ -233,38 +228,38 @@
     /* --- TOP-RIGHT CORNER BANNER BADGE --- */
     #topRightAdBadge {
       position: fixed;
-      top: 62px;
+      top: 56px;
       right: 12px;
       z-index: 50;
-      max-width: 260px;
-      background: rgba(255, 255, 255, 0.95);
+      max-width: 250px;
+      background: rgba(255, 255, 255, 0.96);
       border: 1px solid rgba(226, 232, 240, 0.9);
-      border-radius: 10px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       overflow: hidden;
-      transition: all 0.3s ease-out;
+      transition: all 0.25s ease-out;
     }
 
     .dark #topRightAdBadge {
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.96);
       border-color: rgba(30, 41, 59, 0.9);
     }
 
     .top-right-scaler {
       width: 320px;
       height: 50px;
-      transform: scale(0.70);
+      transform: scale(0.65);
       transform-origin: top left;
-      margin-bottom: -15px;
+      margin-bottom: -17px;
     }
 
     @media (max-width: 640px) {
       div[class*="push"],
       div[id*="push"] {
         top: auto !important;
-        bottom: 50px !important;
+        bottom: 42px !important;
         right: 8px !important;
-        transform: scale(0.78) !important;
+        transform: scale(0.75) !important;
         transform-origin: bottom right !important;
       }
       #topRightAdBadge {
@@ -281,53 +276,53 @@
 
 <body class="app-height bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 overflow-hidden">
 
-  <!-- TOP HEADER -->
-  <header class="h-13 sm:h-14 border-b border-emerald-100 dark:border-emerald-900/40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-30 flex-shrink-0">
+  <!-- COMPACT TOP HEADER (48px) -->
+  <header class="h-12 sm:h-13 border-b border-emerald-100 dark:border-emerald-900/40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-30 flex-shrink-0">
     <div class="w-full mx-auto px-2 sm:px-4 h-full flex items-center justify-between">
       
       <!-- Brand & Mobile Drawer Toggle -->
-      <div class="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
+      <div class="flex min-w-0 flex-1 items-center gap-2">
         <button id="menuToggleBtn" class="lg:hidden p-1.5 -ml-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Open Sidebar">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
 
-        <img src="/logo.png" alt="Logo" class="brand-logo rounded-xl object-contain bg-white shadow-sm flex-shrink-0" />
+        <img src="/logo.png" alt="Logo" class="brand-logo rounded-lg object-contain bg-white shadow-sm flex-shrink-0" />
         
         <div class="min-w-0">
-          <div class="flex items-center gap-1.5 sm:gap-2">
+          <div class="flex items-center gap-1.5">
             <h1 class="brand-title font-bold tracking-tight">
               A·chik Chatbot
             </h1>
-            <span class="hidden sm:inline-flex text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 font-semibold">
+            <span class="hidden sm:inline-flex text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 font-semibold">
               North Garo Hills
             </span>
           </div>
-          <p class="hidden xs:block text-[10px] text-slate-500 dark:text-slate-400">Wa·sabegipa seng·ani</p>
+          <p class="hidden xs:block text-[9px] text-slate-500 dark:text-slate-400">Wa·sabegipa seng·ani</p>
         </div>
       </div>
 
       <!-- Controls -->
-      <div class="flex flex-shrink-0 items-center gap-1 sm:gap-1.5">
+      <div class="flex flex-shrink-0 items-center gap-1">
         <span id="signedInUser" class="header-user-email max-w-28 truncate text-[10px] sm:max-w-40 sm:text-xs text-slate-500 dark:text-slate-400"></span>
         <button id="logoutBtn" type="button" class="hidden rounded-lg border border-slate-200 dark:border-slate-800 px-2 py-1 text-[10px] sm:px-2.5 sm:text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
           Sign out
         </button>
 
         <!-- Feedback & Rating Button -->
-        <button id="openFeedbackBtn" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-600 dark:hover:text-amber-400 transition" title="Feedback & Rating">
+        <button id="openFeedbackBtn" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-600 dark:hover:text-amber-400 transition" title="Feedback & Rating">
           <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
           </svg>
         </button>
 
         <!-- Theme Toggle -->
-        <button id="themeToggleBtn" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Toggle Dark/Light Mode">
+        <button id="themeToggleBtn" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Toggle Dark/Light Mode">
           <svg id="moonIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
           <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
         </button>
 
         <!-- Clear Chat -->
-        <button id="clearChatBtn" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition" title="Reset Chat History">
+        <button id="clearChatBtn" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition" title="Reset Chat History">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
         </button>
       </div>
@@ -413,14 +408,14 @@
     </div>
   </section>
 
-  <!-- MAIN BODY LAYOUT (Symmetric two-column, clean bottom-left) -->
+  <!-- MAIN BODY LAYOUT (Expanded height; chat message area takes priority) -->
   <div id="mainContentLayout" class="flex-1 w-full min-w-0 mx-auto flex overflow-hidden relative h-full min-h-0">
 
     <!-- MOBILE & TABLET DRAWER BACKDROP -->
     <div id="drawerBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
 
-    <!-- SIDEBAR (Cleaned: No oversized bottom-left ad clutter) -->
-    <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-3.5 sm:p-4 gap-3.5 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none min-h-0">
+    <!-- SIDEBAR -->
+    <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-3.5 sm:p-4 gap-3 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none min-h-0">
       
       <!-- Drawer Header -->
       <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 lg:hidden">
@@ -432,15 +427,15 @@
 
       <!-- Mode Selector -->
       <div>
-        <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-2">Modes</h2>
+        <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-1.5">Modes</h2>
         <div class="grid grid-cols-1 gap-1.5" id="modeSelector">
-          <button data-mode="dual" class="mode-btn text-left px-3 py-2.5 rounded-xl text-sm font-medium transition bg-emerald-600 text-white shadow-sm">
+          <button data-mode="dual" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition bg-emerald-600 text-white shadow-sm">
             💬 Smart Dual (Garo + English)
           </button>
-          <button data-mode="pure" class="mode-btn text-left px-3 py-2.5 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
+          <button data-mode="pure" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
             🌿 Pure A·chik Focus
           </button>
-          <button data-mode="translate" class="mode-btn text-left px-3 py-2.5 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
+          <button data-mode="translate" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
             🔄 Quick Translator
           </button>
         </div>
@@ -448,7 +443,7 @@
 
       <!-- Common Expressions -->
       <div>
-        <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-2">Common Expressions</h2>
+        <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-1.5">Common Expressions</h2>
         <div class="space-y-1.5">
           <button onclick="insertPrompt('Pringnam! How are you today?')" class="w-full text-left p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition">
             <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Pringnam</span>
@@ -475,30 +470,30 @@
         </p>
       </div>
 
-      <!-- SPONSORED PROMOTION (Clean end of sidebar; no bulky ad box) -->
+      <!-- SPONSORED PROMOTION -->
       <div class="mt-auto pt-2 border-t border-slate-100 dark:border-slate-800">
-        <a href="https://araplhn.org/4/155e2c27e0088395c28267e674074c2d" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-full px-3 py-2 text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl hover:bg-emerald-100 transition">
+        <a href="https://araplhn.org/4/155e2c27e0088395c28267e674074c2d" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-full px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl hover:bg-emerald-100 transition">
           ✨ Special Partner Offer — Click Here
         </a>
       </div>
 
     </aside>
 
-    <!-- CHAT CONTAINER: MAXIMUM HEIGHT & PERFECT SYMMETRY -->
+    <!-- CHAT CONTAINER: 78%+ OF SCREEN HEIGHT IS DEDICATED TO CHAT -->
     <main class="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-slate-50/50 dark:bg-slate-950">
       
-      <!-- BALANCED TOP LINE BANNER (38px, Closable, Auto-Reopens after 15s) -->
-      <div id="topAdStrip" class="ad-banner-strip-balanced w-full bg-slate-100/70 dark:bg-slate-900/70 border-b border-slate-200/60 dark:border-slate-800/60 relative">
-        <button type="button" onclick="closeAdBanner('topAdStrip')" class="absolute right-2 top-1 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
+      <!-- ULTRA-SLIM 30px TOP LINE BANNER -->
+      <div id="topAdStrip" class="ad-banner-micro w-full bg-slate-100/70 dark:bg-slate-900/70 border-b border-slate-200/50 dark:border-slate-800/50 relative">
+        <button type="button" onclick="closeAdBanner('topAdStrip')" class="absolute right-2 top-0.5 p-0.5 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
-        <div class="w-full max-w-lg h-full flex items-center justify-center overflow-hidden">
+        <div class="w-full max-w-md h-full flex items-center justify-center overflow-hidden">
           <div id="container-fe816a205ab9b5631883cc848108ce59"></div>
           <script async="async" data-cfasync="false" src="https://bauval.org/21/fe816a205ab9b5631883cc848108ce59"></script>
         </div>
       </div>
 
-      <!-- Messages List -->
+      <!-- CHAT MESSAGES LIST: MAXIMUM ROOM TO DISPLAY CONVERSATIONS -->
       <div id="messagesContainer" class="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 md:p-6 space-y-4">
         
         <!-- Welcome Message -->
@@ -519,15 +514,15 @@
         </div>
       </div>
 
-      <!-- PROMPT MESSAGE INPUT AREA -->
-      <div class="p-2 sm:p-2.5 border-t border-slate-200 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md safe-bottom flex-shrink-0">
+      <!-- COMPACT PROMPT MESSAGE INPUT BAR -->
+      <div class="p-1.5 sm:p-2 border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md safe-bottom flex-shrink-0">
         <div class="max-w-5xl mx-auto">
-          <div id="filePreview" class="hidden mb-1.5 flex flex-wrap items-center gap-1.5" aria-live="polite"></div>
+          <div id="filePreview" class="hidden mb-1 flex flex-wrap items-center gap-1" aria-live="polite"></div>
         </div>
         <form id="chatForm" class="w-full min-w-0 max-w-5xl mx-auto flex items-end gap-1.5 sm:gap-2">
           <input id="fileInput" type="file" class="hidden" multiple accept=".pdf,.xlsx,.xls,.csv,.tsv,.docx,.txt,.text,.log,.md,.json,.xml,.html,.jpg,.jpeg,.png,.webp,.gif,application/pdf,image/jpeg,image/png,image/webp,image/gif">
-          <button type="button" id="attachFileBtn" class="h-11 w-11 sm:h-12 sm:w-12 flex-shrink-0 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition" aria-label="Attach files" title="Attach PDF, Excel, Word, images, or text files (up to 5 files, 12 MB total)">
-            <svg class="mx-auto h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.82-2.83l8.49-8.48"></path></svg>
+          <button type="button" id="attachFileBtn" class="h-10 w-10 sm:h-11 sm:w-11 flex-shrink-0 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition" aria-label="Attach files" title="Attach PDF, Excel, Word, images, or text files (up to 5 files, 12 MB total)">
+            <svg class="mx-auto h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.82-2.83l8.49-8.48"></path></svg>
           </button>
           
           <div class="relative min-w-0 flex-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-300 dark:border-slate-700 focus-within:border-emerald-500 dark:focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 shadow-sm transition">
@@ -536,14 +531,14 @@
               id="messageInput"
               rows="1"
               placeholder="Ask anything either in English or Garo and I will translate to Garo..."
-              class="w-full min-w-0 pl-3 pr-20 sm:pl-4 sm:pr-24 py-2.5 sm:py-3 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-36 text-base md:text-sm leading-relaxed"
+              class="w-full min-w-0 pl-3 pr-20 sm:pl-4 sm:pr-24 py-2 sm:py-2.5 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-36 text-base md:text-sm leading-relaxed"
             ></textarea>
             
             <div class="absolute right-1.5 bottom-1.5 sm:right-2 sm:bottom-2 flex items-center gap-1">
               <button
                 type="button"
                 onclick="insertChar('·')"
-                class="px-2 py-1 rounded-lg text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 transition min-h-[32px] flex items-center justify-center"
+                class="px-2 py-0.5 rounded-lg text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 transition min-h-[30px] flex items-center justify-center"
                 title="Insert Raka Glottal Stop (·)"
               >
                 [ · ]
@@ -552,7 +547,7 @@
               <button
                 type="button"
                 id="micBtn"
-                class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 transition min-h-[32px] min-w-[32px] flex items-center justify-center"
+                class="p-1 rounded-lg text-slate-400 hover:text-emerald-600 transition min-h-[30px] min-w-[30px] flex items-center justify-center"
                 title="Voice Input"
               >
                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 02-3-3V5a3 3 0 116 0v6a3 3 0 02-3 3z"></path></svg>
@@ -563,7 +558,7 @@
           <button
             type="submit"
             id="sendBtn"
-            class="h-11 sm:h-12 px-3.5 sm:px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-medium rounded-xl flex items-center justify-center shadow-md shadow-emerald-600/20 transition disabled:opacity-50 disabled:pointer-events-none flex-shrink-0"
+            class="h-10 sm:h-11 px-3 sm:px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-medium rounded-xl flex items-center justify-center shadow-md shadow-emerald-600/20 transition disabled:opacity-50 disabled:pointer-events-none flex-shrink-0"
             aria-label="Send message"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
@@ -574,9 +569,9 @@
     </main>
   </div>
 
-  <!-- BALANCED BOTTOM LINE BANNER (Strictly 38px, Symmetric with Top Banner) -->
-  <div id="bottomAdStrip" class="ad-banner-strip-balanced w-full bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800/80 relative">
-    <button type="button" onclick="closeAdBanner('bottomAdStrip')" class="absolute right-2 top-1 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
+  <!-- ULTRA-SLIM 30px BOTTOM LINE BANNER (Strictly 30px, Auto-Reopens after 15s) -->
+  <div id="bottomAdStrip" class="ad-banner-micro w-full bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800/80 relative">
+    <button type="button" onclick="closeAdBanner('bottomAdStrip')" class="absolute right-2 top-0.5 p-0.5 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
     </button>
     <div class="bottom-ad-scaler" id="bottomAdScaler">
@@ -593,7 +588,7 @@
     </div>
   </div>
 
-  <!-- GUARANTEED TOP-RIGHT CORNER BANNER (Closable, Auto-Reopens after 15s) -->
+  <!-- TOP-RIGHT CORNER SPONSOR BADGE (Auto-Reopens after 15s) -->
   <div id="topRightAdBadge">
     <div class="flex items-center justify-between px-2 py-0.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60">
       <span class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">Sponsor</span>
@@ -728,7 +723,7 @@
         clearTimeout(adReopenTimers[elementId]);
       }
 
-      el.style.transition = 'all 0.3s ease-out';
+      el.style.transition = 'all 0.25s ease-out';
       el.style.opacity = '0';
       el.style.maxHeight = '0px';
       el.style.height = '0px';
@@ -739,9 +734,8 @@
 
       setTimeout(() => {
         el.style.display = 'none';
-      }, 300);
+      }, 250);
 
-      // Reopen banner after 15 seconds
       adReopenTimers[elementId] = setTimeout(() => {
         reopenAdBanner(elementId);
       }, AD_RELOAD_INTERVAL);
@@ -756,15 +750,15 @@
       el.style.removeProperty('margin');
       el.style.removeProperty('padding');
 
-      void el.offsetWidth; // Force reflow
+      void el.offsetWidth;
 
-      el.style.transition = 'all 0.35s ease-in';
+      el.style.transition = 'all 0.25s ease-in';
       el.style.opacity = '1';
 
       if (elementId === 'bottomAdStrip' || elementId === 'topAdStrip') {
-        el.style.height = '38px';
-        el.style.maxHeight = '38px';
-        el.style.minHeight = '38px';
+        el.style.height = '30px';
+        el.style.maxHeight = '30px';
+        el.style.minHeight = '30px';
       } else if (elementId === 'topRightAdBadge') {
         el.style.display = 'block';
         el.style.height = 'auto';
@@ -792,12 +786,12 @@
       });
     }, AD_RELOAD_INTERVAL);
 
-    // Dynamic Sizer: Enforces exactly 38px
+    // Dynamic Sizer: Enforces exactly 30px height
     function autoScaleBannerAds() {
       const bottomScaler = document.getElementById('bottomAdScaler');
       if (bottomScaler && bottomScaler.parentElement) {
-        const availableW = bottomScaler.parentElement.clientWidth - 32;
-        const scale = Math.min(0.40, availableW / 728);
+        const availableW = bottomScaler.parentElement.clientWidth - 24;
+        const scale = Math.min(0.33, availableW / 728);
         bottomScaler.style.transform = `scale(${scale.toFixed(3)})`;
         bottomScaler.style.transformOrigin = 'center center';
       }
@@ -1002,9 +996,9 @@
     document.querySelectorAll('.mode-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.mode-btn').forEach(b => {
-          b.className = "mode-btn text-left px-3 py-2.5 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40";
+          b.className = "mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40";
         });
-        btn.className = "mode-btn text-left px-3 py-2.5 rounded-xl text-sm font-medium transition bg-emerald-600 text-white shadow-sm";
+        btn.className = "mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition bg-emerald-600 text-white shadow-sm";
         activeMode = btn.getAttribute('data-mode');
         if (window.innerWidth < 1024) closeDrawer();
       });
