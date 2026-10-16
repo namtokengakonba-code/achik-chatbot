@@ -19,39 +19,29 @@
     })((document.head || document.documentElement).appendChild(document.createElement('script')));
   </script>
 
-  <!-- Push Ad Auto-Cleaner & New-Tab Enforcer -->
+  <!-- ANTI-REDIRECT & CLICKJACK SHIELD (Prevents Mobile Android Redirects) -->
   <script>
     (function() {
-      document.addEventListener('click', function(e) {
-        const link = e.target.closest('a');
-        if (link && link.href) {
-          try {
-            const url = new URL(link.href, window.location.href);
-            if (url.origin !== window.location.origin && !link.href.includes('/api/auth/')) {
-              link.target = '_blank';
-              link.rel = 'noopener noreferrer';
-            }
-          } catch(err) {}
-        }
-      }, true);
+      const currentOrigin = window.location.origin;
 
-      const originalAssign = window.location.assign ? window.location.assign.bind(window.location) : null;
-      const originalReplace = window.location.replace ? window.location.replace.bind(window.location) : null;
-
-      function isAdUrl(url) {
+      function isExternalAd(url) {
         if (!url || typeof url !== 'string') return false;
         try {
           const parsed = new URL(url, window.location.href);
-          return parsed.origin !== window.location.origin && !url.includes('/api/auth/');
+          return parsed.origin !== currentOrigin && !url.includes('/api/auth/');
         } catch(e) {
           return false;
         }
       }
 
+      // 1. Prevent scripts from replacing the current active tab
+      const originalAssign = window.location.assign ? window.location.assign.bind(window.location) : null;
+      const originalReplace = window.location.replace ? window.location.replace.bind(window.location) : null;
+
       if (originalAssign) {
         window.location.assign = function(url) {
-          if (isAdUrl(url)) {
-            window.open(url, '_blank');
+          if (isExternalAd(url)) {
+            window.open(url, '_blank', 'noopener,noreferrer');
             return;
           }
           return originalAssign(url);
@@ -60,14 +50,50 @@
 
       if (originalReplace) {
         window.location.replace = function(url) {
-          if (isAdUrl(url)) {
-            window.open(url, '_blank');
+          if (isExternalAd(url)) {
+            window.open(url, '_blank', 'noopener,noreferrer');
             return;
           }
           return originalReplace(url);
         };
       }
 
+      // 2. Intercept window.open so popunders cannot steal active tab on Android
+      const originalOpen = window.open;
+      window.open = function(url, target, features) {
+        if (isExternalAd(url)) {
+          return originalOpen.call(window, url, '_blank', 'noopener,noreferrer');
+        }
+        return originalOpen.call(window, url, target, features);
+      };
+
+      // 3. Force any external ad link click into a separate tab
+      document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (link && link.href && isExternalAd(link.href)) {
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+        }
+      }, true);
+
+      // 4. Remove invisible clickjack overlays (transparent fixed divs used by popunder scripts)
+      const purgeInvisibleOverlays = () => {
+        document.querySelectorAll('div, a').forEach(el => {
+          if (el.id === 'drawerBackdrop' || el.id === 'feedbackModal' || el.id === 'authOverlay') return;
+          const style = window.getComputedStyle(el);
+          if (style.position === 'fixed' || style.position === 'absolute') {
+            const isWide = (parseInt(style.width) >= window.innerWidth * 0.85);
+            const isTall = (parseInt(style.height) >= window.innerHeight * 0.85);
+            const isTransparent = style.opacity === '0' || style.visibility === 'hidden' || style.backgroundColor === 'rgba(0, 0, 0, 0)';
+            if (isWide && isTall && isTransparent && parseInt(style.zIndex) > 10) {
+              el.remove();
+            }
+          }
+        });
+      };
+      setInterval(purgeInvisibleOverlays, 1200);
+
+      // 5. Clean up lingering closed ad notifications
       const adCleaner = new MutationObserver(function() {
         const elements = document.querySelectorAll('div, span, p');
         elements.forEach(function(el) {
@@ -228,29 +254,58 @@
       flex-shrink: 0 !important;
     }
 
-    /* Prevent third-party injected elements from breaking chat flex flow */
-    body > *:not(header):not(#drawerBackdrop):not(#feedbackModal):not(#authOverlay):not(#mainContentLayout):not(.bottom-ad-strip):not(script):not(style) {
-      display: none !important;
-    }
-
-    /* In-Page Push cards positioning */
+    /* --- TOP-RIGHT CORNER IN-PAGE PUSH BANNER STYLING --- */
     div[class*="push"],
     div[id*="push"],
-    div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal) {
+    div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal):not(#topRightAdBadge) {
       top: 60px !important;
       right: 12px !important;
-      max-width: 280px !important;
+      max-width: 310px !important;
+      z-index: 55 !important;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* --- DEDICATED TOP-RIGHT CORNER BANNER BADGE --- */
+    #topRightAdBadge {
+      position: fixed;
+      top: 62px;
+      right: 12px;
+      z-index: 50;
+      max-width: 260px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      transition: all 0.3s ease-out;
+    }
+
+    .dark #topRightAdBadge {
+      background: rgba(15, 23, 42, 0.95);
+      border-color: rgba(30, 41, 59, 0.9);
+    }
+
+    .top-right-scaler {
+      width: 320px;
+      height: 50px;
+      transform: scale(0.70);
+      transform-origin: top left;
+      margin-bottom: -15px;
     }
 
     @media (max-width: 640px) {
       div[class*="push"],
-      div[id*="push"],
-      div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal) {
+      div[id*="push"] {
         top: auto !important;
-        bottom: 48px !important;
+        bottom: 50px !important;
         right: 8px !important;
         transform: scale(0.78) !important;
         transform-origin: bottom right !important;
+      }
+      #topRightAdBadge {
+        display: none; /* Let mobile screens have full room; push notifications handle mobile */
       }
     }
 
@@ -597,6 +652,26 @@
     </div>
   </div>
 
+  <!-- GUARANTEED TOP-RIGHT CORNER BANNER (Closable, Auto-Reopens after 15s) -->
+  <div id="topRightAdBadge">
+    <div class="flex items-center justify-between px-2 py-0.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60">
+      <span class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">Sponsor</span>
+      <button type="button" onclick="closeAdBanner('topRightAdBadge')" class="text-[10px] text-slate-400 hover:text-red-500 font-bold px-1 transition" title="Close Ad">✕</button>
+    </div>
+    <div class="top-right-scaler">
+      <script>
+        atOptions = {
+          'key' : 'c466b17efc352c5fc79a8c8b5962b06f',
+          'format' : 'iframe',
+          'height' : 50,
+          'width' : 320,
+          'params' : {}
+        };
+      </script>
+      <script src="https://bauval.org/22/c466b17efc352c5fc79a8c8b5962b06f"></script>
+    </div>
+  </div>
+
   <!-- AdSense Dynamic Loader -->
   <script>
     (() => {
@@ -755,6 +830,10 @@
       } else if (elementId === 'topAdStrip') {
         el.style.height = '42px';
         el.style.maxHeight = '42px';
+      } else if (elementId === 'topRightAdBadge') {
+        el.style.display = 'block';
+        el.style.height = 'auto';
+        el.style.maxHeight = '';
       }
 
       refreshAdContainer(elementId);
@@ -766,7 +845,7 @@
 
     // Recurring 15-second loop: rotates fresh creatives and revives closed banners
     setInterval(() => {
-      ['bottomAdStrip', 'sidebarAdSection', 'topAdStrip'].forEach(id => {
+      ['bottomAdStrip', 'sidebarAdSection', 'topAdStrip', 'topRightAdBadge'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
           if (el.style.display === 'none' || el.style.opacity === '0') {
