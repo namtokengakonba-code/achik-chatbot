@@ -127,13 +127,13 @@
     .raka { color: #f59e0b; font-weight: 700; }
 
     .brand-logo {
-      width: clamp(1.75rem, 9vw, 2.5rem);
-      height: clamp(1.75rem, 9vw, 2.5rem);
+      width: clamp(1.6rem, 8vw, 2.25rem);
+      height: clamp(1.6rem, 8vw, 2.25rem);
     }
 
     .brand-title {
       color: #065f46;
-      font-size: clamp(0.9rem, 5vw, 1.125rem);
+      font-size: clamp(0.875rem, 4.5vw, 1.05rem);
       line-height: 1.2;
       white-space: nowrap;
     }
@@ -155,17 +155,17 @@
       padding-bottom: max(0.4rem, env(safe-area-inset-bottom));
     }
 
-    /* --- CLOSABLE TOP NATIVE BANNER --- */
+    /* Top Native Banner Strip */
     .ad-banner-strip {
-      height: 46px;
-      max-height: 46px;
+      height: 42px;
+      max-height: 42px;
       overflow: hidden;
       transition: all 0.25s ease-out;
     }
 
     #container-fe816a205ab9b5631883cc848108ce59 {
-      height: 44px !important;
-      max-height: 44px !important;
+      height: 40px !important;
+      max-height: 40px !important;
       max-width: 480px !important;
       margin: 0 auto !important;
       overflow: hidden !important;
@@ -174,101 +174,83 @@
       justify-content: center !important;
     }
 
-    /* --- CLOSABLE SIDEBAR LINE BANNER --- */
+    /* --- LEFT BOTTOM BANNER (SIDEBAR ON WINDOWS LAPTOP: STRICT 38px) --- */
     #sidebarAdSection {
       transition: all 0.25s ease-out;
+      width: 100%;
     }
 
     .sidebar-ad-box {
-      width: 100%;
-      height: 42px;
-      max-height: 44px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 100% !important;
+      height: 38px !important;
+      max-height: 38px !important;
+      min-height: 38px !important;
+      overflow: hidden !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
     }
 
     .sidebar-ad-scaler {
-      width: 320px;
-      height: 50px;
-      transform: scale(0.76);
-      transform-origin: center center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      width: 320px !important;
+      height: 50px !important;
+      transform: scale(0.72) !important;
+      transform-origin: center center !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
     }
 
-    /* --- CLOSABLE ULTRA-SLIM BOTTOM LINE BANNER --- */
+    /* --- BOTTOM HORIZONTAL BANNER (STRICT 38px ON LAPTOPS & MOBILE) --- */
     .bottom-ad-strip {
-      height: 40px !important;
-      max-height: 40px !important;
-      min-height: 40px !important;
+      height: 38px !important;
+      max-height: 38px !important;
+      min-height: 38px !important;
       width: 100% !important;
       overflow: hidden !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       flex-shrink: 0 !important;
-      z-index: 20;
+      z-index: 20 !important;
       transition: all 0.25s ease-out;
     }
 
     .bottom-ad-scaler {
-      width: 728px;
-      height: 90px;
-      transform: scale(0.42);
-      transform-origin: center center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      width: 728px !important;
+      height: 90px !important;
+      transform: scale(0.40) !important;
+      transform-origin: center center !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
     }
 
-    /* --- CLOSABLE FLOATING CORNER SPONSOR CARD --- */
-    #floatingAdCard {
-      position: fixed;
-      bottom: 50px;
-      right: 12px;
-      z-index: 45;
-      max-width: 310px;
-      background: rgba(255, 255, 255, 0.98);
-      border: 1px solid rgba(226, 232, 240, 0.9);
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-      overflow: hidden;
-      transition: all 0.25s ease-out;
+    /* Force third-party injected video ads out of laptop flex flow */
+    body > *:not(header):not(#drawerBackdrop):not(#feedbackModal):not(#authOverlay):not(#mainContentLayout):not(.bottom-ad-strip):not(script):not(style) {
+      display: none !important;
     }
 
-    .dark #floatingAdCard {
-      background: rgba(15, 23, 42, 0.98);
-      border-color: rgba(30, 41, 59, 0.9);
-    }
-
-    .floating-ad-scaler {
-      width: 300px;
-      height: 250px;
-      transform: scale(0.68);
-      transform-origin: top center;
-      margin: 0 auto -75px auto;
-    }
-
-    /* Push card controls */
+    /* In-Page Push cards positioning */
     div[class*="push"],
     div[id*="push"],
-    div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal):not(#floatingAdCard) {
-      top: 68px !important;
+    div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal) {
+      top: 60px !important;
       right: 12px !important;
-      max-width: 300px !important;
+      max-width: 280px !important;
     }
 
     @media (max-width: 640px) {
-      #floatingAdCard {
-        bottom: 50px;
-        right: 8px;
-        transform: scale(0.85);
-        transform-origin: bottom right;
+      div[class*="push"],
+      div[id*="push"],
+      div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal) {
+        top: auto !important;
+        bottom: 48px !important;
+        right: 8px !important;
+        transform: scale(0.78) !important;
+        transform-origin: bottom right !important;
       }
     }
 
@@ -282,12 +264,12 @@
 <body class="app-height bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 overflow-hidden">
 
   <!-- TOP HEADER -->
-  <header class="h-14 sm:h-16 border-b border-emerald-100 dark:border-emerald-900/40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-30 flex-shrink-0">
+  <header class="h-13 sm:h-14 border-b border-emerald-100 dark:border-emerald-900/40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-30 flex-shrink-0">
     <div class="w-full mx-auto px-2 sm:px-4 h-full flex items-center justify-between">
       
       <!-- Brand & Mobile Drawer Toggle -->
       <div class="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
-        <button id="menuToggleBtn" class="lg:hidden p-2 -ml-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Open Sidebar">
+        <button id="menuToggleBtn" class="lg:hidden p-1.5 -ml-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Open Sidebar">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
 
@@ -298,37 +280,37 @@
             <h1 class="brand-title font-bold tracking-tight">
               A·chik Chatbot
             </h1>
-            <span class="hidden sm:inline-flex text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 font-semibold">
+            <span class="hidden sm:inline-flex text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 font-semibold">
               North Garo Hills
             </span>
           </div>
-          <p class="hidden xs:block text-[11px] text-slate-500 dark:text-slate-400">Wa·sabegipa seng·ani</p>
+          <p class="hidden xs:block text-[10px] text-slate-500 dark:text-slate-400">Wa·sabegipa seng·ani</p>
         </div>
       </div>
 
       <!-- Controls -->
-      <div class="flex flex-shrink-0 items-center gap-1.5 sm:gap-2">
-        <span id="signedInUser" class="header-user-email max-w-32 truncate text-[10px] sm:max-w-48 sm:text-xs text-slate-500 dark:text-slate-400"></span>
-        <button id="logoutBtn" type="button" class="hidden rounded-lg border border-slate-200 dark:border-slate-800 px-2 py-1.5 text-[10px] sm:px-3 sm:text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+      <div class="flex flex-shrink-0 items-center gap-1 sm:gap-1.5">
+        <span id="signedInUser" class="header-user-email max-w-28 truncate text-[10px] sm:max-w-40 sm:text-xs text-slate-500 dark:text-slate-400"></span>
+        <button id="logoutBtn" type="button" class="hidden rounded-lg border border-slate-200 dark:border-slate-800 px-2 py-1 text-[10px] sm:px-2.5 sm:text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
           Sign out
         </button>
 
         <!-- Feedback & Rating Button -->
-        <button id="openFeedbackBtn" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-600 dark:hover:text-amber-400 transition" title="Feedback & Rating">
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+        <button id="openFeedbackBtn" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-600 dark:hover:text-amber-400 transition" title="Feedback & Rating">
+          <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
           </svg>
         </button>
 
         <!-- Theme Toggle -->
-        <button id="themeToggleBtn" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Toggle Dark/Light Mode">
-          <svg id="moonIcon" class="w-4 h-4 sm:w-5 sm:h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-          <svg id="sunIcon" class="w-4 h-4 sm:w-5 sm:h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        <button id="themeToggleBtn" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Toggle Dark/Light Mode">
+          <svg id="moonIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
         </button>
 
         <!-- Clear Chat -->
-        <button id="clearChatBtn" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition" title="Reset Chat History">
-          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+        <button id="clearChatBtn" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition" title="Reset Chat History">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
         </button>
       </div>
     </div>
@@ -419,8 +401,8 @@
     <!-- MOBILE & TABLET DRAWER BACKDROP -->
     <div id="drawerBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
 
-    <!-- SIDEBAR -->
-    <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-4 gap-4 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none min-h-0">
+    <!-- SIDEBAR (Left bottom banner strictly scaled to 38px height) -->
+    <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-3.5 sm:p-4 gap-3.5 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none min-h-0">
       
       <!-- Drawer Header -->
       <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 lg:hidden">
@@ -466,8 +448,8 @@
       </div>
 
       <!-- Orthography Note -->
-      <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200">
-        <p class="font-bold flex items-center gap-1 mb-1">
+      <div class="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200">
+        <p class="font-bold flex items-center gap-1 mb-0.5">
           <span>ℹ️</span> The Raka ( · ) Glottal Stop
         </p>
         <p class="text-[11px] leading-relaxed text-amber-800 dark:text-amber-300">
@@ -476,17 +458,17 @@
       </div>
 
       <!-- SPONSORED PROMOTION -->
-      <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
-        <a href="https://araplhn.org/4/155e2c27e0088395c28267e674074c2d" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-full px-3 py-2 text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl hover:bg-emerald-100 transition">
+      <div class="pt-1 border-t border-slate-100 dark:border-slate-800">
+        <a href="https://araplhn.org/4/155e2c27e0088395c28267e674074c2d" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-full px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl hover:bg-emerald-100 transition">
           ✨ Special Partner Offer — Click Here
         </a>
       </div>
 
-      <!-- CLOSABLE SIDEBAR LINE BANNER (320x50) -->
-      <div id="sidebarAdSection" class="mt-auto pt-2 flex flex-col items-center border-t border-slate-100 dark:border-slate-800 flex-shrink-0 relative w-full">
-        <div class="w-full flex items-center justify-between mb-1 px-1">
-          <span class="text-[9px] uppercase tracking-wider text-slate-400">Advertisement</span>
-          <button type="button" onclick="closeAdBanner('sidebarAdSection')" class="text-[11px] text-slate-400 hover:text-red-500 font-bold px-1 rounded transition" title="Close Ad">✕</button>
+      <!-- LEFT BOTTOM BANNER (Strictly 38px, Closable) -->
+      <div id="sidebarAdSection" class="mt-auto pt-1 flex flex-col items-center border-t border-slate-100 dark:border-slate-800 flex-shrink-0 relative">
+        <div class="w-full flex items-center justify-between mb-0.5 px-1">
+          <span class="text-[9px] uppercase tracking-wider text-slate-400">Ad</span>
+          <button type="button" onclick="closeAdBanner('sidebarAdSection')" class="text-[10px] text-slate-400 hover:text-red-500 font-bold px-1 transition" title="Close Ad">✕</button>
         </div>
         <div class="sidebar-ad-box">
           <div class="sidebar-ad-scaler" id="sidebarAdScaler">
@@ -506,12 +488,12 @@
 
     </aside>
 
-    <!-- CHAT CONTAINER -->
+    <!-- CHAT CONTAINER: MAXIMUM HEIGHT & COMFORT -->
     <main class="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-slate-50/50 dark:bg-slate-950">
       
       <!-- CLOSABLE TOP NATIVE BANNER -->
       <div id="topAdStrip" class="ad-banner-strip flex-shrink-0 w-full px-2 py-0.5 flex justify-center items-center bg-slate-100/60 dark:bg-slate-900/60 border-b border-slate-200/50 dark:border-slate-800/50 relative">
-        <button type="button" onclick="closeAdBanner('topAdStrip')" class="absolute right-2 top-2 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
+        <button type="button" onclick="closeAdBanner('topAdStrip')" class="absolute right-2 top-1.5 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         <div class="w-full max-w-lg h-full flex items-center justify-center overflow-hidden">
@@ -541,24 +523,24 @@
         </div>
       </div>
 
-      <!-- INPUT BAR -->
-      <div class="p-2 sm:p-3 border-t border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md safe-bottom flex-shrink-0">
+      <!-- PROMPT MESSAGE INPUT AREA (Spacious & Clean) -->
+      <div class="p-2 sm:p-2.5 border-t border-slate-200 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md safe-bottom flex-shrink-0">
         <div class="max-w-5xl mx-auto">
-          <div id="filePreview" class="hidden mb-2 flex flex-wrap items-center gap-2" aria-live="polite"></div>
-          <p class="mb-2 text-[10px] text-slate-500 dark:text-slate-400">Attach PDF, Excel, Word, image, or text files (up to 5 files, 12 MB total; up to 500,000 extracted characters per file).</p>
+          <div id="filePreview" class="hidden mb-1.5 flex flex-wrap items-center gap-1.5" aria-live="polite"></div>
         </div>
         <form id="chatForm" class="w-full min-w-0 max-w-5xl mx-auto flex items-end gap-1.5 sm:gap-2">
           <input id="fileInput" type="file" class="hidden" multiple accept=".pdf,.xlsx,.xls,.csv,.tsv,.docx,.txt,.text,.log,.md,.json,.xml,.html,.jpg,.jpeg,.png,.webp,.gif,application/pdf,image/jpeg,image/png,image/webp,image/gif">
-          <button type="button" id="attachFileBtn" class="h-11 w-11 sm:h-12 sm:w-12 flex-shrink-0 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition" aria-label="Attach files" title="Attach files">
+          <button type="button" id="attachFileBtn" class="h-11 w-11 sm:h-12 sm:w-12 flex-shrink-0 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition" aria-label="Attach files" title="Attach PDF, Excel, Word, images, or text files (up to 5 files, 12 MB total)">
             <svg class="mx-auto h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.82-2.83l8.49-8.48"></path></svg>
           </button>
+          
           <div class="relative min-w-0 flex-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-300 dark:border-slate-700 focus-within:border-emerald-500 dark:focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 shadow-sm transition">
             
             <textarea
               id="messageInput"
               rows="1"
               placeholder="Ask anything either in English or Garo and I will translate to Garo..."
-              class="w-full min-w-0 pl-3 pr-20 sm:pl-4 sm:pr-24 py-2.5 sm:py-3 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-32 text-base md:text-sm leading-relaxed"
+              class="w-full min-w-0 pl-3 pr-20 sm:pl-4 sm:pr-24 py-2.5 sm:py-3 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-36 text-base md:text-sm leading-relaxed"
             ></textarea>
             
             <div class="absolute right-1.5 bottom-1.5 sm:right-2 sm:bottom-2 flex items-center gap-1">
@@ -596,9 +578,9 @@
     </main>
   </div>
 
-  <!-- CLOSABLE ULTRA-SLIM BOTTOM LINE BANNER STRIP -->
+  <!-- CLOSABLE ULTRA-SLIM BOTTOM LINE BANNER (Strictly 38px on Windows Laptops) -->
   <div id="bottomAdStrip" class="bottom-ad-strip w-full flex-shrink-0 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800/80 z-20 relative">
-    <button type="button" onclick="closeAdBanner('bottomAdStrip')" class="absolute right-2 top-1.5 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
+    <button type="button" onclick="closeAdBanner('bottomAdStrip')" class="absolute right-2 top-1 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
     </button>
     <div class="bottom-ad-scaler" id="bottomAdScaler">
@@ -612,26 +594,6 @@
         };
       </script>
       <script src="https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee"></script>
-    </div>
-  </div>
-
-  <!-- CLOSABLE FLOATING CORNER AD (Hosts 300x250, 468x60 & Skyscraper without breaking page layout) -->
-  <div id="floatingAdCard" class="hidden sm:block">
-    <div class="flex items-center justify-between px-2.5 py-1.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60">
-      <span class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">Special Sponsor</span>
-      <button type="button" onclick="closeAdBanner('floatingAdCard')" class="text-xs text-slate-400 hover:text-red-500 font-bold px-1 transition" title="Close Ad">✕</button>
-    </div>
-    <div class="floating-ad-scaler">
-      <script>
-        atOptions = {
-          'key' : '9f4f1cfe78a144f135a9bdcfc885e1a9',
-          'format' : 'iframe',
-          'height' : 250,
-          'width' : 300,
-          'params' : {}
-        };
-      </script>
-      <script src="https://bauval.org/22/9f4f1cfe78a144f135a9bdcfc885e1a9"></script>
     </div>
   </div>
 
@@ -721,7 +683,7 @@
     const signedInUser = document.getElementById('signedInUser');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // General Banner Ad Closer: smooth collapse animation
+    // Smooth Ad Closer
     function closeAdBanner(elementId) {
       const el = document.getElementById(elementId);
       if (el) {
@@ -738,19 +700,19 @@
       }
     }
 
-    // Dynamic Sizing for Active Banners
+    // Dynamic Sizer: Enforces exactly 38px on Windows laptops
     function autoScaleBannerAds() {
       const bottomScaler = document.getElementById('bottomAdScaler');
       if (bottomScaler && bottomScaler.parentElement) {
         const availableW = bottomScaler.parentElement.clientWidth - 32;
-        const scale = Math.min(0.42, availableW / 728);
+        const scale = Math.min(0.40, availableW / 728);
         bottomScaler.style.transform = `scale(${scale.toFixed(3)})`;
         bottomScaler.style.transformOrigin = 'center center';
       }
       const sidebarScaler = document.getElementById('sidebarAdScaler');
       if (sidebarScaler && sidebarScaler.parentElement) {
         const availableW = sidebarScaler.parentElement.clientWidth;
-        const scale = Math.min(0.80, Math.max(0.65, (availableW - 8) / 320));
+        const scale = Math.min(0.72, (availableW - 8) / 320);
         sidebarScaler.style.transform = `scale(${scale.toFixed(3)})`;
         sidebarScaler.style.transformOrigin = 'center center';
       }
@@ -980,7 +942,7 @@
 
     messageInput.addEventListener('input', () => {
       messageInput.style.height = 'auto';
-      messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
+      messageInput.style.height = Math.min(messageInput.scrollHeight, 140) + 'px';
     });
 
     function updateFilePreview(message = '') {
