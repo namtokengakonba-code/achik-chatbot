@@ -22,7 +22,6 @@
   <!-- Push Ad Auto-Cleaner & New-Tab Enforcer -->
   <script>
     (function() {
-      // 1. Force external ad clicks into a new tab so the user stays on the site
       document.addEventListener('click', function(e) {
         const link = e.target.closest('a');
         if (link && link.href) {
@@ -36,7 +35,6 @@
         }
       }, true);
 
-      // 2. Prevent scripts from overriding active window location
       const originalAssign = window.location.assign ? window.location.assign.bind(window.location) : null;
       const originalReplace = window.location.replace ? window.location.replace.bind(window.location) : null;
 
@@ -70,7 +68,6 @@
         };
       }
 
-      // 3. MutationObserver: Immediately deletes lingering "Ad was closed" boxes
       const adCleaner = new MutationObserver(function() {
         const elements = document.querySelectorAll('div, span, p');
         elements.forEach(function(el) {
@@ -158,7 +155,7 @@
       padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
     }
 
-    /* Strict slim strip: locks Adsterra Native Banner */
+    /* Top Native Banner Strip */
     .ad-banner-strip {
       height: 52px !important;
       max-height: 52px !important;
@@ -176,35 +173,76 @@
       justify-content: center !important;
     }
 
-    #container-fe816a205ab9b5631883cc848108ce59 iframe {
-      max-height: 50px !important;
-      height: 50px !important;
-      overflow: hidden !important;
+    /* --- SCALED SMALL LINE BANNER: SIDEBAR --- */
+    .sidebar-ad-box {
+      width: 100%;
+      height: 48px;
+      max-height: 50px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    #container-fe816a205ab9b5631883cc848108ce59 img {
-      max-height: 44px !important;
-      height: 44px !important;
-      width: auto !important;
-      object-fit: cover !important;
-      border-radius: 6px !important;
-      margin: 0 8px 0 0 !important;
-      display: inline-block !important;
+    .sidebar-ad-scaler {
+      width: 320px;
+      height: 50px;
+      transform: scale(0.8);
+      transform-origin: center center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
-    #container-fe816a205ab9b5631883cc848108ce59 div,
-    #container-fe816a205ab9b5631883cc848108ce59 a {
-      max-height: 50px !important;
-      font-size: 11px !important;
-      line-height: 1.2 !important;
-      display: flex !important;
-      align-items: center !important;
-      overflow: hidden !important;
-      white-space: nowrap !important;
-      text-overflow: ellipsis !important;
+    @media (min-width: 640px) {
+      .sidebar-ad-scaler {
+        transform: scale(0.85);
+      }
     }
 
-    /* Keep In-Page Push cards neatly placed so they do not overlap header buttons */
+    /* --- SCALED HORIZONTAL LINE BANNER: BOTTOM STRIP --- */
+    .bottom-ad-strip {
+      height: 56px;
+      max-height: 58px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bottom-ad-scaler {
+      width: 728px;
+      height: 90px;
+      transform: scale(0.55);
+      transform-origin: center center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    @media (min-width: 640px) {
+      .bottom-ad-strip {
+        height: 64px;
+        max-height: 66px;
+      }
+      .bottom-ad-scaler {
+        transform: scale(0.68);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .bottom-ad-strip {
+        height: 72px;
+        max-height: 74px;
+      }
+      .bottom-ad-scaler {
+        transform: scale(0.78);
+      }
+    }
+
+    /* In-Page Push cards positioning */
     div[class*="push"],
     div[id*="push"],
     div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal) {
@@ -214,34 +252,14 @@
     }
 
     @media (max-width: 640px) {
-      .ad-banner-strip {
-        height: 48px !important;
-        max-height: 48px !important;
-      }
-
-      #container-fe816a205ab9b5631883cc848108ce59 {
-        max-width: 100% !important;
-        height: 46px !important;
-      }
-
-      #container-fe816a205ab9b5631883cc848108ce59 img {
-        max-height: 38px !important;
-        height: 38px !important;
-      }
-
       div[class*="push"],
       div[id*="push"],
       div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal) {
         top: auto !important;
-        bottom: 74px !important;
+        bottom: 80px !important;
         right: 8px !important;
-        left: auto !important;
         transform: scale(0.85) !important;
         transform-origin: bottom right !important;
-      }
-
-      #messagesContainer {
-        padding-top: 0.75rem !important;
       }
     }
 
@@ -386,14 +404,14 @@
     </div>
   </section>
 
-  <!-- MAIN BODY LAYOUT -->
-  <div class="flex-1 w-full min-w-0 mx-auto flex overflow-hidden relative">
+  <!-- MAIN BODY LAYOUT (h-full & min-h-0 prevents container collapse) -->
+  <div class="flex-1 w-full min-w-0 mx-auto flex overflow-hidden relative h-full min-h-0">
 
     <!-- MOBILE & TABLET DRAWER BACKDROP -->
     <div id="drawerBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
 
     <!-- SIDEBAR -->
-    <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-4 gap-4 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none">
+    <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-4 gap-4 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none min-h-0">
       
       <!-- Drawer Header (visible on mobile/tablet) -->
       <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 lg:hidden">
@@ -455,95 +473,31 @@
         </a>
       </div>
 
-      <!-- AD CONTAINER: 160x300 Banner -->
-      <div class="mt-auto pt-2 flex flex-col items-center justify-center border-t border-slate-100 dark:border-slate-800 min-h-[305px]">
+      <!-- SCALED SMALL LINE BANNER (320x50 Auto-scaled to Sidebar) -->
+      <div class="mt-auto pt-2 flex flex-col items-center justify-center border-t border-slate-100 dark:border-slate-800 flex-shrink-0">
         <span class="text-[9px] uppercase tracking-wider text-slate-400 mb-1">Advertisement</span>
-        <script>
-          atOptions = {
-            'key' : '6459cd951520b6889e3517b49d1dc5c0',
-            'format' : 'iframe',
-            'height' : 300,
-            'width' : 160,
-            'params' : {}
-          };
-        </script>
-        <script src="https://bauval.org/22/6459cd951520b6889e3517b49d1dc5c0"></script>
-      <!-- Adsterra 790x banner -->
-       <script>
-  atOptions = {
-    'key' : '39ffdf0ae262c17b4545a4934d3ad7ee',
-    'format' : 'iframe',
-    'height' : 90,
-    'width' : 728,
-    'params' : {}
-  };
-</script>
-<script src="https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee"></script>
-
-<script>
-  atOptions = {
-    'key' : '07f14f0dabea4a2cfc95c3533125ec58',
-    'format' : 'iframe',
-    'height' : 60,
-    'width' : 468,
-    'params' : {}
-  };
-</script>
-<script src="https://bauval.org/22/07f14f0dabea4a2cfc95c3533125ec58"></script>
-
-<script>
-  atOptions = {
-    'key' : 'c466b17efc352c5fc79a8c8b5962b06f',
-    'format' : 'iframe',
-    'height' : 50,
-    'width' : 320,
-    'params' : {}
-  };
-</script>
-<script src="https://bauval.org/22/c466b17efc352c5fc79a8c8b5962b06f"></script>
-
-<script>
-  atOptions = {
-    'key' : '9f4f1cfe78a144f135a9bdcfc885e1a9',
-    'format' : 'iframe',
-    'height' : 250,
-    'width' : 300,
-    'params' : {}
-  };
-</script>
-<script src="https://bauval.org/22/9f4f1cfe78a144f135a9bdcfc885e1a9"></script>
-
-<script>
-  atOptions = {
-    'key' : '82fbdcdb856471a40d2a5285f4488a14',
-    'format' : 'iframe',
-    'height' : 600,
-    'width' : 160,
-    'params' : {}
-  };
-</script>
-<script src="https://bauval.org/22/82fbdcdb856471a40d2a5285f4488a14"></script>
-
-<script>
-  atOptions = {
-    'key' : '6459cd951520b6889e3517b49d1dc5c0',
-    'format' : 'iframe',
-    'height' : 300,
-    'width' : 160,
-    'params' : {}
-  };
-</script>
-<script src="https://bauval.org/22/6459cd951520b6889e3517b49d1dc5c0"></script>
-<!-- End of Adsterra banner ads-->
-      
+        <div class="sidebar-ad-box">
+          <div class="sidebar-ad-scaler" id="sidebarAdScaler">
+            <script>
+              atOptions = {
+                'key' : 'c466b17efc352c5fc79a8c8b5962b06f',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+              };
+            </script>
+            <script src="https://bauval.org/22/c466b17efc352c5fc79a8c8b5962b06f"></script>
+          </div>
+        </div>
       </div>
 
     </aside>
 
     <!-- CHAT CONTAINER -->
-    <main class="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-slate-50/50 dark:bg-slate-950">
+    <main class="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-slate-50/50 dark:bg-slate-950">
       
-      <!-- Native Banner Ad Container (Locked above blue line) -->
+      <!-- Native Banner Ad Container -->
       <div class="ad-banner-strip flex-shrink-0 w-full px-2 py-0.5 flex justify-center items-center bg-slate-100/60 dark:bg-slate-900/60 border-b border-slate-200/50 dark:border-slate-800/50">
         <div class="w-full max-w-lg h-full flex items-center justify-center overflow-hidden">
           <div id="container-fe816a205ab9b5631883cc848108ce59"></div>
@@ -627,6 +581,22 @@
     </main>
   </div>
 
+  <!-- BOTTOM HORIZONTAL LINE BANNER STRIP (Spanning the blue line across the bottom) -->
+  <div class="bottom-ad-strip w-full flex-shrink-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800/80 z-20">
+    <div class="bottom-ad-scaler" id="bottomAdScaler">
+      <script>
+        atOptions = {
+          'key' : '39ffdf0ae262c17b4545a4934d3ad7ee',
+          'format' : 'iframe',
+          'height' : 90,
+          'width' : 728,
+          'params' : {}
+        };
+      </script>
+      <script src="https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee"></script>
+    </div>
+  </div>
+
   <!-- AdSense Dynamic Loader -->
   <script>
     (() => {
@@ -642,59 +612,47 @@
     })();
   </script>
 
-  <!-- Hilltops Ads-->
-<script>
-(function(armhyl){
-var d = document,
-    s = d.createElement('script'),
-    l = d.currentScript || d.scripts[d.scripts.length - 1];
-s.settings = armhyl || {};
-s.src = "\/\/fond-appointment.com\/b\/XjVLs.dHGplL0fY\/WGcE\/ketmi9VujZeUIlPkqP_TBcJ1JMrjTMf1AMbzOcRtZNizCUUyqM\/zzUN0tMBQm";
-s.async = true;
-s.referrerPolicy = 'no-referrer-when-downgrade';
-l.parentNode.insertBefore(s, l);
-})({})
-  </script>
-
+  <!-- Hilltops Ads -->
   <script>
-(function(armhyl){
-var d = document,
-    s = d.createElement('script'),
-    l = d.currentScript || d.scripts[d.scripts.length - 1];
-s.settings = armhyl || {};
-s.src = "\/\/fond-appointment.com\/bnXrV.s\/dBG\/la0zYHWtcn\/-eLmt9YubZJUGlikUP\/TKcW1CM\/jzMe1\/MGjIERt\/NKz\/U\/y_MvzgUdy\/NzQG";
-s.async = true;
-s.referrerPolicy = 'no-referrer-when-downgrade';
-l.parentNode.insertBefore(s, l);
-})({})
-</script>
-
-<script>
-(function(armhyl){
-var d = document,
-    s = d.createElement('script'),
-    l = d.currentScript || d.scripts[d.scripts.length - 1];
-s.settings = armhyl || {};
-s.src = "\/\/fond-appointment.com\/bCXNVxsTd.Gflb0MYMWecT\/teHmX9Tu-ZeUQlZkRP\/TGc\/1hMkjEMW1EMUDFUntYNMz-UGyEMWz\/ULwwOYQY";
-s.async = true;
-s.referrerPolicy = 'no-referrer-when-downgrade';
-l.parentNode.insertBefore(s, l);
-})({})
-</script>
-
-<script>
-(function(armhyl){
-var d = document,
-    s = d.createElement('script'),
-    l = d.currentScript || d.scripts[d.scripts.length - 1];
-s.settings = armhyl || {};
-s.src = "\/\/fond-appointment.com\/bRXWV.srdMGTlX0fYiW-cE\/yeJmb9JuFZpU\/lXk\/PdTYcR1\/MdjdMD0dOHD\/k\/tcNez_U\/yvMbzeQt5pMlwJ";
-s.async = true;
-s.referrerPolicy = 'no-referrer-when-downgrade';
-l.parentNode.insertBefore(s, l);
-})({})
-</script>
-<!-- End of Hilltop Ads-->
+    (function(armhyl){
+      var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = armhyl || {};
+      s.src = "\/\/fond-appointment.com\/b\/XjVLs.dHGplL0fY\/WGcE\/ketmi9VujZeUIlPkqP_TBcJ1JMrjTMf1AMbzOcRtZNizCUUyqM\/zzUN0tMBQm";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+    })({})
+  </script>
+  <script>
+    (function(armhyl){
+      var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = armhyl || {};
+      s.src = "\/\/fond-appointment.com\/bnXrV.s\/dBG\/la0zYHWtcn\/-eLmt9YubZJUGlikUP\/TKcW1CM\/jzMe1\/MGjIERt\/NKz\/U\/y_MvzgUdy\/NzQG";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+    })({})
+  </script>
+  <script>
+    (function(armhyl){
+      var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = armhyl || {};
+      s.src = "\/\/fond-appointment.com\/bCXNVxsTd.Gflb0MYMWecT\/teHmX9Tu-ZeUQlZkRP\/TGc\/1hMkjEMW1EMUDFUntYNMz-UGyEMWz\/ULwwOYQY";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+    })({})
+  </script>
+  <script>
+    (function(armhyl){
+      var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = armhyl || {};
+      s.src = "\/\/fond-appointment.com\/bRXWV.srdMGTlX0fYiW-cE\/yeJmb9JuFZpU\/lXk\/PdTYcR1\/MdjdMD0dOHD\/k\/tcNez_U\/yvMbzeQt5pMlwJ";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+    })({})
+  </script>
 
   <!-- Application Logic -->
   <script>
@@ -724,6 +682,27 @@ l.parentNode.insertBefore(s, l);
     const authStatus = document.getElementById('authStatus');
     const signedInUser = document.getElementById('signedInUser');
     const logoutBtn = document.getElementById('logoutBtn');
+
+    // Dynamic Ad Scaler: guarantees pixel-perfect scaling to avoid overflow on any screen
+    function autoScaleBannerAds() {
+      const bottomScaler = document.getElementById('bottomAdScaler');
+      if (bottomScaler && bottomScaler.parentElement) {
+        const availableW = bottomScaler.parentElement.clientWidth - 16;
+        const scale = Math.min(0.85, Math.max(0.38, availableW / 728));
+        bottomScaler.style.transform = `scale(${scale})`;
+        bottomScaler.parentElement.style.height = `${Math.ceil(90 * scale + 4)}px`;
+      }
+      const sidebarScaler = document.getElementById('sidebarAdScaler');
+      if (sidebarScaler && sidebarScaler.parentElement) {
+        const availableW = sidebarScaler.parentElement.clientWidth;
+        const scale = Math.min(0.9, Math.max(0.68, availableW / 320));
+        sidebarScaler.style.transform = `scale(${scale})`;
+        sidebarScaler.parentElement.style.height = `${Math.ceil(50 * scale)}px`;
+      }
+    }
+    window.addEventListener('resize', autoScaleBannerAds);
+    window.addEventListener('DOMContentLoaded', autoScaleBannerAds);
+    setTimeout(autoScaleBannerAds, 1000);
 
     // Feedback & Rating elements
     const openFeedbackBtn = document.getElementById('openFeedbackBtn');
