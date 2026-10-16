@@ -160,7 +160,7 @@
       height: 42px;
       max-height: 42px;
       overflow: hidden;
-      transition: all 0.25s ease-out;
+      transition: all 0.3s ease-out;
     }
 
     #container-fe816a205ab9b5631883cc848108ce59 {
@@ -174,9 +174,9 @@
       justify-content: center !important;
     }
 
-    /* --- LEFT BOTTOM BANNER (SIDEBAR ON WINDOWS LAPTOP: STRICT 38px) --- */
+    /* --- LEFT BOTTOM BANNER (SIDEBAR: STRICT 38px) --- */
     #sidebarAdSection {
-      transition: all 0.25s ease-out;
+      transition: all 0.3s ease-out;
       width: 100%;
     }
 
@@ -214,7 +214,7 @@
       justify-content: center !important;
       flex-shrink: 0 !important;
       z-index: 20 !important;
-      transition: all 0.25s ease-out;
+      transition: all 0.3s ease-out;
     }
 
     .bottom-ad-scaler {
@@ -228,7 +228,7 @@
       flex-shrink: 0 !important;
     }
 
-    /* Force third-party injected video ads out of laptop flex flow */
+    /* Prevent third-party injected elements from breaking chat flex flow */
     body > *:not(header):not(#drawerBackdrop):not(#feedbackModal):not(#authOverlay):not(#mainContentLayout):not(.bottom-ad-strip):not(script):not(style) {
       display: none !important;
     }
@@ -401,7 +401,7 @@
     <!-- MOBILE & TABLET DRAWER BACKDROP -->
     <div id="drawerBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
 
-    <!-- SIDEBAR (Left bottom banner strictly scaled to 38px height) -->
+    <!-- SIDEBAR -->
     <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-3.5 sm:p-4 gap-3.5 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none min-h-0">
       
       <!-- Drawer Header -->
@@ -464,7 +464,7 @@
         </a>
       </div>
 
-      <!-- LEFT BOTTOM BANNER (Strictly 38px, Closable) -->
+      <!-- LEFT BOTTOM BANNER (Strictly 38px, Auto-Reopens after 15s) -->
       <div id="sidebarAdSection" class="mt-auto pt-1 flex flex-col items-center border-t border-slate-100 dark:border-slate-800 flex-shrink-0 relative">
         <div class="w-full flex items-center justify-between mb-0.5 px-1">
           <span class="text-[9px] uppercase tracking-wider text-slate-400">Ad</span>
@@ -523,7 +523,7 @@
         </div>
       </div>
 
-      <!-- PROMPT MESSAGE INPUT AREA (Spacious & Clean) -->
+      <!-- PROMPT MESSAGE INPUT AREA -->
       <div class="p-2 sm:p-2.5 border-t border-slate-200 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md safe-bottom flex-shrink-0">
         <div class="max-w-5xl mx-auto">
           <div id="filePreview" class="hidden mb-1.5 flex flex-wrap items-center gap-1.5" aria-live="polite"></div>
@@ -578,7 +578,7 @@
     </main>
   </div>
 
-  <!-- CLOSABLE ULTRA-SLIM BOTTOM LINE BANNER (Strictly 38px on Windows Laptops) -->
+  <!-- CLOSABLE ULTRA-SLIM BOTTOM LINE BANNER (Strictly 38px, Auto-Reopens after 15s) -->
   <div id="bottomAdStrip" class="bottom-ad-strip w-full flex-shrink-0 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800/80 z-20 relative">
     <button type="button" onclick="closeAdBanner('bottomAdStrip')" class="absolute right-2 top-1 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -683,24 +683,102 @@
     const signedInUser = document.getElementById('signedInUser');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // Smooth Ad Closer
+    // 15-SECOND AD REFRESH & AUTO-REOPEN SYSTEM
+    const AD_RELOAD_INTERVAL = 15000; // 15 seconds
+    const adReopenTimers = {};
+
+    function refreshAdContainer(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const iframes = container.querySelectorAll('iframe');
+      iframes.forEach(iframe => {
+        try {
+          if (iframe.src) {
+            const url = new URL(iframe.src);
+            url.searchParams.set('_r', Date.now());
+            iframe.src = url.toString();
+          }
+        } catch (e) {
+          iframe.src = iframe.src;
+        }
+      });
+    }
+
     function closeAdBanner(elementId) {
       const el = document.getElementById(elementId);
-      if (el) {
-        el.style.transition = 'all 0.25s ease-out';
-        el.style.opacity = '0';
-        el.style.maxHeight = '0px';
-        el.style.height = '0px';
-        el.style.padding = '0px';
-        el.style.margin = '0px';
-        el.style.border = 'none';
-        setTimeout(() => {
-          el.style.display = 'none';
-        }, 250);
+      if (!el) return;
+
+      if (adReopenTimers[elementId]) {
+        clearTimeout(adReopenTimers[elementId]);
+      }
+
+      el.style.transition = 'all 0.3s ease-out';
+      el.style.opacity = '0';
+      el.style.maxHeight = '0px';
+      el.style.height = '0px';
+      el.style.padding = '0px';
+      el.style.margin = '0px';
+      el.style.border = 'none';
+      el.style.overflow = 'hidden';
+
+      setTimeout(() => {
+        el.style.display = 'none';
+      }, 300);
+
+      // Reopen banner after 15 seconds
+      adReopenTimers[elementId] = setTimeout(() => {
+        reopenAdBanner(elementId);
+      }, AD_RELOAD_INTERVAL);
+    }
+
+    function reopenAdBanner(elementId) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+
+      el.style.display = 'flex';
+      el.style.removeProperty('border');
+      el.style.removeProperty('margin');
+      el.style.removeProperty('padding');
+
+      void el.offsetWidth; // Force reflow
+
+      el.style.transition = 'all 0.35s ease-in';
+      el.style.opacity = '1';
+
+      if (elementId === 'bottomAdStrip') {
+        el.style.height = '38px';
+        el.style.maxHeight = '38px';
+        el.style.minHeight = '38px';
+      } else if (elementId === 'sidebarAdSection') {
+        el.style.height = 'auto';
+        el.style.maxHeight = '';
+      } else if (elementId === 'topAdStrip') {
+        el.style.height = '42px';
+        el.style.maxHeight = '42px';
+      }
+
+      refreshAdContainer(elementId);
+
+      if (typeof autoScaleBannerAds === 'function') {
+        autoScaleBannerAds();
       }
     }
 
-    // Dynamic Sizer: Enforces exactly 38px on Windows laptops
+    // Recurring 15-second loop: rotates fresh creatives and revives closed banners
+    setInterval(() => {
+      ['bottomAdStrip', 'sidebarAdSection', 'topAdStrip'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          if (el.style.display === 'none' || el.style.opacity === '0') {
+            reopenAdBanner(id);
+          } else if (el.offsetParent !== null) {
+            refreshAdContainer(id);
+          }
+        }
+      });
+    }, AD_RELOAD_INTERVAL);
+
+    // Dynamic Sizer: Enforces exactly 38px
     function autoScaleBannerAds() {
       const bottomScaler = document.getElementById('bottomAdScaler');
       if (bottomScaler && bottomScaler.parentElement) {
