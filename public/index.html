@@ -155,11 +155,12 @@
       padding-bottom: max(0.4rem, env(safe-area-inset-bottom));
     }
 
-    /* Top Native Banner Strip */
+    /* --- CLOSABLE TOP NATIVE BANNER --- */
     .ad-banner-strip {
-      height: 46px !important;
-      max-height: 46px !important;
-      overflow: hidden !important;
+      height: 46px;
+      max-height: 46px;
+      overflow: hidden;
+      transition: all 0.25s ease-out;
     }
 
     #container-fe816a205ab9b5631883cc848108ce59 {
@@ -173,7 +174,11 @@
       justify-content: center !important;
     }
 
-    /* Sidebar small line banner */
+    /* --- CLOSABLE SIDEBAR LINE BANNER --- */
+    #sidebarAdSection {
+      transition: all 0.25s ease-out;
+    }
+
     .sidebar-ad-box {
       width: 100%;
       height: 42px;
@@ -195,11 +200,11 @@
       flex-shrink: 0;
     }
 
-    /* --- ULTRA-SLIM BOTTOM LINE BANNER (Strictly 38px) --- */
+    /* --- CLOSABLE ULTRA-SLIM BOTTOM LINE BANNER --- */
     .bottom-ad-strip {
-      height: 38px !important;
-      max-height: 38px !important;
-      min-height: 38px !important;
+      height: 40px !important;
+      max-height: 40px !important;
+      min-height: 40px !important;
       width: 100% !important;
       overflow: hidden !important;
       display: flex !important;
@@ -207,12 +212,13 @@
       justify-content: center !important;
       flex-shrink: 0 !important;
       z-index: 20;
+      transition: all 0.25s ease-out;
     }
 
     .bottom-ad-scaler {
       width: 728px;
       height: 90px;
-      transform: scale(0.41);
+      transform: scale(0.42);
       transform-origin: center center;
       display: flex;
       align-items: center;
@@ -220,34 +226,49 @@
       flex-shrink: 0;
     }
 
-    /* Guard: Force third-party video ads and unwanted injected blocks out of normal layout */
-    body > *:not(header):not(#drawerBackdrop):not(#feedbackModal):not(#authOverlay):not(#mainContentLayout):not(.bottom-ad-strip):not(script):not(style) {
-      display: none !important;
+    /* --- CLOSABLE FLOATING CORNER SPONSOR CARD --- */
+    #floatingAdCard {
+      position: fixed;
+      bottom: 50px;
+      right: 12px;
+      z-index: 45;
+      max-width: 310px;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      transition: all 0.25s ease-out;
     }
 
-    /* Prevent any injected iframe from exceeding 38px at the bottom */
-    .bottom-ad-strip iframe {
-      max-height: 38px !important;
+    .dark #floatingAdCard {
+      background: rgba(15, 23, 42, 0.98);
+      border-color: rgba(30, 41, 59, 0.9);
     }
 
-    /* In-Page Push cards positioning */
+    .floating-ad-scaler {
+      width: 300px;
+      height: 250px;
+      transform: scale(0.68);
+      transform-origin: top center;
+      margin: 0 auto -75px auto;
+    }
+
+    /* Push card controls */
     div[class*="push"],
     div[id*="push"],
-    div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal) {
+    div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal):not(#floatingAdCard) {
       top: 68px !important;
       right: 12px !important;
       max-width: 300px !important;
     }
 
     @media (max-width: 640px) {
-      div[class*="push"],
-      div[id*="push"],
-      div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal) {
-        top: auto !important;
-        bottom: 50px !important;
-        right: 8px !important;
-        transform: scale(0.8) !important;
-        transform-origin: bottom right !important;
+      #floatingAdCard {
+        bottom: 50px;
+        right: 8px;
+        transform: scale(0.85);
+        transform-origin: bottom right;
       }
     }
 
@@ -401,7 +422,7 @@
     <!-- SIDEBAR -->
     <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-4 gap-4 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none min-h-0">
       
-      <!-- Drawer Header (visible on mobile/tablet) -->
+      <!-- Drawer Header -->
       <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 lg:hidden">
         <span class="font-bold text-sm text-emerald-800 dark:text-emerald-400">Settings & Culture</span>
         <button id="closeDrawerBtn" class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
@@ -461,9 +482,12 @@
         </a>
       </div>
 
-      <!-- SCALED SMALL SIDEBAR LINE BANNER (320x50) -->
-      <div class="mt-auto pt-2 flex flex-col items-center justify-center border-t border-slate-100 dark:border-slate-800 flex-shrink-0">
-        <span class="text-[9px] uppercase tracking-wider text-slate-400 mb-1">Advertisement</span>
+      <!-- CLOSABLE SIDEBAR LINE BANNER (320x50) -->
+      <div id="sidebarAdSection" class="mt-auto pt-2 flex flex-col items-center border-t border-slate-100 dark:border-slate-800 flex-shrink-0 relative w-full">
+        <div class="w-full flex items-center justify-between mb-1 px-1">
+          <span class="text-[9px] uppercase tracking-wider text-slate-400">Advertisement</span>
+          <button type="button" onclick="closeAdBanner('sidebarAdSection')" class="text-[11px] text-slate-400 hover:text-red-500 font-bold px-1 rounded transition" title="Close Ad">✕</button>
+        </div>
         <div class="sidebar-ad-box">
           <div class="sidebar-ad-scaler" id="sidebarAdScaler">
             <script>
@@ -485,8 +509,11 @@
     <!-- CHAT CONTAINER -->
     <main class="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-slate-50/50 dark:bg-slate-950">
       
-      <!-- Native Banner Ad Container -->
-      <div class="ad-banner-strip flex-shrink-0 w-full px-2 py-0.5 flex justify-center items-center bg-slate-100/60 dark:bg-slate-900/60 border-b border-slate-200/50 dark:border-slate-800/50">
+      <!-- CLOSABLE TOP NATIVE BANNER -->
+      <div id="topAdStrip" class="ad-banner-strip flex-shrink-0 w-full px-2 py-0.5 flex justify-center items-center bg-slate-100/60 dark:bg-slate-900/60 border-b border-slate-200/50 dark:border-slate-800/50 relative">
+        <button type="button" onclick="closeAdBanner('topAdStrip')" class="absolute right-2 top-2 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
         <div class="w-full max-w-lg h-full flex items-center justify-center overflow-hidden">
           <div id="container-fe816a205ab9b5631883cc848108ce59"></div>
           <script async="async" data-cfasync="false" src="https://bauval.org/21/fe816a205ab9b5631883cc848108ce59"></script>
@@ -569,8 +596,11 @@
     </main>
   </div>
 
-  <!-- ULTRA-SLIM BOTTOM LINE BANNER STRIP (Strict 38px line docked at bottom) -->
-  <div class="bottom-ad-strip w-full flex-shrink-0 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800/80 z-20">
+  <!-- CLOSABLE ULTRA-SLIM BOTTOM LINE BANNER STRIP -->
+  <div id="bottomAdStrip" class="bottom-ad-strip w-full flex-shrink-0 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800/80 z-20 relative">
+    <button type="button" onclick="closeAdBanner('bottomAdStrip')" class="absolute right-2 top-1.5 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
     <div class="bottom-ad-scaler" id="bottomAdScaler">
       <script>
         atOptions = {
@@ -582,6 +612,26 @@
         };
       </script>
       <script src="https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee"></script>
+    </div>
+  </div>
+
+  <!-- CLOSABLE FLOATING CORNER AD (Hosts 300x250, 468x60 & Skyscraper without breaking page layout) -->
+  <div id="floatingAdCard" class="hidden sm:block">
+    <div class="flex items-center justify-between px-2.5 py-1.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60">
+      <span class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">Special Sponsor</span>
+      <button type="button" onclick="closeAdBanner('floatingAdCard')" class="text-xs text-slate-400 hover:text-red-500 font-bold px-1 transition" title="Close Ad">✕</button>
+    </div>
+    <div class="floating-ad-scaler">
+      <script>
+        atOptions = {
+          'key' : '9f4f1cfe78a144f135a9bdcfc885e1a9',
+          'format' : 'iframe',
+          'height' : 250,
+          'width' : 300,
+          'params' : {}
+        };
+      </script>
+      <script src="https://bauval.org/22/9f4f1cfe78a144f135a9bdcfc885e1a9"></script>
     </div>
   </div>
 
@@ -671,12 +721,29 @@
     const signedInUser = document.getElementById('signedInUser');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // Strict 38px Dynamic Line Scaler
+    // General Banner Ad Closer: smooth collapse animation
+    function closeAdBanner(elementId) {
+      const el = document.getElementById(elementId);
+      if (el) {
+        el.style.transition = 'all 0.25s ease-out';
+        el.style.opacity = '0';
+        el.style.maxHeight = '0px';
+        el.style.height = '0px';
+        el.style.padding = '0px';
+        el.style.margin = '0px';
+        el.style.border = 'none';
+        setTimeout(() => {
+          el.style.display = 'none';
+        }, 250);
+      }
+    }
+
+    // Dynamic Sizing for Active Banners
     function autoScaleBannerAds() {
       const bottomScaler = document.getElementById('bottomAdScaler');
       if (bottomScaler && bottomScaler.parentElement) {
-        const availableW = bottomScaler.parentElement.clientWidth - 16;
-        const scale = Math.min(0.41, availableW / 728);
+        const availableW = bottomScaler.parentElement.clientWidth - 32;
+        const scale = Math.min(0.42, availableW / 728);
         bottomScaler.style.transform = `scale(${scale.toFixed(3)})`;
         bottomScaler.style.transformOrigin = 'center center';
       }
