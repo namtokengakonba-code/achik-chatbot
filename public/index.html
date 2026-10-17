@@ -34,6 +34,7 @@
         }
       }
 
+      // 1. Prevent scripts from replacing the current active tab
       const originalAssign = window.location.assign ? window.location.assign.bind(window.location) : null;
       const originalReplace = window.location.replace ? window.location.replace.bind(window.location) : null;
 
@@ -57,6 +58,7 @@
         };
       }
 
+      // 2. Intercept window.open so popunders cannot steal active tab on Android
       const originalOpen = window.open;
       window.open = function(url, target, features) {
         if (isExternalAd(url)) {
@@ -65,6 +67,7 @@
         return originalOpen.call(window, url, target, features);
       };
 
+      // 3. Force any external ad link click into a separate tab
       document.addEventListener('click', function(e) {
         const link = e.target.closest('a');
         if (link && link.href && isExternalAd(link.href)) {
@@ -73,6 +76,7 @@
         }
       }, true);
 
+      // 4. Remove invisible clickjack overlays (transparent fixed divs used by popunder scripts)
       const purgeInvisibleOverlays = () => {
         document.querySelectorAll('div, a').forEach(el => {
           if (el.id === 'drawerBackdrop' || el.id === 'feedbackModal' || el.id === 'authOverlay') return;
@@ -89,6 +93,7 @@
       };
       setInterval(purgeInvisibleOverlays, 1200);
 
+      // 5. Clean up lingering closed ad notifications
       const adCleaner = new MutationObserver(function() {
         const elements = document.querySelectorAll('div, span, p');
         elements.forEach(function(el) {
@@ -173,14 +178,68 @@
     }
 
     .safe-bottom {
-      padding-bottom: max(0.35rem, env(safe-area-inset-bottom));
+      padding-bottom: max(0.4rem, env(safe-area-inset-bottom));
     }
 
-    /* --- ULTRA-SLIM 30px MICRO LINE BANNERS (TOP & BOTTOM) --- */
-    .ad-banner-micro {
-      height: 30px !important;
-      max-height: 30px !important;
-      min-height: 30px !important;
+    /* Top Native Banner Strip */
+    .ad-banner-top {
+      height: 40px !important;
+      max-height: 40px !important;
+      overflow: hidden !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
+      transition: all 0.25s ease-out;
+    }
+
+    #container-fe816a205ab9b5631883cc848108ce59 {
+      height: 38px !important;
+      max-height: 38px !important;
+      max-width: 440px !important;
+      margin: 0 auto !important;
+      overflow: hidden !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    /* --- SIDEBAR RECTANGLE BANNER (BLUE BOX IN IMAGE 3) --- */
+    #sidebarSquareAd {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease-out;
+    }
+
+    .sidebar-square-ad-scaler {
+      width: 300px;
+      height: 250px;
+      transform: scale(0.82);
+      transform-origin: top center;
+      margin-bottom: -40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 340px) {
+      .sidebar-square-ad-scaler {
+        transform: scale(0.72);
+        margin-bottom: -65px;
+      }
+    }
+
+    /* --- SLIM BOTTOM LINE BANNER (STRICT 42px ON MOBILE & DESKTOP) --- */
+    .bottom-ad-strip {
+      height: 42px !important;
+      max-height: 42px !important;
+      min-height: 42px !important;
+      width: 100% !important;
       overflow: hidden !important;
       display: flex !important;
       align-items: center !important;
@@ -190,80 +249,49 @@
       transition: all 0.25s ease-out;
     }
 
-    #container-fe816a205ab9b5631883cc848108ce59 {
-      height: 28px !important;
-      max-height: 28px !important;
-      max-width: 420px !important;
-      margin: 0 auto !important;
-      overflow: hidden !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-
     .bottom-ad-scaler {
-      width: 728px !important;
-      height: 90px !important;
-      transform: scale(0.33) !important;
-      transform-origin: center center !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      flex-shrink: 0 !important;
-    }
-
-    /* --- TOP-RIGHT CORNER IN-PAGE PUSH BANNER STYLING --- */
-    div[class*="push"],
-    div[id*="push"],
-    div[style*="position: fixed"][style*="z-index"]:not(#authOverlay):not(#feedbackModal):not(#topRightAdBadge) {
-      top: 54px !important;
-      right: 12px !important;
-      max-width: 280px !important;
-      z-index: 55 !important;
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-    }
-
-    /* --- TOP-RIGHT CORNER BANNER BADGE --- */
-    #topRightAdBadge {
-      position: fixed;
-      top: 56px;
-      right: 12px;
-      z-index: 50;
-      max-width: 250px;
-      background: rgba(255, 255, 255, 0.96);
-      border: 1px solid rgba(226, 232, 240, 0.9);
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      overflow: hidden;
-      transition: all 0.25s ease-out;
-    }
-
-    .dark #topRightAdBadge {
-      background: rgba(15, 23, 42, 0.96);
-      border-color: rgba(30, 41, 59, 0.9);
-    }
-
-    .top-right-scaler {
       width: 320px;
       height: 50px;
-      transform: scale(0.65);
-      transform-origin: top left;
-      margin-bottom: -17px;
+      transform: scale(0.80);
+      transform-origin: center center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    @media (min-width: 640px) {
+      .bottom-ad-scaler {
+        width: 728px;
+        height: 90px;
+        transform: scale(0.44);
+      }
+    }
+
+    /* Block intrusive full-screen video ads from expanding below chat */
+    video,
+    iframe[src*="fond-appointment"]:has(video),
+    div:has(> video) {
+      display: none !important;
+    }
+
+    /* In-Page Push notifications */
+    div[class*="push"],
+    div[id*="push"] {
+      top: 56px !important;
+      right: 12px !important;
+      max-width: 290px !important;
+      z-index: 55 !important;
     }
 
     @media (max-width: 640px) {
       div[class*="push"],
       div[id*="push"] {
         top: auto !important;
-        bottom: 42px !important;
+        bottom: 50px !important;
         right: 8px !important;
-        transform: scale(0.75) !important;
+        transform: scale(0.78) !important;
         transform-origin: bottom right !important;
-      }
-      #topRightAdBadge {
-        display: none;
       }
     }
 
@@ -276,7 +304,7 @@
 
 <body class="app-height bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 overflow-hidden">
 
-  <!-- COMPACT TOP HEADER (48px) -->
+  <!-- TOP HEADER -->
   <header class="h-12 sm:h-13 border-b border-emerald-100 dark:border-emerald-900/40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-30 flex-shrink-0">
     <div class="w-full mx-auto px-2 sm:px-4 h-full flex items-center justify-between">
       
@@ -408,13 +436,13 @@
     </div>
   </section>
 
-  <!-- MAIN BODY LAYOUT (Expanded height; chat message area takes priority) -->
+  <!-- MAIN BODY LAYOUT -->
   <div id="mainContentLayout" class="flex-1 w-full min-w-0 mx-auto flex overflow-hidden relative h-full min-h-0">
 
     <!-- MOBILE & TABLET DRAWER BACKDROP -->
     <div id="drawerBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR DRAWER -->
     <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-3.5 sm:p-4 gap-3 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none min-h-0">
       
       <!-- Drawer Header -->
@@ -470,6 +498,28 @@
         </p>
       </div>
 
+      <!-- BANNER AD PLACED IN THE BLUE BOX IN SIDEBAR (IMAGE 3) -->
+      <div id="sidebarSquareAd" class="p-2 rounded-xl bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center relative overflow-hidden">
+        <div class="w-full flex items-center justify-between mb-1 px-1">
+          <span class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">Advertisement</span>
+          <button type="button" onclick="closeAdBanner('sidebarSquareAd')" class="text-[11px] text-slate-400 hover:text-red-500 font-bold px-1 transition" title="Close Ad">✕</button>
+        </div>
+        <div class="w-full flex items-center justify-center overflow-hidden">
+          <div class="sidebar-square-ad-scaler">
+            <script>
+              atOptions = {
+                'key' : '9f4f1cfe78a144f135a9bdcfc885e1a9',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+              };
+            </script>
+            <script src="https://bauval.org/22/9f4f1cfe78a144f135a9bdcfc885e1a9"></script>
+          </div>
+        </div>
+      </div>
+
       <!-- SPONSORED PROMOTION -->
       <div class="mt-auto pt-2 border-t border-slate-100 dark:border-slate-800">
         <a href="https://araplhn.org/4/155e2c27e0088395c28267e674074c2d" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-full px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl hover:bg-emerald-100 transition">
@@ -479,11 +529,11 @@
 
     </aside>
 
-    <!-- CHAT CONTAINER: 78%+ OF SCREEN HEIGHT IS DEDICATED TO CHAT -->
+    <!-- CHAT CONTAINER: MAXIMUM HEIGHT FOR CHAT MESSAGES -->
     <main class="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-slate-50/50 dark:bg-slate-950">
       
-      <!-- ULTRA-SLIM 30px TOP LINE BANNER -->
-      <div id="topAdStrip" class="ad-banner-micro w-full bg-slate-100/70 dark:bg-slate-900/70 border-b border-slate-200/50 dark:border-slate-800/50 relative">
+      <!-- TOP NATIVE BANNER (40px) -->
+      <div id="topAdStrip" class="ad-banner-top w-full bg-slate-100/70 dark:bg-slate-900/70 border-b border-slate-200/50 dark:border-slate-800/50 relative">
         <button type="button" onclick="closeAdBanner('topAdStrip')" class="absolute right-2 top-0.5 p-0.5 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
@@ -493,7 +543,7 @@
         </div>
       </div>
 
-      <!-- CHAT MESSAGES LIST: MAXIMUM ROOM TO DISPLAY CONVERSATIONS -->
+      <!-- CHAT MESSAGES CONTAINER -->
       <div id="messagesContainer" class="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 md:p-6 space-y-4">
         
         <!-- Welcome Message -->
@@ -514,7 +564,7 @@
         </div>
       </div>
 
-      <!-- COMPACT PROMPT MESSAGE INPUT BAR -->
+      <!-- PROMPT MESSAGE INPUT BAR -->
       <div class="p-1.5 sm:p-2 border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md safe-bottom flex-shrink-0">
         <div class="max-w-5xl mx-auto">
           <div id="filePreview" class="hidden mb-1 flex flex-wrap items-center gap-1" aria-live="polite"></div>
@@ -569,32 +619,12 @@
     </main>
   </div>
 
-  <!-- ULTRA-SLIM 30px BOTTOM LINE BANNER (Strictly 30px, Auto-Reopens after 15s) -->
-  <div id="bottomAdStrip" class="ad-banner-micro w-full bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800/80 relative">
-    <button type="button" onclick="closeAdBanner('bottomAdStrip')" class="absolute right-2 top-0.5 p-0.5 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
+  <!-- SLIM 42px BOTTOM LINE BANNER (CHONATBO: STRICT 42px ON MOBILE & DESKTOP) -->
+  <div id="bottomAdStrip" class="bottom-ad-strip w-full bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800/80 relative">
+    <button type="button" onclick="closeAdBanner('bottomAdStrip')" class="absolute right-2 top-1 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
     </button>
     <div class="bottom-ad-scaler" id="bottomAdScaler">
-      <script>
-        atOptions = {
-          'key' : '39ffdf0ae262c17b4545a4934d3ad7ee',
-          'format' : 'iframe',
-          'height' : 90,
-          'width' : 728,
-          'params' : {}
-        };
-      </script>
-      <script src="https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee"></script>
-    </div>
-  </div>
-
-  <!-- TOP-RIGHT CORNER SPONSOR BADGE (Auto-Reopens after 15s) -->
-  <div id="topRightAdBadge">
-    <div class="flex items-center justify-between px-2 py-0.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60">
-      <span class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">Sponsor</span>
-      <button type="button" onclick="closeAdBanner('topRightAdBadge')" class="text-[10px] text-slate-400 hover:text-red-500 font-bold px-1 transition" title="Close Ad">✕</button>
-    </div>
-    <div class="top-right-scaler">
       <script>
         atOptions = {
           'key' : 'c466b17efc352c5fc79a8c8b5962b06f',
@@ -755,26 +785,25 @@
       el.style.transition = 'all 0.25s ease-in';
       el.style.opacity = '1';
 
-      if (elementId === 'bottomAdStrip' || elementId === 'topAdStrip') {
-        el.style.height = '30px';
-        el.style.maxHeight = '30px';
-        el.style.minHeight = '30px';
-      } else if (elementId === 'topRightAdBadge') {
-        el.style.display = 'block';
+      if (elementId === 'bottomAdStrip') {
+        el.style.height = '42px';
+        el.style.maxHeight = '42px';
+        el.style.minHeight = '42px';
+      } else if (elementId === 'topAdStrip') {
+        el.style.height = '40px';
+        el.style.maxHeight = '40px';
+        el.style.minHeight = '40px';
+      } else if (elementId === 'sidebarSquareAd') {
         el.style.height = 'auto';
         el.style.maxHeight = '';
       }
 
       refreshAdContainer(elementId);
-
-      if (typeof autoScaleBannerAds === 'function') {
-        autoScaleBannerAds();
-      }
     }
 
     // Recurring 15-second loop: rotates fresh creatives and revives closed banners
     setInterval(() => {
-      ['bottomAdStrip', 'topAdStrip', 'topRightAdBadge'].forEach(id => {
+      ['bottomAdStrip', 'topAdStrip', 'sidebarSquareAd'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
           if (el.style.display === 'none' || el.style.opacity === '0') {
@@ -785,20 +814,6 @@
         }
       });
     }, AD_RELOAD_INTERVAL);
-
-    // Dynamic Sizer: Enforces exactly 30px height
-    function autoScaleBannerAds() {
-      const bottomScaler = document.getElementById('bottomAdScaler');
-      if (bottomScaler && bottomScaler.parentElement) {
-        const availableW = bottomScaler.parentElement.clientWidth - 24;
-        const scale = Math.min(0.33, availableW / 728);
-        bottomScaler.style.transform = `scale(${scale.toFixed(3)})`;
-        bottomScaler.style.transformOrigin = 'center center';
-      }
-    }
-    window.addEventListener('resize', autoScaleBannerAds);
-    window.addEventListener('DOMContentLoaded', autoScaleBannerAds);
-    setTimeout(autoScaleBannerAds, 1000);
 
     // Feedback & Rating elements
     const openFeedbackBtn = document.getElementById('openFeedbackBtn');
