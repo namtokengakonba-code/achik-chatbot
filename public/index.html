@@ -34,7 +34,6 @@
         }
       }
 
-      // 1. Prevent scripts from replacing the current active tab
       const originalAssign = window.location.assign ? window.location.assign.bind(window.location) : null;
       const originalReplace = window.location.replace ? window.location.replace.bind(window.location) : null;
 
@@ -58,7 +57,6 @@
         };
       }
 
-      // 2. Intercept window.open so popunders cannot steal active tab on Android
       const originalOpen = window.open;
       window.open = function(url, target, features) {
         if (isExternalAd(url)) {
@@ -67,7 +65,6 @@
         return originalOpen.call(window, url, target, features);
       };
 
-      // 3. Force any external ad link click into a separate tab
       document.addEventListener('click', function(e) {
         const link = e.target.closest('a');
         if (link && link.href && isExternalAd(link.href)) {
@@ -76,7 +73,6 @@
         }
       }, true);
 
-      // 4. Remove invisible clickjack overlays (transparent fixed divs used by popunder scripts)
       const purgeInvisibleOverlays = () => {
         document.querySelectorAll('div, a').forEach(el => {
           if (el.id === 'drawerBackdrop' || el.id === 'feedbackModal' || el.id === 'authOverlay') return;
@@ -93,7 +89,6 @@
       };
       setInterval(purgeInvisibleOverlays, 1200);
 
-      // 5. Clean up lingering closed ad notifications
       const adCleaner = new MutationObserver(function() {
         const elements = document.querySelectorAll('div, span, p');
         elements.forEach(function(el) {
@@ -183,8 +178,8 @@
 
     /* Top Native Banner Strip */
     .ad-banner-top {
-      height: 40px !important;
-      max-height: 40px !important;
+      height: 38px !important;
+      max-height: 38px !important;
       overflow: hidden !important;
       display: flex !important;
       align-items: center !important;
@@ -194,8 +189,8 @@
     }
 
     #container-fe816a205ab9b5631883cc848108ce59 {
-      height: 38px !important;
-      max-height: 38px !important;
+      height: 36px !important;
+      max-height: 36px !important;
       max-width: 440px !important;
       margin: 0 auto !important;
       overflow: hidden !important;
@@ -204,7 +199,7 @@
       justify-content: center !important;
     }
 
-    /* --- SIDEBAR RECTANGLE BANNER (BLUE BOX IN IMAGE 3) --- */
+    /* --- SIDEBAR BANNER (BLUE BOX IN IMAGE 3) --- */
     #sidebarSquareAd {
       width: 100%;
       border-radius: 12px;
@@ -234,41 +229,39 @@
       }
     }
 
-    /* --- SLIM BOTTOM LINE BANNER (STRICT 42px ON MOBILE & DESKTOP) --- */
+    /* --- SMALL HORIZONTAL BOTTOM BANNER (SLIM 36px SCALED DOWN) --- */
     .bottom-ad-strip {
-      height: 42px !important;
-      max-height: 42px !important;
-      min-height: 42px !important;
+      height: 36px !important;
+      max-height: 36px !important;
+      min-height: 36px !important;
       width: 100% !important;
       overflow: hidden !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       flex-shrink: 0 !important;
-      z-index: 20 !important;
+      z-index: 25 !important;
       transition: all 0.25s ease-out;
     }
 
     .bottom-ad-scaler {
-      width: 320px;
-      height: 50px;
-      transform: scale(0.80);
-      transform-origin: center center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      width: 728px !important;
+      height: 90px !important;
+      transform: scale(0.38) !important;
+      transform-origin: center center !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
     }
 
-    @media (min-width: 640px) {
+    @media (max-width: 640px) {
       .bottom-ad-scaler {
-        width: 728px;
-        height: 90px;
-        transform: scale(0.44);
+        transform: scale(0.36) !important;
       }
     }
 
-    /* Block intrusive full-screen video ads from expanding below chat */
+    /* Block intrusive video ads from expanding below chat */
     video,
     iframe[src*="fond-appointment"]:has(video),
     div:has(> video) {
@@ -288,7 +281,7 @@
       div[class*="push"],
       div[id*="push"] {
         top: auto !important;
-        bottom: 50px !important;
+        bottom: 46px !important;
         right: 8px !important;
         transform: scale(0.78) !important;
         transform-origin: bottom right !important;
@@ -498,7 +491,7 @@
         </p>
       </div>
 
-      <!-- BANNER AD PLACED IN THE BLUE BOX IN SIDEBAR (IMAGE 3) -->
+      <!-- BANNER AD IN SIDEBAR DRAWER (BLUE BOX) -->
       <div id="sidebarSquareAd" class="p-2 rounded-xl bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center relative overflow-hidden">
         <div class="w-full flex items-center justify-between mb-1 px-1">
           <span class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">Advertisement</span>
@@ -532,7 +525,7 @@
     <!-- CHAT CONTAINER: MAXIMUM HEIGHT FOR CHAT MESSAGES -->
     <main class="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-slate-50/50 dark:bg-slate-950">
       
-      <!-- TOP NATIVE BANNER (40px) -->
+      <!-- TOP NATIVE BANNER -->
       <div id="topAdStrip" class="ad-banner-top w-full bg-slate-100/70 dark:bg-slate-900/70 border-b border-slate-200/50 dark:border-slate-800/50 relative">
         <button type="button" onclick="closeAdBanner('topAdStrip')" class="absolute right-2 top-0.5 p-0.5 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -619,22 +612,22 @@
     </main>
   </div>
 
-  <!-- SLIM 42px BOTTOM LINE BANNER (CHONATBO: STRICT 42px ON MOBILE & DESKTOP) -->
+  <!-- SLIM 36px HORIZONTAL BOTTOM BANNER (SCALED DOWN) -->
   <div id="bottomAdStrip" class="bottom-ad-strip w-full bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800/80 relative">
-    <button type="button" onclick="closeAdBanner('bottomAdStrip')" class="absolute right-2 top-1 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
+    <button type="button" onclick="closeAdBanner('bottomAdStrip')" class="absolute right-2 top-0.5 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
     </button>
     <div class="bottom-ad-scaler" id="bottomAdScaler">
       <script>
         atOptions = {
-          'key' : 'c466b17efc352c5fc79a8c8b5962b06f',
+          'key' : '39ffdf0ae262c17b4545a4934d3ad7ee',
           'format' : 'iframe',
-          'height' : 50,
-          'width' : 320,
+          'height' : 90,
+          'width' : 728,
           'params' : {}
         };
       </script>
-      <script src="https://bauval.org/22/c466b17efc352c5fc79a8c8b5962b06f"></script>
+      <script src="https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee"></script>
     </div>
   </div>
 
@@ -786,13 +779,13 @@
       el.style.opacity = '1';
 
       if (elementId === 'bottomAdStrip') {
-        el.style.height = '42px';
-        el.style.maxHeight = '42px';
-        el.style.minHeight = '42px';
+        el.style.height = '36px';
+        el.style.maxHeight = '36px';
+        el.style.minHeight = '36px';
       } else if (elementId === 'topAdStrip') {
-        el.style.height = '40px';
-        el.style.maxHeight = '40px';
-        el.style.minHeight = '40px';
+        el.style.height = '38px';
+        el.style.maxHeight = '38px';
+        el.style.minHeight = '38px';
       } else if (elementId === 'sidebarSquareAd') {
         el.style.height = 'auto';
         el.style.maxHeight = '';
