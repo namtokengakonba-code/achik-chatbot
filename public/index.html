@@ -1,1631 +1,644 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en" class="dark h-full">
 <head>
-
-  <meta name="c9003aeed4262d10993c21a2b5f5db8279fd3fbe" content="c9003aeed4262d10993c21a2b5f5db8279fd3fbe" />
-  <meta name="referrer" content="no-referrer-when-downgrade" />
-
-  <!-- Monetag & Google Search Console Verification -->
-  <meta name="monetag" content="c3f33c6590315012665c96f5f0a7f676">
-  <meta name="google-site-verification" content="5z7yHu5E9kukmZK9FBM4JmRv1ZcrSxg4mwHyAF8oHGo" />
-
-  <!-- Monetag Tag (nap5k) -->
-  <script>
-    (function(s) {
-      s.dataset.zone = '12017976';
-      s.src = 'https://nap5k.com/tag.min.js';
-      s.async = true;
-      s.setAttribute('data-cfasync', 'false');
-    })((document.head || document.documentElement).appendChild(document.createElement('script')));
-  </script>
-
-  <!-- ANTI-REDIRECT & CLICKJACK SHIELD (Prevents Mobile Android Redirects) -->
-  <script>
-    (function() {
-      const currentOrigin = window.location.origin;
-
-      function isExternalAd(url) {
-        if (!url || typeof url !== 'string') return false;
-        try {
-          const parsed = new URL(url, window.location.href);
-          return parsed.origin !== currentOrigin && !url.includes('/api/auth/');
-        } catch(e) {
-          return false;
-        }
-      }
-
-      const originalAssign = window.location.assign ? window.location.assign.bind(window.location) : null;
-      const originalReplace = window.location.replace ? window.location.replace.bind(window.location) : null;
-
-      if (originalAssign) {
-        window.location.assign = function(url) {
-          if (isExternalAd(url)) {
-            window.open(url, '_blank', 'noopener,noreferrer');
-            return;
-          }
-          return originalAssign(url);
-        };
-      }
-
-      if (originalReplace) {
-        window.location.replace = function(url) {
-          if (isExternalAd(url)) {
-            window.open(url, '_blank', 'noopener,noreferrer');
-            return;
-          }
-          return originalReplace(url);
-        };
-      }
-
-      const originalOpen = window.open;
-      window.open = function(url, target, features) {
-        if (isExternalAd(url)) {
-          return originalOpen.call(window, url, '_blank', 'noopener,noreferrer');
-        }
-        return originalOpen.call(window, url, target, features);
-      };
-
-      document.addEventListener('click', function(e) {
-        const link = e.target.closest('a');
-        if (link && link.href && isExternalAd(link.href)) {
-          link.target = '_blank';
-          link.rel = 'noopener noreferrer';
-        }
-      }, true);
-
-      const purgeInvisibleOverlays = () => {
-        document.querySelectorAll('div, a').forEach(el => {
-          if (el.id === 'drawerBackdrop' || el.id === 'feedbackModal' || el.id === 'authOverlay') return;
-          const style = window.getComputedStyle(el);
-          if (style.position === 'fixed' || style.position === 'absolute') {
-            const isWide = (parseInt(style.width) >= window.innerWidth * 0.85);
-            const isTall = (parseInt(style.height) >= window.innerHeight * 0.85);
-            const isTransparent = style.opacity === '0' || style.visibility === 'hidden' || style.backgroundColor === 'rgba(0, 0, 0, 0)';
-            if (isWide && isTall && isTransparent && parseInt(style.zIndex) > 10) {
-              el.remove();
-            }
-          }
-        });
-      };
-      setInterval(purgeInvisibleOverlays, 1200);
-
-      const adCleaner = new MutationObserver(function() {
-        const elements = document.querySelectorAll('div, span, p');
-        elements.forEach(function(el) {
-          if (el.children.length === 0) {
-            const text = (el.textContent || '').trim().toLowerCase();
-            if (text === 'ad was closed' || text === 'advertisement closed') {
-              const card = el.closest('[style*="position: fixed"], [style*="position: absolute"]') || el.parentElement;
-              if (card && card !== document.body && card !== document.documentElement) {
-                card.style.display = 'none';
-                card.remove();
-              }
-            }
-          }
-        });
-      });
-
-      if (document.body) {
-        adCleaner.observe(document.body, { childList: true, subtree: true });
-      } else {
-        document.addEventListener('DOMContentLoaded', function() {
-          adCleaner.observe(document.body, { childList: true, subtree: true });
-        });
-      }
-    })();
-  </script>
-
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>A·chik Chatbot | Garo Language Companion</title>
-  <link rel="icon" type="image/png" href="/logo.png" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>A·chik Chatbot - Bilingual Garo Companion</title>
+  
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
           colors: {
-            emerald: { 750: '#035d3d', 850: '#023c28', 950: '#012418' },
-            amber: { 450: '#f59e0b' }
-          },
-          screens: {
-            'xs': '380px'
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+              950: '#022c22',
+            }
           }
         }
       }
     };
   </script>
-  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-  <script src="https://unpkg.com/mammoth@1.9.0/mammoth.browser.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    .raka { color: #f59e0b; font-weight: 700; }
-
-    .brand-logo {
-      width: clamp(1.5rem, 7vw, 2.1rem);
-      height: clamp(1.5rem, 7vw, 2.1rem);
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.8);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(71, 85, 105, 1);
     }
 
-    .brand-title {
-      color: #065f46;
-      font-size: clamp(0.85rem, 4vw, 1rem);
-      line-height: 1.2;
-      white-space: nowrap;
-    }
-
-    .dark .brand-title { color: #a7f3d0; }
-
-    .header-user-email { display: none; }
-
-    @media (min-width: 640px) {
-      .header-user-email { display: inline-block; }
-    }
-
-    .app-height {
-      height: 100vh;
-      height: 100dvh;
-    }
-
-    .safe-bottom {
-      padding-bottom: max(0.4rem, env(safe-area-inset-bottom));
-    }
-
-    /* Top Native Banner Strip */
-    .ad-banner-top {
-      height: 38px !important;
-      max-height: 38px !important;
-      overflow: hidden !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      flex-shrink: 0 !important;
-      transition: all 0.25s ease-out;
-    }
-
-    #container-fe816a205ab9b5631883cc848108ce59 {
-      height: 36px !important;
-      max-height: 36px !important;
-      max-width: 440px !important;
-      margin: 0 auto !important;
-      overflow: hidden !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-
-    /* --- SIDEBAR BANNER (BLUE BOX IN IMAGE 3) --- */
-    #sidebarSquareAd {
-      width: 100%;
-      border-radius: 12px;
+    /* Scaling wrappers for sidebar ad banner (supports 300x250, 160x300 read-full, and 320x50) */
+    .ad-sidebar-scaled {
+      width: 280px;
+      height: 200px;
       overflow: hidden;
+      position: relative;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      transition: all 0.25s ease-out;
+      align-items: flex-start;
+      border-radius: 8px;
     }
-
-    .sidebar-square-ad-scaler {
+    .ad-sidebar-inner {
+      transform: scale(0.78);
+      transform-origin: top center;
       width: 300px;
       height: 250px;
-      transform: scale(0.82);
-      transform-origin: top center;
-      margin-bottom: -40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      pointer-events: auto;
     }
 
-    @media (max-width: 340px) {
-      .sidebar-square-ad-scaler {
-        transform: scale(0.72);
-        margin-bottom: -65px;
-      }
-    }
-
-    /* --- SMALL HORIZONTAL BOTTOM BANNER (SLIM 36px SCALED DOWN) --- */
-    .bottom-ad-strip {
-      height: 36px !important;
-      max-height: 36px !important;
-      min-height: 36px !important;
-      width: 100% !important;
+    /* Bottom slim horizontal banner: strictly clamped to 34px height */
+    #bottomAdStrip {
+      height: 34px !important;
+      min-height: 34px !important;
+      max-height: 34px !important;
       overflow: hidden !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      flex-shrink: 0 !important;
-      z-index: 25 !important;
-      transition: all 0.25s ease-out;
     }
-
-    .bottom-ad-scaler {
-      width: 728px !important;
-      height: 90px !important;
-      transform: scale(0.38) !important;
-      transform-origin: center center !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      flex-shrink: 0 !important;
+    .ad-bottom-inner {
+      transform: scale(0.36);
+      transform-origin: center center;
+      width: 728px;
+      height: 90px;
+      margin: -28px auto;
     }
-
     @media (max-width: 640px) {
-      .bottom-ad-scaler {
-        transform: scale(0.36) !important;
+      .ad-bottom-inner {
+        transform: scale(0.65);
+        transform-origin: center center;
+        width: 320px;
+        height: 50px;
+        margin: -8px auto;
       }
     }
-
-    /* Block intrusive video ads from expanding below chat */
-    video,
-    iframe[src*="fond-appointment"]:has(video),
-    div:has(> video) {
-      display: none !important;
-    }
-
-    /* In-Page Push notifications */
-    div[class*="push"],
-    div[id*="push"] {
-      top: 56px !important;
-      right: 12px !important;
-      max-width: 290px !important;
-      z-index: 55 !important;
-    }
-
-    @media (max-width: 640px) {
-      div[class*="push"],
-      div[id*="push"] {
-        top: auto !important;
-        bottom: 46px !important;
-        right: 8px !important;
-        transform: scale(0.78) !important;
-        transform-origin: bottom right !important;
-      }
-    }
-
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.25); border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.5); }
   </style>
-</head>
 
-<body class="app-height bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 overflow-hidden">
-
-  <!-- TOP HEADER -->
-  <header class="h-12 sm:h-13 border-b border-emerald-100 dark:border-emerald-900/40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-30 flex-shrink-0">
-    <div class="w-full mx-auto px-2 sm:px-4 h-full flex items-center justify-between">
-      
-      <!-- Brand & Mobile Drawer Toggle -->
-      <div class="flex min-w-0 flex-1 items-center gap-2">
-        <button id="menuToggleBtn" class="lg:hidden p-1.5 -ml-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Open Sidebar">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-        </button>
-
-        <img src="/logo.png" alt="Logo" class="brand-logo rounded-lg object-contain bg-white shadow-sm flex-shrink-0" />
-        
-        <div class="min-w-0">
-          <div class="flex items-center gap-1.5">
-            <h1 class="brand-title font-bold tracking-tight">
-              A·chik Chatbot
-            </h1>
-            <span class="hidden sm:inline-flex text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 font-semibold">
-              North Garo Hills
-            </span>
-          </div>
-          <p class="hidden xs:block text-[9px] text-slate-500 dark:text-slate-400">Wa·sabegipa seng·ani</p>
-        </div>
-      </div>
-
-      <!-- Controls -->
-      <div class="flex flex-shrink-0 items-center gap-1">
-        <span id="signedInUser" class="header-user-email max-w-28 truncate text-[10px] sm:max-w-40 sm:text-xs text-slate-500 dark:text-slate-400"></span>
-        <button id="logoutBtn" type="button" class="hidden rounded-lg border border-slate-200 dark:border-slate-800 px-2 py-1 text-[10px] sm:px-2.5 sm:text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
-          Sign out
-        </button>
-
-        <!-- Feedback & Rating Button -->
-        <button id="openFeedbackBtn" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-600 dark:hover:text-amber-400 transition" title="Feedback & Rating">
-          <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
-        </button>
-
-        <!-- Theme Toggle -->
-        <button id="themeToggleBtn" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Toggle Dark/Light Mode">
-          <svg id="moonIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-          <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-        </button>
-
-        <!-- Clear Chat -->
-        <button id="clearChatBtn" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition" title="Reset Chat History">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- FEEDBACK & RATING MODAL -->
-  <section id="feedbackModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
-    <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl relative">
-      <button id="closeFeedbackBtn" class="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition" aria-label="Close dialog">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-      </button>
-
-      <div class="mb-4">
-        <h2 id="feedbackTitle" class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-          <span>💬</span> Message Developer
-        </h2>
-        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Rate your experience or share your thoughts to help us improve A·chik Chatbot.</p>
-      </div>
-
-      <form id="feedbackForm" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Rating</label>
-          <div class="flex items-center gap-1.5" id="starContainer">
-            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="1" aria-label="1 star">
-              <svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-            </button>
-            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="2" aria-label="2 stars">
-              <svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-            </button>
-            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="3" aria-label="3 stars">
-              <svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-            </button>
-            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="4" aria-label="4 stars">
-              <svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-            </button>
-            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="5" aria-label="5 stars">
-              <svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-            </button>
-            <span id="ratingText" class="text-xs font-semibold text-amber-600 dark:text-amber-400 ml-2">5 / 5</span>
-          </div>
-          <input type="hidden" id="selectedRating" value="5">
-        </div>
-
-        <div>
-          <label for="feedbackCategory" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Feedback Type</label>
-          <select id="feedbackCategory" class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-2.5 text-xs text-slate-800 dark:text-slate-200 outline-none focus:border-emerald-500">
-            <option value="general">💡 General Feedback / Suggestion</option>
-            <option value="translation">📖 Garo Translation Quality</option>
-            <option value="bug">🐛 Report a Bug / Issue</option>
-            <option value="feature">✨ New Feature Request</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="feedbackMessage" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Your Message</label>
-          <textarea id="feedbackMessage" rows="4" required maxlength="2000" placeholder="Type your message, critique, or idea here..." class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-3 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none focus:border-emerald-500 resize-none"></textarea>
-        </div>
-
-        <p id="feedbackStatus" role="status" class="hidden text-xs font-medium"></p>
-
-        <button type="submit" id="submitFeedbackBtn" class="w-full rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] py-2.5 text-xs font-semibold text-white shadow-md transition disabled:opacity-50">
-          Send Message to Developer
-        </button>
-      </form>
-    </div>
-  </section>
-
-  <!-- AUTH DIALOG OVERLAY -->
-  <section id="authOverlay" class="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-    <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl">
-      <div class="mb-5 text-center">
-        <img src="/logo.png" alt="" class="mx-auto mb-3 h-14 w-14 rounded-xl object-contain">
-        <h2 id="authTitle" class="text-xl font-bold text-emerald-800 dark:text-emerald-300">Sign in to A·chik Chatbot</h2>
-        <p id="authDescription" class="mt-1 text-sm text-slate-500 dark:text-slate-400">Sign in with Google to create your account or continue chatting.</p>
-      </div>
-      <p id="authStatus" role="status" aria-live="polite" class="mb-3 hidden rounded-lg bg-slate-50 dark:bg-slate-800 p-3 text-sm text-slate-600 dark:text-slate-300"></p>
-      <a href="/api/auth/google" id="googleSignInBtn" class="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
-        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 38.02 46.98 31.86 46.98 24.55Z"/><path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.55 2.56 10.78l7.97-6.19Z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.14 1.44-4.89 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"/></svg>
-        Continue with Google
-      </a>
-      <p class="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">Your Google email is used to create or access your account.</p>
-    </div>
-  </section>
-
-  <!-- MAIN BODY LAYOUT -->
-  <div id="mainContentLayout" class="flex-1 w-full min-w-0 mx-auto flex overflow-hidden relative h-full min-h-0">
-
-    <!-- MOBILE & TABLET DRAWER BACKDROP -->
-    <div id="drawerBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
-
-    <!-- SIDEBAR DRAWER -->
-    <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-3.5 sm:p-4 gap-3 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none min-h-0">
-      
-      <!-- Drawer Header -->
-      <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 lg:hidden">
-        <span class="font-bold text-sm text-emerald-800 dark:text-emerald-400">Settings & Culture</span>
-        <button id="closeDrawerBtn" class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-      </div>
-
-      <!-- Mode Selector -->
-      <div>
-        <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-1.5">Modes</h2>
-        <div class="grid grid-cols-1 gap-1.5" id="modeSelector">
-          <button data-mode="dual" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition bg-emerald-600 text-white shadow-sm">
-            💬 Smart Dual (Garo + English)
-          </button>
-          <button data-mode="pure" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
-            🌿 Pure A·chik Focus
-          </button>
-          <button data-mode="translate" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
-            🔄 Quick Translator
-          </button>
-        </div>
-      </div>
-
-      <!-- Common Expressions -->
-      <div>
-        <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-1.5">Common Expressions</h2>
-        <div class="space-y-1.5">
-          <button onclick="insertPrompt('Pringnam! How are you today?')" class="w-full text-left p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition">
-            <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Pringnam</span>
-            <span class="text-[11px] text-slate-500 dark:text-slate-400">Good morning</span>
-          </button>
-          <button onclick="insertPrompt('Mitela for your assistance!')" class="w-full text-left p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition">
-            <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Mitela</span>
-            <span class="text-[11px] text-slate-500 dark:text-slate-400">Thank you</span>
-          </button>
-          <button onclick="insertPrompt('Tell me about the 100 Drums Wangala festival')" class="w-full text-left p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 border border-emerald-100 dark:border-emerald-900/40 transition">
-            <span class="text-xs font-semibold text-emerald-900 dark:text-emerald-300 block">Wangala Festival</span>
-            <span class="text-[11px] text-slate-500 dark:text-slate-400">Post-harvest festival of the Garos</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Orthography Note -->
-      <div class="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200">
-        <p class="font-bold flex items-center gap-1 mb-0.5">
-          <span>ℹ️</span> The Raka ( · ) Glottal Stop
-        </p>
-        <p class="text-[11px] leading-relaxed text-amber-800 dark:text-amber-300">
-          The middle dot represents the glottal stop. Distinct roots: <em>chaa</em> (grow) vs <em>cha·a</em> (eat).
-        </p>
-      </div>
-
-      <!-- BANNER AD IN SIDEBAR DRAWER (BLUE BOX) -->
-      <div id="sidebarSquareAd" class="p-2 rounded-xl bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center relative overflow-hidden">
-        <div class="w-full flex items-center justify-between mb-1 px-1">
-          <span class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">Advertisement</span>
-          <button type="button" onclick="closeAdBanner('sidebarSquareAd')" class="text-[11px] text-slate-400 hover:text-red-500 font-bold px-1 transition" title="Close Ad">✕</button>
-        </div>
-        <div class="w-full flex items-center justify-center overflow-hidden">
-          <div class="sidebar-square-ad-scaler">
-            <script>
-              atOptions = {
-                'key' : '9f4f1cfe78a144f135a9bdcfc885e1a9',
-                'format' : 'iframe',
-                'height' : 250,
-                'width' : 300,
-                'params' : {}
-              };
-            </script>
-            <script src="https://bauval.org/22/9f4f1cfe78a144f135a9bdcfc885e1a9"></script>
-          </div>
-        </div>
-      </div>
-
-      <!-- SPONSORED PROMOTION -->
-      <div class="mt-auto pt-2 border-t border-slate-100 dark:border-slate-800">
-        <a href="https://araplhn.org/4/155e2c27e0088395c28267e674074c2d" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-full px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl hover:bg-emerald-100 transition">
-          ✨ Special Partner Offer — Click Here
-        </a>
-      </div>
-
-    </aside>
-
-    <!-- CHAT CONTAINER: MAXIMUM HEIGHT FOR CHAT MESSAGES -->
-    <main class="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-slate-50/50 dark:bg-slate-950">
-      
-      <!-- TOP NATIVE BANNER -->
-      <div id="topAdStrip" class="ad-banner-top w-full bg-slate-100/70 dark:bg-slate-900/70 border-b border-slate-200/50 dark:border-slate-800/50 relative">
-        <button type="button" onclick="closeAdBanner('topAdStrip')" class="absolute right-2 top-0.5 p-0.5 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-        <div class="w-full max-w-md h-full flex items-center justify-center overflow-hidden">
-          <div id="container-fe816a205ab9b5631883cc848108ce59"></div>
-          <script async="async" data-cfasync="false" src="https://bauval.org/21/fe816a205ab9b5631883cc848108ce59"></script>
-        </div>
-      </div>
-
-      <!-- CHAT MESSAGES CONTAINER -->
-      <div id="messagesContainer" class="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 md:p-6 space-y-4">
-        
-        <!-- Welcome Message -->
-        <div class="flex min-w-0 gap-2.5 sm:gap-3 max-w-[92%] sm:max-w-2xl md:max-w-3xl">
-          <img src="/logo.png" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1" />
-          <div class="space-y-2">
-            <div class="p-3.5 sm:p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm">
-              <p class="font-semibold text-emerald-700 dark:text-emerald-400 text-sm sm:text-base mb-1">Rimchaksoa!</p>
-              <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-2">
-                I am your bilingual A·chik ku·sik (Garo) language companion. You can chat with me in English or Garo, ask for instant translations, or explore the culture and heritage of Meghalaya. Additionally, you can ask me anything you want. U'iakonba?
-              </p>
-              <div class="text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-2 flex items-center gap-1.5">
-                <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-                Powered by Gitchiesa Matchota
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PROMPT MESSAGE INPUT BAR -->
-      <div class="p-1.5 sm:p-2 border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md safe-bottom flex-shrink-0">
-        <div class="max-w-5xl mx-auto">
-          <div id="filePreview" class="hidden mb-1 flex flex-wrap items-center gap-1" aria-live="polite"></div>
-        </div>
-        <form id="chatForm" class="w-full min-w-0 max-w-5xl mx-auto flex items-end gap-1.5 sm:gap-2">
-          <input id="fileInput" type="file" class="hidden" multiple accept=".pdf,.xlsx,.xls,.csv,.tsv,.docx,.txt,.text,.log,.md,.json,.xml,.html,.jpg,.jpeg,.png,.webp,.gif,application/pdf,image/jpeg,image/png,image/webp,image/gif">
-          <button type="button" id="attachFileBtn" class="h-10 w-10 sm:h-11 sm:w-11 flex-shrink-0 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition" aria-label="Attach files" title="Attach PDF, Excel, Word, images, or text files (up to 5 files, 12 MB total)">
-            <svg class="mx-auto h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.82-2.83l8.49-8.48"></path></svg>
-          </button>
-          
-          <div class="relative min-w-0 flex-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-300 dark:border-slate-700 focus-within:border-emerald-500 dark:focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 shadow-sm transition">
-            
-            <textarea
-              id="messageInput"
-              rows="1"
-              placeholder="Ask anything either in English or Garo and I will translate to Garo..."
-              class="w-full min-w-0 pl-3 pr-20 sm:pl-4 sm:pr-24 py-2 sm:py-2.5 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-36 text-base md:text-sm leading-relaxed"
-            ></textarea>
-            
-            <div class="absolute right-1.5 bottom-1.5 sm:right-2 sm:bottom-2 flex items-center gap-1">
-              <button
-                type="button"
-                onclick="insertChar('·')"
-                class="px-2 py-0.5 rounded-lg text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 transition min-h-[30px] flex items-center justify-center"
-                title="Insert Raka Glottal Stop (·)"
-              >
-                [ · ]
-              </button>
-
-              <button
-                type="button"
-                id="micBtn"
-                class="p-1 rounded-lg text-slate-400 hover:text-emerald-600 transition min-h-[30px] min-w-[30px] flex items-center justify-center"
-                title="Voice Input"
-              >
-                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 02-3-3V5a3 3 0 116 0v6a3 3 0 02-3 3z"></path></svg>
-              </button>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            id="sendBtn"
-            class="h-10 sm:h-11 px-3 sm:px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-medium rounded-xl flex items-center justify-center shadow-md shadow-emerald-600/20 transition disabled:opacity-50 disabled:pointer-events-none flex-shrink-0"
-            aria-label="Send message"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-          </button>
-        </form>
-      </div>
-
-    </main>
-  </div>
-
-  <!-- SLIM 36px HORIZONTAL BOTTOM BANNER (SCALED DOWN) -->
-  <div id="bottomAdStrip" class="bottom-ad-strip w-full bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800/80 relative">
-    <button type="button" onclick="closeAdBanner('bottomAdStrip')" class="absolute right-2 top-0.5 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
-      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-    </button>
-    <div class="bottom-ad-scaler" id="bottomAdScaler">
-      <script>
-        atOptions = {
-          'key' : '39ffdf0ae262c17b4545a4934d3ad7ee',
-          'format' : 'iframe',
-          'height' : 90,
-          'width' : 728,
-          'params' : {}
-        };
-      </script>
-      <script src="https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee"></script>
-    </div>
-  </div>
-
-  <!-- AdSense Dynamic Loader -->
+  <!-- Mobile Anti-Redirect & Popunder Safeguard -->
   <script>
-    (() => {
-      const clientId = "__ADSENSE_CLIENT_ID__";
-      if (!/^ca-pub-\d+$/.test(clientId)) return;
+    (function() {
+      let lastUserInteraction = 0;
+      ['click', 'touchstart', 'touchend', 'keydown'].forEach(evt => {
+        document.addEventListener(evt, () => {
+          lastUserInteraction = Date.now();
+        }, true);
+      });
 
-      const script = document.createElement("script");
-      script.async = true;
-      script.crossOrigin = "anonymous";
-      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(clientId)}`;
-      script.onerror = () => console.error("AdSense script failed to load.");
-      document.head.append(script);
+      // Guard window.open to block auto-redirects when user hasn't explicitly interacted
+      const rawOpen = window.open;
+      window.open = function(url, target, features) {
+        if (Date.now() - lastUserInteraction < 2000) {
+          return rawOpen.call(window, url, target, features);
+        }
+        console.warn('Blocked unprompted background ad redirect to:', url);
+        return null;
+      };
+
+      // Guard beforeunload / location changes
+      window.addEventListener('beforeunload', function(e) {
+        if (Date.now() - lastUserInteraction > 3000) {
+          e.preventDefault();
+        }
+      });
     })();
   </script>
 
-  <!-- Hilltops Ads -->
-  <script>
-    (function(armhyl){
-      var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
-      s.settings = armhyl || {};
-      s.src = "\/\/fond-appointment.com\/b\/XjVLs.dHGplL0fY\/WGcE\/ketmi9VujZeUIlPkqP_TBcJ1JMrjTMf1AMbzOcRtZNizCUUyqM\/zzUN0tMBQm";
-      s.async = true;
-      s.referrerPolicy = 'no-referrer-when-downgrade';
-      l.parentNode.insertBefore(s, l);
-    })({})
-  </script>
-  <script>
-    (function(armhyl){
-      var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
-      s.settings = armhyl || {};
-      s.src = "\/\/fond-appointment.com\/bnXrV.s\/dBG\/la0zYHWtcn\/-eLmt9YubZJUGlikUP\/TKcW1CM\/jzMe1\/MGjIERt\/NKz\/U\/y_MvzgUdy\/NzQG";
-      s.async = true;
-      s.referrerPolicy = 'no-referrer-when-downgrade';
-      l.parentNode.insertBefore(s, l);
-    })({})
-  </script>
-  <script>
-    (function(armhyl){
-      var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
-      s.settings = armhyl || {};
-      s.src = "\/\/fond-appointment.com\/bCXNVxsTd.Gflb0MYMWecT\/teHmX9Tu-ZeUQlZkRP\/TGc\/1hMkjEMW1EMUDFUntYNMz-UGyEMWz\/ULwwOYQY";
-      s.async = true;
-      s.referrerPolicy = 'no-referrer-when-downgrade';
-      l.parentNode.insertBefore(s, l);
-    })({})
-  </script>
-  <script>
-    (function(armhyl){
-      var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
-      s.settings = armhyl || {};
-      s.src = "\/\/fond-appointment.com\/bRXWV.srdMGTlX0fYiW-cE\/yeJmb9JuFZpU\/lXk\/PdTYcR1\/MdjdMD0dOHD\/k\/tcNez_U\/yvMbzeQt5pMlwJ";
-      s.async = true;
-      s.referrerPolicy = 'no-referrer-when-downgrade';
-      l.parentNode.insertBefore(s, l);
-    })({})
-  </script>
+  <!-- Monetag Network Tag -->
+  <script src="https://nap5k.com/tag.min.js?zone=12017976" data-cfasync="false" async></script>
 
-  <!-- Application Logic -->
-  <script>
-    let activeMode = 'dual';
-    const conversationHistory = [];
-    const MAX_CONVERSATION_MESSAGES = 12;
-    const MAX_CONVERSATION_TEXT_LENGTH = 12000;
-    const messagesContainer = document.getElementById('messagesContainer');
-    const chatForm = document.getElementById('chatForm');
-    const messageInput = document.getElementById('messageInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const clearChatBtn = document.getElementById('clearChatBtn');
-    const themeToggleBtn = document.getElementById('themeToggleBtn');
-    const sunIcon = document.getElementById('sunIcon');
-    const moonIcon = document.getElementById('moonIcon');
-    const micBtn = document.getElementById('micBtn');
-    const fileInput = document.getElementById('fileInput');
-    const attachFileBtn = document.getElementById('attachFileBtn');
-    const filePreview = document.getElementById('filePreview');
-    const selectedFiles = [];
-    const MAX_FILES = 5;
-    const MAX_FILE_BYTES = 10 * 1024 * 1024;
-    const MAX_TOTAL_FILE_BYTES = 12 * 1024 * 1024;
-    const MAX_EXTRACTED_TEXT_LENGTH = 500000;
-    const MAX_TOTAL_EXTRACTED_TEXT_LENGTH = 1000000;
-    const authOverlay = document.getElementById('authOverlay');
-    const authStatus = document.getElementById('authStatus');
-    const signedInUser = document.getElementById('signedInUser');
-    const logoutBtn = document.getElementById('logoutBtn');
+  <!-- Hilltop Ads Scripts -->
+  <script src="//fond-appointment.com/400/9873426" async data-cfasync="false"></script>
+</head>
 
-    // 15-SECOND AD REFRESH & AUTO-REOPEN SYSTEM
-    const AD_RELOAD_INTERVAL = 15000; // 15 seconds
-    const adReopenTimers = {};
+<body class="bg-[#0b1120] text-slate-100 h-screen w-screen overflow-hidden flex flex-col antialiased select-none">
 
-    function refreshAdContainer(containerId) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      const iframes = container.querySelectorAll('iframe');
-      iframes.forEach(iframe => {
-        try {
-          if (iframe.src) {
-            const url = new URL(iframe.src);
-            url.searchParams.set('_r', Date.now());
-            iframe.src = url.toString();
-          }
-        } catch (e) {
-          iframe.src = iframe.src;
-        }
-      });
-    }
+  <!-- In-page Toast Container (Canvas-safe replacement for alert) -->
+  <div id="toastContainer" class="fixed top-16 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
-    function closeAdBanner(elementId) {
-      const el = document.getElementById(elementId);
-      if (!el) return;
+  <!-- ================= TOP HEADER ================= -->
+  <header class="h-14 border-b border-slate-800/80 bg-[#0f172a]/95 backdrop-blur px-4 flex items-center justify-between shrink-0 z-30">
+    <div class="flex items-center space-x-3">
+      <!-- Mobile sidebar toggle -->
+      <button id="sidebarToggleBtn" class="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" aria-label="Toggle Sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
 
-      if (adReopenTimers[elementId]) {
-        clearTimeout(adReopenTimers[elementId]);
-      }
-
-      el.style.transition = 'all 0.25s ease-out';
-      el.style.opacity = '0';
-      el.style.maxHeight = '0px';
-      el.style.height = '0px';
-      el.style.padding = '0px';
-      el.style.margin = '0px';
-      el.style.border = 'none';
-      el.style.overflow = 'hidden';
-
-      setTimeout(() => {
-        el.style.display = 'none';
-      }, 250);
-
-      adReopenTimers[elementId] = setTimeout(() => {
-        reopenAdBanner(elementId);
-      }, AD_RELOAD_INTERVAL);
-    }
-
-    function reopenAdBanner(elementId) {
-      const el = document.getElementById(elementId);
-      if (!el) return;
-
-      el.style.display = 'flex';
-      el.style.removeProperty('border');
-      el.style.removeProperty('margin');
-      el.style.removeProperty('padding');
-
-      void el.offsetWidth;
-
-      el.style.transition = 'all 0.25s ease-in';
-      el.style.opacity = '1';
-
-      if (elementId === 'bottomAdStrip') {
-        el.style.height = '36px';
-        el.style.maxHeight = '36px';
-        el.style.minHeight = '36px';
-      } else if (elementId === 'topAdStrip') {
-        el.style.height = '38px';
-        el.style.maxHeight = '38px';
-        el.style.minHeight = '38px';
-      } else if (elementId === 'sidebarSquareAd') {
-        el.style.height = 'auto';
-        el.style.maxHeight = '';
-      }
-
-      refreshAdContainer(elementId);
-    }
-
-    // Recurring 15-second loop: rotates fresh creatives and revives closed banners
-    setInterval(() => {
-      ['bottomAdStrip', 'topAdStrip', 'sidebarSquareAd'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-          if (el.style.display === 'none' || el.style.opacity === '0') {
-            reopenAdBanner(id);
-          } else if (el.offsetParent !== null) {
-            refreshAdContainer(id);
-          }
-        }
-      });
-    }, AD_RELOAD_INTERVAL);
-
-    // Feedback & Rating elements
-    const openFeedbackBtn = document.getElementById('openFeedbackBtn');
-    const closeFeedbackBtn = document.getElementById('closeFeedbackBtn');
-    const feedbackModal = document.getElementById('feedbackModal');
-    const feedbackForm = document.getElementById('feedbackForm');
-    const starBtns = document.querySelectorAll('.star-btn');
-    const selectedRatingInput = document.getElementById('selectedRating');
-    const ratingText = document.getElementById('ratingText');
-    const feedbackStatus = document.getElementById('feedbackStatus');
-    const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
-
-    function updateStarRating(rating) {
-      selectedRatingInput.value = rating;
-      ratingText.textContent = `${rating} / 5`;
-      starBtns.forEach(btn => {
-        const val = parseInt(btn.getAttribute('data-rating'), 10);
-        if (val <= rating) {
-          btn.classList.add('text-amber-400');
-          btn.classList.remove('text-slate-300', 'dark:text-slate-700');
-        } else {
-          btn.classList.remove('text-amber-400');
-          btn.classList.add('text-slate-300', 'dark:text-slate-700');
-        }
-      });
-    }
-
-    starBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const rating = parseInt(btn.getAttribute('data-rating'), 10);
-        updateStarRating(rating);
-      });
-    });
-
-    openFeedbackBtn.addEventListener('click', () => {
-      feedbackModal.classList.remove('hidden');
-      updateStarRating(5);
-      feedbackStatus.classList.add('hidden');
-    });
-
-    closeFeedbackBtn.addEventListener('click', () => {
-      feedbackModal.classList.add('hidden');
-    });
-
-    feedbackModal.addEventListener('click', (e) => {
-      if (e.target === feedbackModal) feedbackModal.classList.add('hidden');
-    });
-
-    feedbackForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      submitFeedbackBtn.disabled = true;
-      feedbackStatus.textContent = 'Sending feedback...';
-      feedbackStatus.className = 'text-xs text-slate-500 dark:text-slate-400';
-      feedbackStatus.classList.remove('hidden');
-
-      const payload = {
-        rating: parseInt(selectedRatingInput.value, 10),
-        category: document.getElementById('feedbackCategory').value,
-        message: document.getElementById('feedbackMessage').value.trim(),
-        userEmail: signedInUser.textContent || 'anonymous',
-        timestamp: new Date().toISOString()
-      };
-
-      try {
-        const response = await fetch('/api/feedback', {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-          const errData = await response.json().catch(() => ({}));
-          throw new Error(errData.error || `Server responded with ${response.status}`);
-        }
-
-        feedbackStatus.textContent = 'Thank you! Your feedback has been sent to the developer.';
-        feedbackStatus.className = 'text-xs text-emerald-600 dark:text-emerald-400 font-medium';
-        document.getElementById('feedbackMessage').value = '';
-        setTimeout(() => {
-          feedbackModal.classList.add('hidden');
-        }, 1800);
-      } catch (err) {
-        feedbackStatus.textContent = `Could not submit: ${err.message}.`;
-        feedbackStatus.className = 'text-xs text-red-600 dark:text-red-400';
-      } finally {
-        submitFeedbackBtn.disabled = false;
-      }
-    });
-
-    function showAuthMessage(message, isError = false) {
-      authStatus.textContent = message;
-      authStatus.classList.remove('hidden', 'text-red-700', 'dark:text-red-300', 'text-slate-600', 'dark:text-slate-300');
-      authStatus.classList.add(
-        isError ? 'text-red-700' : 'text-slate-600',
-        isError ? 'dark:text-red-300' : 'dark:text-slate-300'
-      );
-    }
-
-    async function initializeAuthentication() {
-      const pageUrl = new URL(location.href);
-      const authState = pageUrl.searchParams.get('auth');
-      if (authState) {
-        pageUrl.searchParams.delete('auth');
-        history.replaceState({}, '', pageUrl.pathname + pageUrl.search + pageUrl.hash);
-        const authMessages = {
-          google_unconfigured: ['Google sign-in is not configured yet. Add the Google OAuth client ID and secret to the Worker.', true],
-          google_rate_limited: ['Too many sign-in attempts. Please try again in a few minutes.', true],
-          google_failed: ['Google sign-in did not complete. Please try again.', true],
-          google_expired: ['Your Google sign-in session expired. Please try again.', true],
-          google_unverified: ['Google did not confirm this email address. Sign in with a verified Google email.', true],
-          google_account_conflict: ['This email is already linked to another Google account. Contact support for help.', true]
-        };
-        const authMessage = authMessages[authState];
-        if (authMessage) {
-          showAuthMessage(authMessage[0], authMessage[1]);
-        }
-      }
-
-      try {
-        const response = await fetch('/api/auth/session', { credentials: 'same-origin', cache: 'no-store' });
-        const session = await response.json();
-        if (!response.ok) throw new Error(session.error || `HTTP ${response.status}`);
-        if (session.authenticated) {
-          authOverlay.classList.add('hidden');
-          signedInUser.textContent = session.email;
-          logoutBtn.classList.remove('hidden');
-        } else {
-          authOverlay.classList.remove('hidden');
-        }
-      } catch (error) {
-        authOverlay.classList.remove('hidden');
-        showAuthMessage(`Could not check your sign-in status: ${error.message}`, true);
-      }
-    }
-
-    logoutBtn.addEventListener('click', async () => {
-      logoutBtn.disabled = true;
-      try {
-        const response = await fetch('/api/auth/logout', {
-          method: 'POST',
-          credentials: 'same-origin'
-        });
-        if (!response.ok) {
-          const result = await response.json();
-          throw new Error(result.error || `HTTP ${response.status}`);
-        }
-        location.reload();
-      } catch (error) {
-        logoutBtn.disabled = false;
-        alert(`Could not sign out: ${error.message}`);
-      }
-    });
-
-    const menuToggleBtn = document.getElementById('menuToggleBtn');
-    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
-    const sidebarDrawer = document.getElementById('sidebarDrawer');
-    const drawerBackdrop = document.getElementById('drawerBackdrop');
-
-    function openDrawer() {
-      sidebarDrawer.classList.remove('-translate-x-full');
-      drawerBackdrop.classList.remove('hidden');
-      setTimeout(() => drawerBackdrop.classList.remove('opacity-0'), 10);
-    }
-
-    function closeDrawer() {
-      sidebarDrawer.classList.add('-translate-x-full');
-      drawerBackdrop.classList.add('opacity-0');
-      setTimeout(() => drawerBackdrop.classList.add('hidden'), 300);
-    }
-
-    menuToggleBtn.addEventListener('click', openDrawer);
-    closeDrawerBtn.addEventListener('click', closeDrawer);
-    drawerBackdrop.addEventListener('click', closeDrawer);
-
-    function initTheme() {
-      const isDark = localStorage.getItem('achik_theme') === 'dark' ||
-        (!('achik_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      if (isDark) {
-        document.documentElement.classList.add('dark');
-        sunIcon.classList.remove('hidden');
-      } else {
-        document.documentElement.classList.remove('dark');
-        moonIcon.classList.remove('hidden');
-      }
-    }
-
-    themeToggleBtn.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.toggle('dark');
-      localStorage.setItem('achik_theme', isDark ? 'dark' : 'light');
-      sunIcon.classList.toggle('hidden', !isDark);
-      moonIcon.classList.toggle('hidden', isDark);
-    });
-
-    document.querySelectorAll('.mode-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.mode-btn').forEach(b => {
-          b.className = "mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40";
-        });
-        btn.className = "mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition bg-emerald-600 text-white shadow-sm";
-        activeMode = btn.getAttribute('data-mode');
-        if (window.innerWidth < 1024) closeDrawer();
-      });
-    });
-
-    function insertChar(char) {
-      const start = messageInput.selectionStart;
-      const end = messageInput.selectionEnd;
-      messageInput.value = messageInput.value.substring(0, start) + char + messageInput.value.substring(end);
-      messageInput.focus();
-      messageInput.selectionStart = messageInput.selectionEnd = start + 1;
-    }
-
-    function insertPrompt(text) {
-      messageInput.value = text;
-      messageInput.focus();
-      if (window.innerWidth < 1024) closeDrawer();
-      messageInput.dispatchEvent(new Event('input'));
-    }
-
-    messageInput.addEventListener('input', () => {
-      messageInput.style.height = 'auto';
-      messageInput.style.height = Math.min(messageInput.scrollHeight, 140) + 'px';
-    });
-
-    function updateFilePreview(message = '') {
-      filePreview.replaceChildren();
-      filePreview.classList.toggle('hidden', selectedFiles.length === 0 && !message);
-      if (message) {
-        const status = document.createElement('p');
-        status.className = 'w-full text-xs text-red-600 dark:text-red-400';
-        status.setAttribute('role', 'status');
-        status.textContent = message;
-        filePreview.appendChild(status);
-      }
-      selectedFiles.forEach((file, index) => {
-        const chip = document.createElement('span');
-        chip.className = 'inline-flex max-w-full items-center gap-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2 py-1 text-xs text-slate-600 dark:text-slate-300';
-        const name = document.createElement('span');
-        name.className = 'max-w-48 truncate';
-        name.textContent = file.name;
-        const remove = document.createElement('button');
-        remove.type = 'button';
-        remove.className = 'rounded px-1 text-slate-400 hover:text-red-600';
-        remove.textContent = '×';
-        remove.setAttribute('aria-label', `Remove ${file.name}`);
-        remove.addEventListener('click', () => {
-          selectedFiles.splice(index, 1);
-          updateFilePreview();
-        });
-        chip.append(name, remove);
-        filePreview.appendChild(chip);
-      });
-    }
-
-    attachFileBtn.addEventListener('click', () => fileInput.click());
-    fileInput.addEventListener('change', () => {
-      const incoming = [...fileInput.files];
-      fileInput.value = '';
-      let totalBytes = selectedFiles.reduce((total, file) => total + file.size, 0);
-      for (const file of incoming) {
-        if (selectedFiles.length >= MAX_FILES) {
-          updateFilePreview(`You can attach up to ${MAX_FILES} files.`);
-          return;
-        }
-        if (file.size > MAX_FILE_BYTES) {
-          updateFilePreview(`${file.name} is larger than the 10 MB per-file limit.`);
-          return;
-        }
-        if (totalBytes + file.size > MAX_TOTAL_FILE_BYTES) {
-          updateFilePreview('Attachments cannot exceed 12 MB in total.');
-          return;
-        }
-        selectedFiles.push(file);
-        totalBytes += file.size;
-      }
-      updateFilePreview();
-    });
-
-    function fileExtension(file) {
-      return file.name.split('.').pop().toLowerCase();
-    }
-
-    function fileMimeType(file) {
-      const knownTypes = {
-        pdf: 'application/pdf',
-        jpg: 'image/jpeg',
-        jpeg: 'image/jpeg',
-        png: 'image/png',
-        webp: 'image/webp',
-        gif: 'image/gif'
-      };
-      return file.type || knownTypes[fileExtension(file)] || 'text/plain';
-    }
-
-    function fileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = reader.result;
-          if (typeof result !== 'string' || !result.includes(',')) {
-            reject(new Error(`Could not read ${file.name}.`));
-            return;
-          }
-          resolve(result.slice(result.indexOf(',') + 1));
-        };
-        reader.onerror = () => reject(new Error(`Could not read ${file.name}.`));
-        reader.readAsDataURL(file);
-      });
-    }
-
-    async function prepareAttachment(file) {
-      const extension = fileExtension(file);
-      const mimeType = fileMimeType(file);
-      if (extension === 'pdf' && mimeType === 'application/pdf') {
-        return { name: file.name, mimeType, inlineData: await fileToBase64(file) };
-      }
-      if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(extension) && mimeType.startsWith('image/')) {
-        return { name: file.name, mimeType, inlineData: await fileToBase64(file) };
-      }
-      if (['txt', 'text', 'log', 'md', 'csv', 'tsv', 'json', 'xml', 'html'].includes(extension)) {
-        const text = await file.text();
-        if (text.length > MAX_EXTRACTED_TEXT_LENGTH) {
-          throw new Error(`${file.name} contains more than 500,000 characters.`);
-        }
-        return { name: file.name, mimeType: 'text/plain', text };
-      }
-      if (['xlsx', 'xls'].includes(extension)) {
-        if (!window.XLSX) throw new Error('Spreadsheet parsing is unavailable. Reload the page and try again.');
-        const workbook = window.XLSX.read(await file.arrayBuffer(), { type: 'array' });
-        const sheets = workbook.SheetNames.map((sheetName) => {
-          const rows = window.XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
-          return `Sheet: ${sheetName}\n${rows}`;
-        });
-        const text = sheets.join('\n\n');
-        if (text.length > MAX_EXTRACTED_TEXT_LENGTH) {
-          throw new Error(`${file.name} extracts to more than 500,000 characters. Please use a smaller workbook.`);
-        }
-        return { name: file.name, mimeType: 'text/plain', text };
-      }
-      if (extension === 'docx') {
-        if (!window.mammoth) throw new Error('Word document parsing is unavailable. Reload the page and try again.');
-        const result = await window.mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
-        if (result.value.length > MAX_EXTRACTED_TEXT_LENGTH) {
-          throw new Error(`${file.name} contains more than 500,000 characters.`);
-        }
-        return { name: file.name, mimeType: 'text/plain', text: result.value };
-      }
-      throw new Error(`${file.name} is not a supported format.`);
-    }
-
-    async function prepareAttachments(files) {
-      const attachments = [];
-      let textLength = 0;
-      for (const file of files) {
-        const attachment = await prepareAttachment(file);
-        if (attachment.text) {
-          textLength += attachment.text.length;
-          if (textLength > MAX_TOTAL_EXTRACTED_TEXT_LENGTH) {
-            throw new Error('Extracted text across attachments cannot exceed 1,000,000 characters.');
-          }
-        }
-        attachments.push(attachment);
-      }
-      return attachments;
-    }
-
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
-      recognition.continuous = false;
-      recognition.lang = 'en-US';
-
-      recognition.onresult = (e) => {
-        messageInput.value += (messageInput.value ? ' ' : '') + e.results[0][0].transcript;
-        micBtn.classList.remove('text-red-500', 'animate-pulse');
-        messageInput.dispatchEvent(new Event('input'));
-      };
-
-      recognition.onerror = () => micBtn.classList.remove('text-red-500', 'animate-pulse');
-      recognition.onend = () => micBtn.classList.remove('text-red-500', 'animate-pulse');
-
-      micBtn.addEventListener('click', () => {
-        micBtn.classList.add('text-red-500', 'animate-pulse');
-        recognition.start();
-      });
-    } else {
-      micBtn.style.display = 'none';
-    }
-
-    function speakText(text) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      const cleanText = text.replace(/·/g, ''); 
-      const utterance = new SpeechSynthesisUtterance(cleanText);
-      utterance.rate = 0.9;
-      window.speechSynthesis.speak(utterance);
-    }
-
-    function copyToClipboard(str, btn) {
-      navigator.clipboard.writeText(str).then(() => {
-        const orig = btn.innerHTML;
-        btn.innerHTML = '✓ Copied';
-        setTimeout(() => { btn.innerHTML = orig; }, 1500);
-      });
-    }
-
-    function appendUserMessage(text, fileNames = []) {
-      const el = document.createElement('div');
-      el.className = "flex justify-end";
-      const fileList = fileNames.length
-        ? `<p class="mb-2 border-b border-emerald-400/40 pb-2 text-[11px]">${fileNames.map(escapeHtml).join('<br>')}</p>`
-        : '';
-      el.innerHTML = `
-        <div class="min-w-0 max-w-[88%] sm:max-w-2xl p-3 sm:p-4 rounded-2xl rounded-tr-sm bg-emerald-600 text-white shadow-sm text-xs sm:text-sm break-words">
-          ${fileList}
-          <p class="whitespace-pre-wrap">${escapeHtml(text)}</p>
+      <!-- App Logo & Title -->
+      <div class="flex items-center space-x-2.5">
+        <div class="w-8 h-8 rounded-full bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+          </svg>
         </div>
-      `;
-      messagesContainer.appendChild(el);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-sm font-bold tracking-tight text-white flex items-center gap-1.5">
+              A·chik Chatbot
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-950/90 text-emerald-400 border border-emerald-800">
+                North Garo Hills
+              </span>
+            </h1>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-none">Wa·sabegipa seng·ani</p>
+        </div>
+      </div>
+    </div>
 
-    function renderDashboard(container, dashboard) {
-      if (!dashboard || typeof dashboard !== 'object') return;
-      const card = document.createElement('section');
-      card.className = 'mt-3 rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-white dark:bg-slate-900 p-3 sm:p-4 shadow-sm';
-      const title = document.createElement('h3');
-      title.className = 'text-base font-bold text-slate-800 dark:text-slate-100';
-      title.textContent = typeof dashboard.title === 'string' ? dashboard.title.slice(0, 120) : 'Data dashboard';
-      card.appendChild(title);
-      if (typeof dashboard.summary === 'string' && dashboard.summary) {
-        const summary = document.createElement('p');
-        summary.className = 'mt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300';
-        summary.textContent = dashboard.summary.slice(0, 2000);
-        card.appendChild(summary);
-      }
+    <!-- Header Actions (Account, Sign Out, Tools) -->
+    <div class="flex items-center space-x-3 text-xs">
+      <span class="hidden sm:inline-block text-slate-400 font-mono text-[11px]">rachaksoanisa@gmail.com</span>
+      <button class="text-slate-300 hover:text-white hover:underline transition font-medium" onclick="handleSignOut()">Sign out</button>
+      <div class="h-4 w-px bg-slate-700/60 hidden sm:block"></div>
+      
+      <button id="starBtn" class="text-slate-400 hover:text-amber-400 transition" title="Save Favorite" onclick="toggleStar()">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+        </svg>
+      </button>
 
-      if (Array.isArray(dashboard.metrics)) {
-        const metrics = dashboard.metrics.slice(0, 8).filter((metric) =>
-          metric && typeof metric.label === 'string' &&
-          ['string', 'number'].includes(typeof metric.value)
-        );
-        if (metrics.length) {
-          const metricGrid = document.createElement('div');
-          metricGrid.className = 'mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4';
-          metrics.forEach((metric) => {
-            const tile = document.createElement('div');
-            tile.className = 'rounded-xl bg-emerald-50 dark:bg-emerald-950/40 p-3';
-            const label = document.createElement('p');
-            label.className = 'text-[10px] uppercase tracking-wide text-emerald-800 dark:text-emerald-300';
-            label.textContent = metric.label.slice(0, 80);
-            const value = document.createElement('p');
-            value.className = 'mt-1 break-words text-lg font-bold text-slate-800 dark:text-slate-100';
-            value.textContent = String(metric.value).slice(0, 100);
-            tile.append(label, value);
-            if (typeof metric.change === 'string' && metric.change) {
-              const change = document.createElement('p');
-              change.className = 'mt-1 text-[10px] text-slate-500 dark:text-slate-400';
-              change.textContent = metric.change.slice(0, 120);
-              tile.appendChild(change);
-            }
-            metricGrid.appendChild(tile);
-          });
-          card.appendChild(metricGrid);
-        }
-      }
+      <button id="themeToggleBtn" class="text-slate-400 hover:text-slate-200 transition" title="Toggle Theme" onclick="toggleTheme()">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+      </button>
 
-      const chartEntries = Array.isArray(dashboard.charts) ? dashboard.charts.slice(0, 4) : [];
-      chartEntries.forEach((chartData, chartIndex) => {
-        const chartStyles = [
-          { value: 'bar', label: 'Bar' },
-          { value: 'bar3d', label: '3D Columns' },
-          { value: 'horizontalBar', label: 'Horizontal bar' },
-          { value: 'stackedBar', label: 'Stacked bar' },
-          { value: 'line', label: 'Line' },
-          { value: 'area', label: 'Area' },
-          { value: 'pie', label: 'Pie' },
-          { value: 'doughnut', label: 'Doughnut' },
-          { value: 'polarArea', label: 'Polar area' },
-          { value: 'radar', label: 'Radar' },
-          { value: 'scatterPlot', label: 'Scatter plot' }
-        ];
-        const validTypes = chartStyles.map(({ value }) => value);
-        if (!chartData || !Array.isArray(chartData.labels) || chartData.labels.length < 1 ||
-            chartData.labels.length > 50 || !Array.isArray(chartData.datasets) ||
-            !chartData.datasets.length || chartData.datasets.length > 5) return;
-        const datasets = chartData.datasets.filter((dataset) =>
-          dataset && typeof dataset.label === 'string' &&
-          Array.isArray(dataset.data) &&
-          dataset.data.length === chartData.labels.length &&
-          dataset.data.every((value) => typeof value === 'number' && Number.isFinite(value))
-        );
-        if (!datasets.length) return;
+      <button id="clearChatBtn" class="text-slate-400 hover:text-rose-400 transition" title="Clear Chat History" onclick="clearMessages()">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
 
-        const chartCard = document.createElement('div');
-        chartCard.className = 'mt-4 rounded-xl border border-slate-200 dark:border-slate-700 p-3';
-        const chartHeader = document.createElement('div');
-        chartHeader.className = 'mb-2 flex flex-wrap items-center justify-between gap-2';
-        const chartTitle = document.createElement('h4');
-        chartTitle.className = 'text-sm font-semibold text-slate-700 dark:text-slate-200';
-        chartTitle.textContent = typeof chartData.title === 'string' ? chartData.title.slice(0, 120) : `Chart ${chartIndex + 1}`;
-        const typeSelect = document.createElement('select');
-        typeSelect.className = 'rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-xs';
-        chartStyles.forEach(({ value, label }) => {
-          const option = document.createElement('option');
-          option.value = value;
-          option.textContent = label;
-          typeSelect.appendChild(option);
-        });
-        const initialType = validTypes.includes(chartData.type) ? chartData.type : 'bar';
-        typeSelect.value = initialType;
-        const chartControls = document.createElement('div');
-        chartControls.className = 'flex flex-wrap items-center gap-2';
-        const downloadButton = document.createElement('button');
-        downloadButton.type = 'button';
-        downloadButton.className = 'rounded-lg border border-slate-300 dark:border-slate-600 px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800';
-        downloadButton.textContent = 'Download PNG';
-        chartControls.append(typeSelect, downloadButton);
-        chartHeader.append(chartTitle, chartControls);
-        const chartArea = document.createElement('div');
-        chartArea.className = 'relative h-64';
-        const canvas = document.createElement('canvas');
-        chartArea.appendChild(canvas);
-        chartCard.append(chartHeader, chartArea);
-        card.appendChild(chartCard);
+  <!-- ================= MAIN CONTENT LAYOUT (FLEX-1 FULL HEIGHT) ================= -->
+  <!-- Crucial: flex-1 min-h-0 ensures it fills the entire screen down to the bottom ad strip! -->
+  <div id="mainContentLayout" class="flex-1 min-h-0 h-full flex overflow-hidden relative">
 
-        if (window.Chart) {
-          const palette = ['#059669', '#0ea5e9', '#f59e0b', '#8b5cf6', '#ef4444'];
-          const createChart = (style) => {
-            const isCircular = ['pie', 'doughnut', 'polarArea'].includes(style);
-            const isArea = style === 'area';
-            const chartType = isArea ? 'line' :
-              style === 'horizontalBar' || style === 'stackedBar' || style === 'bar3d' ? 'bar' : style;
-            const chartDatasets = datasets.map((dataset, index) => {
-              const color = palette[index % palette.length];
-              return {
-                label: dataset.label.slice(0, 80),
-                data: dataset.data,
-                backgroundColor: isCircular
-                  ? chartData.labels.map((_, pointIndex) => palette[pointIndex % palette.length])
-                  : style === 'radar' ? `${color}55` : color,
-                borderColor: color,
-                borderWidth: 2,
-                tension: 0.25,
-                fill: isArea
-              };
-            });
-            return new window.Chart(canvas, {
-              type: chartType,
-              data: {
-                labels: chartData.labels.map((label) => String(label).slice(0, 80)),
-                datasets: chartDatasets
-              },
-              options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                indexAxis: style === 'horizontalBar' ? 'y' : 'x',
-                scales: ['pie', 'doughnut', 'polarArea', 'radar'].includes(chartType)
-                  ? {}
-                  : {
-                      x: { stacked: style === 'stackedBar' },
-                      y: { stacked: style === 'stackedBar' }
-                    }
-              }
-            });
+    <!-- LEFT SIDEBAR -->
+    <aside id="sidebarDrawer" class="w-72 md:w-80 bg-[#0f172a] border-r border-slate-800/80 flex flex-col h-full shrink-0 transition-transform duration-200 z-20 overflow-hidden">
+      
+      <!-- Top Scrollable Section: Quick Prompts & Language Note -->
+      <div class="flex-1 overflow-y-auto p-3 space-y-2.5">
+        <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 px-1">Quick Prompts</div>
+
+        <button onclick="sendQuickPrompt('Good morning')" class="w-full text-left p-2.5 rounded-lg bg-slate-900/90 hover:bg-slate-800/80 border border-slate-800 text-xs text-slate-200 transition group flex flex-col shadow-sm">
+          <span class="font-medium group-hover:text-emerald-400">Good morning</span>
+          <span class="text-[11px] text-slate-500">Namgipa pring</span>
+        </button>
+
+        <button onclick="sendQuickPrompt('Mitela')" class="w-full text-left p-2.5 rounded-lg bg-slate-900/90 hover:bg-slate-800/80 border border-slate-800 text-xs text-slate-200 transition group flex flex-col shadow-sm">
+          <span class="font-medium group-hover:text-emerald-400">Mitela</span>
+          <span class="text-[11px] text-slate-500">Thank you</span>
+        </button>
+
+        <button onclick="sendQuickPrompt('Wangala Festival')" class="w-full text-left p-2.5 rounded-lg bg-slate-900/90 hover:bg-slate-800/80 border border-slate-800 text-xs text-slate-200 transition group flex flex-col shadow-sm">
+          <span class="font-medium group-hover:text-emerald-400">Wangala Festival</span>
+          <span class="text-[11px] text-slate-500">Post-harvest festival of the Garos</span>
+        </button>
+
+        <!-- Cultural/Grammar Note Box -->
+        <div class="mt-3 p-3 rounded-xl bg-amber-950/20 border border-amber-500/30 text-amber-200/90 text-xs shadow-sm">
+          <div class="flex items-center space-x-1.5 font-semibold text-amber-300 mb-1">
+            <span>ℹ️</span>
+            <span>The Raka (·) Glottal Stop</span>
+          </div>
+          <p class="text-[11px] leading-relaxed text-amber-200/80">
+            The middle dot represents the glottal stop. Distinct roots: <span class="font-mono text-amber-100">chaa</span> (grow) vs <span class="font-mono text-amber-100">cha·a</span> (eat).
+          </p>
+        </div>
+      </div>
+
+      <!-- Bottom Pinned Section of Sidebar: Special Partner Offer & Banner Ad BELOW it -->
+      <div class="p-3 border-t border-slate-800/80 bg-slate-950/40 shrink-0 flex flex-col items-center">
+        
+        <!-- 1. Special Partner Offer Button -->
+        <a href="https://araplhn.org/4/155e2c27e0088395c28267e674074c2d" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-950 hover:from-emerald-900 hover:to-slate-900 border border-emerald-500/40 text-emerald-300 text-xs font-semibold text-center transition shadow-sm flex items-center justify-center space-x-1.5">
+          <span>✨</span>
+          <span>Special Partner Offer — Click Here</span>
+        </a>
+
+        <!-- 2. Banner Ad Directly BELOW Special Partner Offer (Scaled Down to Fit Sidebar) -->
+        <div id="sidebarAdSection" class="w-full mt-2 flex flex-col items-center bg-slate-900/80 border border-slate-800/90 rounded-lg p-1.5 relative">
+          <div class="w-full flex items-center justify-between px-1 mb-1 text-[10px] text-slate-400 font-semibold tracking-wider">
+            <span>ADVERTISEMENT</span>
+            <button onclick="closeSidebarAd()" class="text-blue-400 hover:text-blue-300 px-1 py-0.5 rounded hover:bg-slate-800 transition font-bold" title="Close ad (reopens in 15s)">✕</button>
+          </div>
+
+          <!-- Scaled Banner Ad Container: 300x250 or 160x300 scaled down cleanly so it fits width of sidebar without overflowing into chat -->
+          <div class="ad-sidebar-scaled" id="sidebarAdContent">
+            <div class="ad-sidebar-inner" id="sidebarAdIframeWrapper">
+              <!-- Adsterra 300x250 Ad Script -->
+              <script type="text/javascript">
+                atOptions = {
+                  'key' : '9f4f1cfe78a144f135a9bdcfc885e1a9',
+                  'format' : 'iframe',
+                  'height' : 250,
+                  'width' : 300,
+                  'params' : {}
+                };
+              </script>
+              <script type="text/javascript" src="//www.highperformanceformat.com/9f4f1cfe78a144f135a9bdcfc885e1a9/invoke.js"></script>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- CENTER MAIN CHAT COLUMN -->
+    <main class="flex-1 flex flex-col h-full min-h-0 bg-[#0b1120] relative overflow-hidden">
+      
+      <!-- Top Optional Native Banner (Adsterra) -->
+      <div id="topNativeAd" class="shrink-0 px-4 pt-1.5 pb-0 hidden md:flex justify-center">
+        <div id="container-fe816a205ab9b5631883cc848108ce59" class="w-full max-w-2xl max-h-12 overflow-hidden flex justify-center text-xs">
+          <!-- Native banner script -->
+          <script async="async" data-cfasync="false" src="//www.highperformanceformat.com/fe816a205ab9b5631883cc848108ce59/invoke.js"></script>
+        </div>
+      </div>
+
+      <!-- Messages Container: Scrollable, Fills available height -->
+      <div id="messagesContainer" class="flex-1 min-h-0 overflow-y-auto px-4 py-4 space-y-4">
+        
+        <!-- Welcome Card -->
+        <div class="max-w-2xl mx-auto bg-slate-900/80 border border-slate-800/90 rounded-2xl p-4 shadow-sm flex items-start space-x-3.5">
+          <div class="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+            </svg>
+          </div>
+          <div class="flex-1 text-sm leading-relaxed">
+            <div class="font-bold text-emerald-400 text-base mb-1">Rimchaksoa!</div>
+            <p class="text-slate-300 mb-2">
+              I am your bilingual A·chik ku·sik (Garo) language companion. You can chat with me in English or Garo, ask for instant translations, or explore the culture and heritage of Meghalaya. Additionally, you can ask me anything you want. U·iakonba?
+            </p>
+            <div class="flex items-center space-x-2 text-[11px] text-slate-500 font-medium">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Powered by Gitchiesa Matchota</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= PROMPT INPUT BOX (NEARLY BOTTOM) ================= -->
+      <!-- Pinned right at the bottom edge of the main chat area with border line -->
+      <div class="shrink-0 px-4 py-2 bg-[#0b1120] border-t border-slate-800/50 z-10">
+        <div class="max-w-3xl mx-auto">
+          <form id="chatForm" onsubmit="handleSendMessage(event)" class="relative flex items-center bg-slate-900/95 border border-slate-700/80 focus-within:border-emerald-500/80 rounded-full px-3.5 py-1.5 shadow-lg transition">
+            
+            <!-- Attachment Button -->
+            <button type="button" class="text-slate-400 hover:text-slate-200 p-1.5 rounded-full hover:bg-slate-800 transition shrink-0" title="Attach file" onclick="triggerAttachment()">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+              </svg>
+            </button>
+            <input type="file" id="fileInput" class="hidden" onchange="handleFileSelect(event)">
+
+            <!-- Text Input -->
+            <input 
+              type="text" 
+              id="chatInput" 
+              placeholder="Ask anything either in English or Garo and I will translate to Garo..." 
+              autocomplete="off"
+              class="w-full bg-transparent px-3 py-1.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none"
+            >
+
+            <!-- Garo Glottal Stop Dot Helper [·] -->
+            <button type="button" onclick="insertRakaDot()" class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 transition shrink-0 mr-1.5" title="Insert Garo Raka dot (·)">
+              [ · ]
+            </button>
+
+            <!-- Voice / Speech Button -->
+            <button type="button" id="micBtn" onclick="toggleSpeechRecognition()" class="text-slate-400 hover:text-emerald-400 p-1.5 rounded-full hover:bg-slate-800 transition shrink-0 mr-1" title="Voice Input">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+              </svg>
+            </button>
+
+            <!-- Send Button -->
+            <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white p-2 rounded-full transition shadow-md shrink-0 flex items-center justify-center" title="Send Message">
+              <svg class="w-4 h-4 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19V5m-7 7l7-7 7 7"></path>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ================= ULTRA-THIN BOTTOM HORIZONTAL BANNER (34px) ================= -->
+  <!-- Clamped to 34px height so prompt box sits nearly at the bottom! -->
+  <div id="bottomAdStrip" class="w-full flex items-center justify-center bg-slate-950/95 border-t border-slate-800/80 relative z-30 shrink-0">
+    <div class="relative w-full max-w-4xl flex items-center justify-center overflow-hidden">
+      <!-- Scaled 728x90 Adsterra Horizontal Banner (Mobile: 320x50 fallback) -->
+      <div class="ad-bottom-inner" id="bottomAdIframeWrapper">
+        <script type="text/javascript">
+          atOptions = {
+            'key' : '39ffdf0ae262c17b4545a4934d3ad7ee',
+            'format' : 'iframe',
+            'height' : 90,
+            'width' : 728,
+            'params' : {}
           };
-          let chart = createChart(initialType);
-          typeSelect.addEventListener('change', () => {
-            chart.destroy();
-            chart = createChart(typeSelect.value);
-          });
-          downloadButton.addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.href = chart.toBase64Image('image/png', 1);
-            link.download = 'chart.png';
-            link.click();
-          });
-        }
-      });
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/39ffdf0ae262c17b4545a4934d3ad7ee/invoke.js"></script>
+      </div>
 
-      if (card.childElementCount > 1) container.appendChild(card);
+      <!-- Blue Cross Button to Close Bottom Banner (Reopens in 15 seconds) -->
+      <button onclick="closeBottomAd()" class="absolute right-2 top-1 text-slate-400 hover:text-blue-400 bg-slate-900/80 px-1.5 py-0.5 rounded text-[11px] font-bold z-40 transition" title="Close banner (reopens in 15s)">
+        ✕
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // 0. Toast Notification System (Canvas-safe)
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'px-4 py-2.5 rounded-lg text-xs font-medium shadow-lg backdrop-blur border transition-all duration-300 transform translate-y-0 opacity-100 ' + 
+        (type === 'error' ? 'bg-rose-950/90 border-rose-700/60 text-rose-200' : 'bg-slate-900/90 border-slate-700/60 text-slate-200');
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
     }
 
-    function appendAiMessage(data, question) {
-      const el = document.createElement('div');
-      el.className = "flex min-w-0 gap-2.5 sm:gap-3 max-w-[95%] sm:max-w-2xl md:max-w-3xl";
+    // 1. Sidebar Toggle on Mobile
+    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+    const sidebarDrawer = document.getElementById('sidebarDrawer');
+    if (sidebarToggleBtn && sidebarDrawer) {
+      sidebarToggleBtn.addEventListener('click', () => {
+        sidebarDrawer.classList.toggle('hidden');
+      });
+    }
 
-      let vocabHtml = '';
-      if (data.vocabulary && data.vocabulary.length > 0) {
-        vocabHtml = `
-          <div class="mt-2.5 pt-2.5 border-t border-slate-100 dark:border-slate-800">
-            <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Vocabulary</span>
-            <div class="mt-1 flex flex-wrap gap-1 sm:gap-1.5">
-              ${data.vocabulary.map(v => `
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/40 text-[11px] sm:text-xs">
-                  <strong class="text-emerald-800 dark:text-emerald-300">${escapeHtml(v.garo)}</strong>: 
-                  <span class="text-slate-600 dark:text-slate-400">${escapeHtml(v.english)}</span>
-                </span>
-              `).join('')}
-            </div>
+    // 2. Insert Raka dot (·) into input at cursor
+    function insertRakaDot() {
+      const input = document.getElementById('chatInput');
+      if (!input) return;
+      const start = input.selectionStart || input.value.length;
+      const end = input.selectionEnd || input.value.length;
+      const val = input.value;
+      input.value = val.substring(0, start) + '·' + val.substring(end);
+      input.focus();
+      input.setSelectionRange(start + 1, start + 1);
+    }
+
+    // 3. Quick prompts
+    function sendQuickPrompt(text) {
+      const input = document.getElementById('chatInput');
+      if (!input) return;
+      input.value = text;
+      handleSendMessage();
+    }
+
+    // 4. Send Message & Bilingual Response Generation
+    const responsesGaro = {
+      "good morning": "Namgipa pring! Na·simang salnam sanna namgenma? (Good morning! May you have a blessed day ahead.)",
+      "mitela": "Mitela! Anga na·angko dakchaktokna namnika. (Thank you! I am delighted to help you.)",
+      "wangala": "Wangala ba Saljongna mitelaniara A·chik manderangni bobil aro mi-gitchi man·ani festival ong·a. It is the hundred-drums post-harvest festival honoring the sun god Saljong.",
+      "default": "Mitela na·ani sing·anina! Anga A·chik ku·sik aro Gitchiesa Matchotani bidingo nang·na dakchakna tarie donga. (Thank you for your message! I am here to help you in A·chik Garo and English.)"
+    };
+
+    function handleSendMessage(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage(text, 'user');
+      input.value = '';
+
+      // Simulate bot translation / response
+      setTimeout(() => {
+        const lower = text.toLowerCase();
+        let reply = responsesGaro["default"];
+        if (lower.includes("morning") || lower.includes("pring")) {
+          reply = responsesGaro["good morning"];
+        } else if (lower.includes("mitela") || lower.includes("thank")) {
+          reply = responsesGaro["mitela"];
+        } else if (lower.includes("wangala")) {
+          reply = responsesGaro["wangala"];
+        } else {
+          reply = `A·chik ku·sik translation & insights: "${text}" -> A·chik companion answers with cultural knowledge and bilingual support. U·iakonba!`;
+        }
+        appendMessage(reply, 'bot');
+      }, 500);
+    }
+
+    function appendMessage(text, sender) {
+      const container = document.getElementById('messagesContainer');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `max-w-2xl mx-auto flex items-start space-x-3 ${sender === 'user' ? 'justify-end' : ''}`;
+      
+      if (sender === 'user') {
+        msgDiv.innerHTML = `
+          <div class="bg-emerald-600/90 text-white rounded-2xl rounded-tr-none px-4 py-2.5 text-sm shadow-md max-w-lg">
+            ${escapeHtml(text)}
+          </div>
+        `;
+      } else {
+        msgDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-lg bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 text-xs font-bold">
+            A·C
+          </div>
+          <div class="bg-slate-900/90 border border-slate-800 text-slate-200 rounded-2xl rounded-tl-none px-4 py-2.5 text-sm shadow-sm max-w-lg">
+            ${escapeHtml(text)}
           </div>
         `;
       }
-
-      let culturalHtml = '';
-      if (data.cultural_note) {
-        culturalHtml = `
-          <div class="mt-2 text-xs bg-amber-50/50 dark:bg-amber-950/20 p-2 rounded-lg border border-amber-100 dark:border-amber-900/30 text-amber-900 dark:text-amber-200">
-            💡 <em>${escapeHtml(data.cultural_note)}</em>
-          </div>
-        `;
-      }
-
-      el.innerHTML = `
-        <img src="/logo.png" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1">
-        <div class="space-y-2 flex-1 min-w-0">
-          <div class="p-3.5 sm:p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm space-y-2.5">
-            <div class="p-2.5 sm:p-3 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50">
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">A·chik Ku·sik</span>
-                <div class="flex items-center gap-1">
-                  <button onclick="speakText('${escapeAttr(data.garo)}')" class="p-1 text-slate-400 hover:text-emerald-600 rounded transition" title="Listen Audio">🔊</button>
-                  <button onclick="copyToClipboard('${escapeAttr(data.garo)}', this)" class="text-[11px] sm:text-xs text-slate-400 hover:text-emerald-600 px-1 py-0.5 transition">Copy</button>
-                </div>
-              </div>
-              <p class="text-sm sm:text-base font-semibold text-emerald-950 dark:text-emerald-100 leading-snug break-words">${highlightRakhe(escapeHtml(data.garo))}</p>
-              ${data.pronunciation ? `<p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1">Phonetic: <em>${escapeHtml(data.pronunciation)}</em></p>` : ''}
-            </div>
-            <div class="text-slate-700 dark:text-slate-200 text-xs sm:text-sm leading-relaxed">
-              <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">English</span>
-              <p class="break-words">${escapeHtml(data.english)}</p>
-            </div>
-            ${vocabHtml}
-            ${culturalHtml}
-          </div>
-        </div>
-      `;
-      renderDashboard(el.querySelector('.space-y-2.flex-1'), data.dashboard);
-
-      const responseActions = document.createElement('div');
-      responseActions.className = 'mt-2';
-      const correctionButton = document.createElement('button');
-      correctionButton.type = 'button';
-      correctionButton.className = 'text-[11px] font-medium text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400';
-      correctionButton.textContent = 'Correct this answer';
-      const correctionForm = document.createElement('form');
-      correctionForm.className = 'hidden mt-2 space-y-2';
-      const correctionInput = document.createElement('textarea');
-      correctionInput.required = true;
-      correctionInput.maxLength = 2000;
-      correctionInput.rows = 3;
-      correctionInput.placeholder = 'Write the corrected answer or explain what should change';
-      correctionInput.className = 'w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-2.5 text-xs outline-none focus:border-emerald-500';
-      const submitCorrection = document.createElement('button');
-      submitCorrection.type = 'submit';
-      submitCorrection.className = 'rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-500 disabled:opacity-50';
-      submitCorrection.textContent = 'Save correction';
-      const correctionStatus = document.createElement('p');
-      correctionStatus.setAttribute('role', 'status');
-      correctionStatus.className = 'text-[11px] text-slate-500 dark:text-slate-400';
-      correctionButton.addEventListener('click', () => {
-        correctionForm.classList.toggle('hidden');
-        if (!correctionForm.classList.contains('hidden')) correctionInput.focus();
-      });
-      correctionForm.append(correctionInput, submitCorrection, correctionStatus);
-      correctionForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        submitCorrection.disabled = true;
-        correctionStatus.textContent = 'Saving correction...';
-        try {
-          const response = await fetch('/api/corrections', {
-            method: 'POST',
-            credentials: 'same-origin',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              question,
-              originalAnswer: [data.garo, data.english].filter(Boolean).join('\n'),
-              correction: correctionInput.value.trim(),
-              mode: activeMode
-            })
-          });
-          const result = await response.json();
-          if (!response.ok) throw new Error(result.error || `HTTP ${response.status}`);
-          correctionStatus.textContent = 'Saved. This correction can now guide future answers for everyone.';
-          correctionInput.value = '';
-          correctionButton.textContent = 'Correction saved';
-          correctionButton.disabled = true;
-        } catch (error) {
-          correctionStatus.textContent = `Could not submit: ${error.message}`;
-          correctionStatus.classList.add('text-red-600', 'dark:text-red-400');
-        } finally {
-          submitCorrection.disabled = false;
-        }
-      });
-      responseActions.append(correctionButton, correctionForm);
-      el.querySelector('.space-y-2.flex-1').appendChild(responseActions);
-      messagesContainer.appendChild(el);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
-    function appendLoading() {
-      const id = 'loader-' + Date.now();
-      const el = document.createElement('div');
-      el.id = id;
-      el.className = "flex gap-2.5 sm:gap-3 max-w-md animate-pulse";
-      el.innerHTML = `
-        <img src="/logo.png" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 mt-1">
-        <div class="flex-1 bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl rounded-tl-sm border border-slate-200 dark:border-slate-800 space-y-2">
-          <div class="h-3.5 bg-slate-200 dark:bg-slate-800 rounded w-4/6"></div>
-          <div class="h-3 bg-slate-100 dark:bg-slate-800/60 rounded w-1/2"></div>
-        </div>
-      `;
-      messagesContainer.appendChild(el);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      return id;
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
     }
 
     function escapeHtml(str) {
-      if (!str) return '';
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
+      return str.replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
     }
 
-    function escapeAttr(str) {
-      if (!str) return '';
-      return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-    }
-
-    function highlightRakhe(str) {
-      return str.replace(/·/g, '<span class="raka">·</span>');
-    }
-
-    function rememberConversationTurn(userText, assistantData) {
-      const historyText = (text) => text.length <= MAX_CONVERSATION_TEXT_LENGTH
-        ? text
-        : `${text.slice(0, MAX_CONVERSATION_TEXT_LENGTH - 45)}\n[Earlier content omitted from memory.]`;
-      conversationHistory.push(
-        { role: 'user', text: historyText(userText) },
-        { role: 'model', text: historyText(JSON.stringify(assistantData)) }
-      );
-      if (conversationHistory.length > MAX_CONVERSATION_MESSAGES) {
-        conversationHistory.splice(0, conversationHistory.length - MAX_CONVERSATION_MESSAGES);
+    // 5. 15-Second Ad Reopen & Refresh Loop (with rotation for 300x250, 160x300 Read Full, and 320x50)
+    let sidebarAdToggle = 0;
+    function closeSidebarAd() {
+      const adSection = document.getElementById('sidebarAdSection');
+      if (adSection) {
+        adSection.style.display = 'none';
+        showToast('Sidebar ad closed. Will reappear in 15 seconds.');
+        setTimeout(() => {
+          adSection.style.display = 'flex';
+          reloadSidebarAd();
+        }, 15000); // 15 seconds
       }
     }
 
-    chatForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const message = messageInput.value.trim();
-      if (!message) return;
-
-      sendBtn.disabled = true;
-      attachFileBtn.disabled = true;
-      const loaderId = appendLoading();
-
-      try {
-        const attachments = await prepareAttachments([...selectedFiles]);
-        appendUserMessage(message, selectedFiles.map((file) => file.name));
-        messageInput.value = '';
-        messageInput.style.height = 'auto';
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message, mode: activeMode, attachments, history: conversationHistory })
-        });
-
-        const loader = document.getElementById(loaderId);
-        if (loader) loader.remove();
-
-        if (!response.ok) {
-          const err = await response.json().catch(() => ({ error: 'Request rejected' }));
-          throw new Error(err.error || `HTTP ${response.status}`);
-        }
-
-        const data = await response.json();
-        appendAiMessage(data, message);
-        rememberConversationTurn(message, data);
-        selectedFiles.splice(0, selectedFiles.length);
-        updateFilePreview();
-
-      } catch (err) {
-        const loader = document.getElementById(loaderId);
-        if (loader) loader.remove();
-
-        const errEl = document.createElement('div');
-        errEl.className = "flex gap-2.5 sm:gap-3 max-w-lg";
-        errEl.innerHTML = `
-          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-red-600 text-white flex-shrink-0 flex items-center justify-center font-bold text-xs mt-1">!</div>
-          <div class="p-3 sm:p-4 rounded-2xl rounded-tl-sm bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs leading-relaxed whitespace-pre-wrap">
-            <strong>Service Notification:</strong> ${escapeHtml(err.message)}
-          </div>
+    function reloadSidebarAd() {
+      const wrapper = document.getElementById('sidebarAdIframeWrapper');
+      if (!wrapper) return;
+      sidebarAdToggle = (sidebarAdToggle + 1) % 2;
+      // Rotates between 300x250 (9f4f1cfe78a144f135a9bdcfc885e1a9) and 160x300 Read-Full (6459cd951520b6889e3517b49d1dc5c0)
+      if (sidebarAdToggle === 0) {
+        wrapper.innerHTML = `
+          <script type="text/javascript">
+            atOptions = {
+              'key' : '9f4f1cfe78a144f135a9bdcfc885e1a9',
+              'format' : 'iframe',
+              'height' : 250,
+              'width' : 300,
+              'params' : {}
+            };
+          <\/script>
+          <script type="text/javascript" src="//www.highperformanceformat.com/9f4f1cfe78a144f135a9bdcfc885e1a9/invoke.js"><\/script>
         `;
-        messagesContainer.appendChild(errEl);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      } finally {
-        sendBtn.disabled = false;
-        attachFileBtn.disabled = false;
-        if (window.innerWidth >= 1024) messageInput.focus();
+      } else {
+        wrapper.innerHTML = `
+          <script type="text/javascript">
+            atOptions = {
+              'key' : '6459cd951520b6889e3517b49d1dc5c0',
+              'format' : 'iframe',
+              'height' : 300,
+              'width' : 160,
+              'params' : {}
+            };
+          <\/script>
+          <script type="text/javascript" src="//www.highperformanceformat.com/6459cd951520b6889e3517b49d1dc5c0/invoke.js"><\/script>
+        `;
       }
-    });
+    }
 
-    clearChatBtn.addEventListener('click', () => {
-      if (confirm('Clear the chat session?')) {
-        messagesContainer.innerHTML = '';
-        location.reload();
+    function closeBottomAd() {
+      const bottomAd = document.getElementById('bottomAdStrip');
+      if (bottomAd) {
+        bottomAd.style.display = 'none';
+        showToast('Bottom banner closed. Will reappear in 15 seconds.');
+        setTimeout(() => {
+          bottomAd.style.display = 'flex';
+          reloadBottomAd();
+        }, 15000); // 15 seconds
       }
-    });
+    }
 
-    messageInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey && window.innerWidth >= 768) {
-        e.preventDefault();
-        chatForm.dispatchEvent(new Event('submit'));
+    function reloadBottomAd() {
+      const wrapper = document.getElementById('bottomAdIframeWrapper');
+      if (!wrapper) return;
+      wrapper.innerHTML = `
+        <script type="text/javascript">
+          atOptions = {
+            'key' : '39ffdf0ae262c17b4545a4934d3ad7ee',
+            'format' : 'iframe',
+            'height' : 90,
+            'width' : 728,
+            'params' : {}
+          };
+        <\/script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/39ffdf0ae262c17b4545a4934d3ad7ee/invoke.js"><\/script>
+      `;
+    }
+
+    // 6. Header utility actions
+    function clearMessages() {
+      const container = document.getElementById('messagesContainer');
+      if (!container) return;
+      while (container.children.length > 1) {
+        container.removeChild(container.lastChild);
       }
-    });
+      showToast('Chat history cleared.');
+    }
 
-    initTheme();
-    initializeAuthentication();
+    function toggleStar() {
+      const star = document.getElementById('starBtn');
+      if (star) {
+        star.classList.toggle('text-amber-400');
+        star.classList.toggle('text-slate-400');
+        showToast('Favorites updated.');
+      }
+    }
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+      showToast('Theme switched.');
+    }
+
+    function handleSignOut() {
+      showToast('Signed out of rachaksoanisa@gmail.com.');
+    }
+
+    function triggerAttachment() {
+      document.getElementById('fileInput').click();
+    }
+
+    function handleFileSelect(e) {
+      if (e.target.files.length > 0) {
+        const file = e.target.files[0];
+        appendMessage(`[Attached file: ${file.name}]`, 'user');
+        setTimeout(() => {
+          appendMessage(`A·chik Bot: I have received "${file.name}". How would you like me to process or translate it?`, 'bot');
+        }, 600);
+      }
+    }
+
+    // 7. Speech Recognition
+    let isRecording = false;
+    function toggleSpeechRecognition() {
+      const micBtn = document.getElementById('micBtn');
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        showToast('Speech recognition not supported in this browser.', 'error');
+        return;
+      }
+      isRecording = !isRecording;
+      if (isRecording) {
+        micBtn.classList.add('text-red-500', 'animate-pulse');
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const rec = new SpeechRec();
+        rec.lang = 'en-US';
+        rec.onresult = (event) => {
+          const text = event.results[0][0].transcript;
+          document.getElementById('chatInput').value = text;
+          micBtn.classList.remove('text-red-500', 'animate-pulse');
+          isRecording = false;
+        };
+        rec.onerror = () => {
+          micBtn.classList.remove('text-red-500', 'animate-pulse');
+          isRecording = false;
+        };
+        rec.start();
+      } else {
+        micBtn.classList.remove('text-red-500', 'animate-pulse');
+      }
+    }
   </script>
 </body>
 </html>
