@@ -21,9 +21,6 @@
       "migrations_dir": "migrations"
     }
   ],
-  "ai": {
-    "binding": "AI"
-  },
   "assets": {
     "directory": "./public",
     "binding": "ASSETS"

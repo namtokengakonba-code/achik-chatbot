@@ -3,18 +3,20 @@
 <head>
   <meta name="c9003aeed4262d10993c21a2b5f5db8279fd3fbe" content="c9003aeed4262d10993c21a2b5f5db8279fd3fbe" />
   <meta name="referrer" content="no-referrer-when-downgrade" />
-  <script>(function(s){s.dataset.zone='12100680',s.src='[https://nap5k.com/tag.min.js](https://nap5k.com/tag.min.js)'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-  <script>(function(s){s.dataset.zone='12100722',s.src='[https://n6wxm.com/vignette.min.js](https://n6wxm.com/vignette.min.js)'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
+  <script>(function(s){s.dataset.zone='12100680',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+  
+  <script>(function(s){s.dataset.zone='12100722',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
   
   <!-- Monetag & Google Search Console Verification -->
   <meta name="monetag" content="c3f33c6590315012665c96f5f0a7f676">
   <meta name="google-site-verification" content="5z7yHu5E9kukmZK9FBM4JmRv1ZcrSxg4mwHyAF8oHGo" />
-  
+
   <!-- Monetag Tag (nap5k) -->
   <script>
     (function(s) {
       s.dataset.zone = '12017976';
-      s.src = '[https://nap5k.com/tag.min.js](https://nap5k.com/tag.min.js)';
+      s.src = 'https://nap5k.com/tag.min.js';
       s.async = true;
       s.setAttribute('data-cfasync', 'false');
     })((document.head || document.documentElement).appendChild(document.createElement('script')));
@@ -24,6 +26,7 @@
   <script>
     (function() {
       const currentOrigin = window.location.origin;
+
       function isExternalAd(url) {
         if (!url || typeof url !== 'string') return false;
         try {
@@ -33,8 +36,10 @@
           return false;
         }
       }
+
       const originalAssign = window.location.assign ? window.location.assign.bind(window.location) : null;
       const originalReplace = window.location.replace ? window.location.replace.bind(window.location) : null;
+
       if (originalAssign) {
         window.location.assign = function(url) {
           if (isExternalAd(url)) {
@@ -44,6 +49,7 @@
           return originalAssign(url);
         };
       }
+
       if (originalReplace) {
         window.location.replace = function(url) {
           if (isExternalAd(url)) {
@@ -53,6 +59,7 @@
           return originalReplace(url);
         };
       }
+
       const originalOpen = window.open;
       window.open = function(url, target, features) {
         if (isExternalAd(url)) {
@@ -60,6 +67,7 @@
         }
         return originalOpen.call(window, url, target, features);
       };
+
       document.addEventListener('click', function(e) {
         const link = e.target.closest('a');
         if (link && link.href && isExternalAd(link.href)) {
@@ -67,6 +75,7 @@
           link.rel = 'noopener noreferrer';
         }
       }, true);
+
       const purgeInvisibleOverlays = () => {
         document.querySelectorAll('div, a').forEach(el => {
           if (el.id === 'drawerBackdrop' || el.id === 'feedbackModal' || el.id === 'authOverlay') return;
@@ -82,6 +91,7 @@
         });
       };
       setInterval(purgeInvisibleOverlays, 1200);
+
       const adCleaner = new MutationObserver(function() {
         const elements = document.querySelectorAll('div, span, p');
         elements.forEach(function(el) {
@@ -97,6 +107,7 @@
           }
         });
       });
+
       if (document.body) {
         adCleaner.observe(document.body, { childList: true, subtree: true });
       } else {
@@ -111,10 +122,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>A·chik Chatbot | Garo Language Companion</title>
   <link rel="icon" type="image/png" href="/logo.png" />
-  <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-  <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-  <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-  <link href="[https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap)" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -132,26 +144,33 @@
       }
     };
   </script>
-  <script src="[https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js](https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js)"></script>
-  <script src="[https://unpkg.com/mammoth@1.9.0/mammoth.browser.min.js](https://unpkg.com/mammoth@1.9.0/mammoth.browser.min.js)"></script>
-  <script src="[https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js](https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js)"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="https://unpkg.com/mammoth@1.9.0/mammoth.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
   <style>
     .raka { color: #f59e0b; font-weight: 700; }
+
     .brand-logo {
       width: clamp(1.5rem, 7vw, 2.1rem);
       height: clamp(1.5rem, 7vw, 2.1rem);
     }
+
     .brand-title {
       color: #065f46;
       font-size: clamp(0.85rem, 4vw, 1rem);
       line-height: 1.2;
       white-space: nowrap;
     }
+
     .dark .brand-title { color: #a7f3d0; }
+
     .header-user-email { display: none; }
+
     @media (min-width: 640px) {
       .header-user-email { display: inline-block; }
     }
+
+    /* Enforce full viewport height so layout stretches all the way to taskbar */
     html, body {
       height: 100% !important;
       height: 100vh !important;
@@ -160,6 +179,7 @@
       padding: 0 !important;
       overflow: hidden !important;
     }
+
     .app-height {
       height: 100vh !important;
       height: 100dvh !important;
@@ -168,6 +188,8 @@
       overflow: hidden !important;
       position: relative !important;
     }
+
+    /* Main chat layout stretches to fill entire space down to the taskbar line */
     #mainContentLayout {
       flex: 1 1 0% !important;
       min-height: 0 !important;
@@ -175,6 +197,7 @@
       display: flex !important;
       overflow: hidden !important;
     }
+
     main {
       flex: 1 1 0% !important;
       min-height: 0 !important;
@@ -183,11 +206,14 @@
       flex-direction: column !important;
       overflow: hidden !important;
     }
+
     #messagesContainer {
       flex: 1 1 0% !important;
       min-height: 0 !important;
       overflow-y: auto !important;
     }
+
+    /* Slim 32px horizontal bottom banner directly above taskbar */
     .bottom-ad-strip, #bottomAdStrip {
       height: 32px !important;
       max-height: 32px !important;
@@ -201,6 +227,7 @@
       position: relative !important;
       z-index: 30 !important;
     }
+
     .bottom-ad-scaler {
       width: 728px !important;
       height: 90px !important;
@@ -212,6 +239,7 @@
       justify-content: center !important;
       flex-shrink: 0 !important;
     }
+
     @media (max-width: 640px) {
       .bottom-ad-scaler {
         width: 320px !important;
@@ -220,6 +248,8 @@
         margin: -10px auto !important;
       }
     }
+
+    /* Prevents injected third-party ads from stealing flex height and creating voids */
     body > *:not(header):not(#mainContentLayout):not(#bottomAdStrip):not(#feedbackModal):not(#authOverlay):not(#drawerBackdrop):not(#toastContainer) {
       position: fixed !important;
       top: -9999px !important;
@@ -231,11 +261,15 @@
       opacity: 0 !important;
       pointer-events: none !important;
     }
+
+    /* Block intrusive video ads from expanding below chat */
     video,
     iframe[src*="fond-appointment"]:has(video),
     div:has(> video) {
       display: none !important;
     }
+
+    /* In-Page Push notifications */
     div[class*="push"],
     div[id*="push"] {
       top: 56px !important;
@@ -243,6 +277,7 @@
       max-width: 290px !important;
       z-index: 55 !important;
     }
+
     @media (max-width: 640px) {
       div[class*="push"],
       div[id*="push"] {
@@ -253,40 +288,66 @@
         transform-origin: bottom right !important;
       }
     }
+
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.25); border-radius: 9999px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.5); }
   </style>
 </head>
+
 <body class="app-height bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 overflow-hidden">
+
+  <!-- TOP HEADER -->
   <header class="h-12 sm:h-13 border-b border-emerald-100 dark:border-emerald-900/40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-30 flex-shrink-0">
     <div class="w-full mx-auto px-2 sm:px-4 h-full flex items-center justify-between">
+      
+      <!-- Brand & Mobile Drawer Toggle -->
       <div class="flex min-w-0 flex-1 items-center gap-2">
         <button id="menuToggleBtn" class="lg:hidden p-1.5 -ml-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Open Sidebar">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
+
+        <!-- Header Logo -->
         <img src="/logo.png" 
-          onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAIfUlEQVR4nJWYaWxcVxXHf/d5Fntm7BnvjrPZjuOli5NASgkRUISSUlG1QEtB0A8VqIhKgNQW9RtS1Q8IoUqVKkHVBQnRokqllHQvLUVOixyy2uMkjh27TrzE29gz9oxne/PePXx4k7En9qThzNx5o3vPPff/zjn33HOuqmroFtbR9+69i0d/9TAdu1vxer0gAkqh8uMiglIKkaJpACilCjybUdY0uTh6iWeefZE33ny/eO56IL0f/Y29PTdvKuQqiQiW1kRSKWaTSRK5HAABt5tmv596nw+XYWAoxeZwHBoYPM8dh76/EchwuJempoaSi6+aOWaTq5yen+dCNEpteQU7qioJeb0ALGeyTCYSLKXTdNXUsL+pkeZAAL/bXdDUtTQ3t0DXnjvWgFxPEyJC79QUI9Eou6uraQ+FaA4EcJeVbcqfs21mk0nGYjEuxmJ0VFfzjR07SoIpaOahhx8TLbKxaS1LqZQ8ffKkvDY8LDnbFlvrzXlLzM/Ztrw+MiK/P3FCFlMp0SXmP/Szx4Xw4NCGAVtrmVxZkecHwjK8tCTWOgGW7Sxg2rbkSrQifq1lZCkqL4QH5fLKyqYvEx4cEpXOZMSbt/NVmk4k+N3x4zx18CA1FRUFEy2kUhwZG2MwEsHSGpQCEWcnGYbzRNEc8PNARwe7a2pwGUbehzL8pq+PJ/bvZ1tlZZGpstksXKuuWCYjz4fDsphKieT7TNuWv49clJfPn5fPYjGxbPu6JomkUvLW6Jg8NzAgi6l0YWwpnZYXwmGJpdMb5hQD0Vqe6++XwYWFInv+a2JC3hwdE8u2xb4B/7Dz522Ox+XP584VzGGLyNlIRP5wpl+uXddYvzv+OzuL1+XiptpaR+2ArTUzq6scbtmJYRhs7vvFpHCCW1MgQLnLxUIyWejvrq3B53FzbGa2KPAVgGRsmxNzczzY3Y1hFLpZzmSpcLnwulw3AKGYDKXoqavj7fFLToQGDGXw464uTs3PkbGsYiAKWEglaQsGKVsHAmB0OUa9r+KGNLEZNfp8DEeXivrKDINdwRDzyZTToZQDRItwNrLIrlCoYJKr5Ckrw9bXC9bXJ1sET9k12lSKtlCQc0uLBfMUgIQjEXZUVm54845QNfOpFLrEQfZ5NL6ywoEtTUUvqIDtlZUMRCIFuQZA2rJI2xZ+t3uDIJ/HTc62Sa+z542SrTUXolG+uWPHhjG/x0NOa1K5HIg4QOaTSbYHKjeYBRyH29PQwMtDF4hlMjcMwrRteqenqa+owOfxbMqzPRBgNr+jDIAV06SmvLyk0Fvq6vj69m0cGR3F1hoRwdYaa5OWs21GolH+ODCAgk21cZWqyyuIm1kAXOD4iFHidARHK40VPlCKuGkyHI3y6fQ0Wa0BAVHOM58wba+q5IHOTrb4/SVPXUcuaFEopRwgAbeHuGmSF7eBRITe6SnmkyleGRriS01N/GLfPnwuF4JzvhQon83diGvHTZNOt2tNIw2+CqYTqxsYC+kh0Oj34zHKONyyE7dhkMllGL4yxrnJsyTSCeqq6tizcy9barbgdnnyYATLdpzcXeYuAqeA6dVV7m5rXQNS5fFiaWdnlLtcIELOznFu8hwTkQlsbVNTWcsXt3VTphSxZJR3Tr/L2NwolrYBGFv4jDOX+/lCyz6+te8uFpbnOTN+hlgqBkrRFGzi9t23E/QFQSkyloVp2wS9XgRQWjs7+bWREfY3NtIWCrEUj/Dqp68yn1hA8h+Fgc9dzj233cvIlRH6JwaKk2Ql+TdVdDd1MbE0QSqXRrjab+B1eXjwqw/S2tjK+HKcU/NzPNDZiVLKAYJSXIxGGVlcYH9dkLdOHmFyaWrNNigHjECZUYYgaNFrqhaHVdZS/TXDFvmq0FDZwH1fvp+BWJLO2no6ampBZA1IwjR57sRRDtb5AY3ofNmAFJcJ+WRIFQDmF1Zr/mTk/aOA5Kr3KkdjgqJvMcUjt32NynzJUjgEAm43PVvbWbJt7m5rK2xny7YYmZjkplbHqbQIi8vLlHu8uFwGs4tLpNIZbmnfhZkzOXn+AmnT5EDPrZR7vdjaJhJbprm+DoXCFuG9S+Pc2mwQWBfoCkCUUtzZ0sKTfX3sqa9nZzCIAj45PcDxc+dp376d5XiCl/7xJs319cwuLtLd1krr1mY++E8fiWSSzpYWUuksQb+PD48dp394hJvbd/HyO+/z198+RTAQYGY1wam5OZ78ysGiGFN05iuleGTvXj6amCCdy2HmLF559wPcLhdXFhY4Fh7kh3ceoqGmmh/ceYjBi6NcvjLD4OhnmJaFiDA4Okrf4FmOnj7DT75zD1nTZP9NXVT6fGRsi39evszP9+wtDnRKsSF5FhHORiL8ZWiIx3t6WFmJUxsKMjU7j1KKofFxbmnfRdu2rQxfmqAuVMXSShxXWRmdLTv598nTWJbF3s4OPj5xikO338Yn/QMcPniAp8NhftTVRU99fXHybJpsWk5YWkv//Ly8GA7LdDzuJMtai9Za7HzT656Fls9V7XX/c7YtM4mE/GlwUM7MzRWVGoVy4uwFKVlg2VrLVDwuTxw9Kh9PTDgC/s8Cy9Zaeqem5Ne9vTIZj5cs0B56+DFRVQ1d0vvh6+zds3nJqUV4e2yMxUyGjupqdodCNPr9G4pstY5/IZXiYizGaCxGdXk597a3lzxUB8LnuePw/aiqhi5BYHjwaMkiXIsQz2aZjMc5NjPL9OoqLVVVtIaCBL1eFLCSzXJ5Jc74yjJbAwEONDezo6qKoNdbEsTc3AJdPV934otzG+B8ez8qrZn1oLKWxUQ8zkwySTxrgoIqj4ctPj87g1WUu1zXTSsKmjh0f16VqhgIwH3f/TaP/vKn7N7dhtfjKXkpAxTGPu+C5iqfc1EzzjPPvsQbR97LDzo//wOD52coFsOSeQAAAABJRU5ErkJggg==';" 
-          alt="Logo" class="brand-logo rounded-lg object-contain bg-white shadow-sm flex-shrink-0" />
+        onerror="this.onerror=null; this.src='data:image/png;base64,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';" 
+        alt="Logo" 
+        class="brand-logo rounded-lg object-contain bg-white shadow-sm flex-shrink-0" />
+
         <div class="min-w-0">
           <div class="flex items-center gap-1.5">
-            <h1 class="brand-title font-bold tracking-tight">A·chik Chatbot</h1>
-            <span class="hidden sm:inline-flex text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 font-semibold">North Garo Hills</span>
+            <h1 class="brand-title font-bold tracking-tight">
+              A·chik Chatbot
+            </h1>
+            <span class="hidden sm:inline-flex text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 font-semibold">
+              North Garo Hills
+            </span>
           </div>
           <p class="hidden xs:block text-[9px] text-slate-500 dark:text-slate-400">Wa·sabegipa seng·ani</p>
         </div>
       </div>
+
+      <!-- Controls -->
       <div class="flex flex-shrink-0 items-center gap-1">
         <span id="signedInUser" class="header-user-email max-w-28 truncate text-[10px] sm:max-w-40 sm:text-xs text-slate-500 dark:text-slate-400"></span>
-        <button id="logoutBtn" type="button" class="hidden rounded-lg border border-slate-200 dark:border-slate-800 px-2 py-1 text-[10px] sm:px-2.5 sm:text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Sign out</button>
-        <button id="openFeedbackBtn" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-600 dark:hover:text-amber-400 transition" title="Feedback & Rating">
-          <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+        <button id="logoutBtn" type="button" class="hidden rounded-lg border border-slate-200 dark:border-slate-800 px-2 py-1 text-[10px] sm:px-2.5 sm:text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+          Sign out
         </button>
+
+        <!-- Feedback & Rating Button -->
+        <button id="openFeedbackBtn" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-600 dark:hover:text-amber-400 transition" title="Feedback & Rating">
+          <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          </svg>
+        </button>
+
+        <!-- Theme Toggle -->
         <button id="themeToggleBtn" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Toggle Dark/Light Mode">
           <svg id="moonIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
           <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
         </button>
+
+        <!-- Clear Chat -->
         <button id="clearChatBtn" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition" title="Reset Chat History">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
         </button>
@@ -294,28 +355,44 @@
     </div>
   </header>
 
+  <!-- FEEDBACK & RATING MODAL -->
   <section id="feedbackModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
     <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl relative">
       <button id="closeFeedbackBtn" class="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition" aria-label="Close dialog">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
       </button>
+
       <div class="mb-4">
-        <h2 id="feedbackTitle" class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2"><span>💬</span> Message Developer</h2>
+        <h2 id="feedbackTitle" class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+          <span>💬</span> Message Developer
+        </h2>
         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Rate your experience or share your thoughts to help us improve A·chik Chatbot.</p>
       </div>
+
       <form id="feedbackForm" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Rating</label>
           <div class="flex items-center gap-1.5" id="starContainer">
-            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="1" aria-label="1 star"><svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg></button>
-            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="2" aria-label="2 stars"><svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg></button>
-            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="3" aria-label="3 stars"><svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg></button>
-            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="4" aria-label="4 stars"><svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg></button>
-            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="5" aria-label="5 stars"><svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg></button>
+            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="1" aria-label="1 star">
+              <svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+            </button>
+            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="2" aria-label="2 stars">
+              <svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+            </button>
+            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="3" aria-label="3 stars">
+              <svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+            </button>
+            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="4" aria-label="4 stars">
+              <svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+            </button>
+            <button type="button" class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:text-amber-400 transition" data-rating="5" aria-label="5 stars">
+              <svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+            </button>
             <span id="ratingText" class="text-xs font-semibold text-amber-600 dark:text-amber-400 ml-2">5 / 5</span>
           </div>
           <input type="hidden" id="selectedRating" value="5">
         </div>
+
         <div>
           <label for="feedbackCategory" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Feedback Type</label>
           <select id="feedbackCategory" class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-2.5 text-xs text-slate-800 dark:text-slate-200 outline-none focus:border-emerald-500">
@@ -325,21 +402,26 @@
             <option value="feature">✨ New Feature Request</option>
           </select>
         </div>
+
         <div>
           <label for="feedbackMessage" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Your Message</label>
           <textarea id="feedbackMessage" rows="4" required maxlength="2000" placeholder="Type your message, critique, or idea here..." class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-3 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none focus:border-emerald-500 resize-none"></textarea>
         </div>
+
         <p id="feedbackStatus" role="status" class="hidden text-xs font-medium"></p>
-        <button type="submit" id="submitFeedbackBtn" class="w-full rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] py-2.5 text-xs font-semibold text-white shadow-md transition disabled:opacity-50">Send Message to Developer</button>
+
+        <button type="submit" id="submitFeedbackBtn" class="w-full rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] py-2.5 text-xs font-semibold text-white shadow-md transition disabled:opacity-50">
+          Send Message to Developer
+        </button>
       </form>
     </div>
   </section>
 
+  <!-- AUTH DIALOG OVERLAY -->
   <section id="authOverlay" class="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
     <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl">
       <div class="mb-5 text-center">
-        <img src="/logo.png" onerror="this.onerror=null; this.src='data:image/png;base64,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';" 
-          alt="" class="mx-auto mb-3 h-14 w-14 rounded-xl object-contain">
+        <img src="/logo.png" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAIfUlEQVR4nJWYaWxcVxXHf/d5Fntm7BnvjrPZjuOli5NASgkRUISSUlG1QEtB0A8VqIhKgNQW9RtS1Q8IoUqVKkHVBQnRokqllHQvLUVOixyy2uMkjh27TrzE29gz9oxne/PePXx4k7En9qThzNx5o3vPPff/zjn33HOuqmroFtbR9+69i0d/9TAdu1vxer0gAkqh8uMiglIKkaJpACilCjybUdY0uTh6iWeefZE33ny/eO56IL0f/Y29PTdvKuQqiQiW1kRSKWaTSRK5HAABt5tmv596nw+XYWAoxeZwHBoYPM8dh76/EchwuJempoaSi6+aOWaTq5yen+dCNEpteQU7qioJeb0ALGeyTCYSLKXTdNXUsL+pkeZAAL/bXdDUtTQ3t0DXnjvWgFxPEyJC79QUI9Eou6uraQ+FaA4EcJeVbcqfs21mk0nGYjEuxmJ0VFfzjR07SoIpaOahhx8TLbKxaS1LqZQ8ffKkvDY8LDnbFlvrzXlLzM/Ztrw+MiK/P3FCFlMp0SXmP/Szx4Xw4NCGAVtrmVxZkecHwjK8tCTWOgGW7Sxg2rbkSrQifq1lZCkqL4QH5fLKyqYvEx4cEpXOZMSbt/NVmk4k+N3x4zx18CA1FRUFEy2kUhwZG2MwEsHSGpQCEWcnGYbzRNEc8PNARwe7a2pwGUbehzL8pq+PJ/bvZ1tlZZGpstksXKuuWCYjz4fDsphKieT7TNuWv49clJfPn5fPYjGxbPu6JomkUvLW6Jg8NzAgi6l0YWwpnZYXwmGJpdMb5hQD0Vqe6++XwYWFInv+a2JC3hwdE8u2xb4B/7Dz522Ox+XP584VzGGLyNlIRP5wpl+uXddYvzv+OzuL1+XiptpaR+2ArTUzq6scbtmJYRhs7vvFpHCCW1MgQLnLxUIyWejvrq3B53FzbGa2KPAVgGRsmxNzczzY3Y1hFLpZzmSpcLnwulw3AKGYDKXoqavj7fFLToQGDGXw464uTs3PkbGsYiAKWEglaQsGKVsHAmB0OUa9r+KGNLEZNfp8DEeXivrKDINdwRDzyZTToZQDRItwNrLIrlCoYJKr5Ckrw9bXC9bXJ1sET9k12lSKtlCQc0uLBfMUgIQjEXZUVm54845QNfOpFLrEQfZ5NL6ywoEtTUUvqIDtlZUMRCIFuQZA2rJI2xZ+t3uDIJ/HTc62Sa+z542SrTUXolG+uWPHhjG/x0NOa1K5HIg4QOaTSbYHKjeYBRyH29PQwMtDF4hlMjcMwrRteqenqa+owOfxbMqzPRBgNr+jDIAV06SmvLyk0Fvq6vj69m0cGR3F1hoRwdYaa5OWs21GolH+ODCAgk21cZWqyyuIm1kAXOD4iFHidARHK40VPlCKuGkyHI3y6fQ0Wa0BAVHOM58wba+q5IHOTrb4/SVPXUcuaFEopRwgAbeHuGmSF7eBRITe6SnmkyleGRriS01N/GLfPnwuF4JzvhQon83diGvHTZNOt2tNIw2+CqYTqxsYC+kh0Oj34zHKONyyE7dhkMllGL4yxrnJsyTSCeqq6tizcy9barbgdnnyYATLdpzcXeYuAqeA6dVV7m5rXQNS5fFiaWdnlLtcIELOznFu8hwTkQlsbVNTWcsXt3VTphSxZJR3Tr/L2NwolrYBGFv4jDOX+/lCyz6+te8uFpbnOTN+hlgqBkrRFGzi9t23E/QFQSkyloVp2wS9XgRQWjs7+bWREfY3NtIWCrEUj/Dqp68yn1hA8h+Fgc9dzj233cvIlRH6JwaKk2Ql+TdVdDd1MbE0QSqXRrjab+B1eXjwqw/S2tjK+HKcU/NzPNDZiVLKAYJSXIxGGVlcYH9dkLdOHmFyaWrNNigHjECZUYYgaNFrqhaHVdZS/TXDFvmq0FDZwH1fvp+BWJLO2no6ampBZA1IwjR57sRRDtb5AY3ofNmAFJcJ+WRIFQDmF1Zr/mTk/aOA5Kr3KkdjgqJvMcUjt32NynzJUjgEAm43PVvbWbJt7m5rK2xny7YYmZjkplbHqbQIi8vLlHu8uFwGs4tLpNIZbmnfhZkzOXn+AmnT5EDPrZR7vdjaJhJbprm+DoXCFuG9S+Pc2mwQWBfoCkCUUtzZ0sKTfX3sqa9nZzCIAj45PcDxc+dp376d5XiCl/7xJs319cwuLtLd1krr1mY++E8fiWSSzpYWUuksQb+PD48dp394hJvbd/HyO+/z198+RTAQYGY1wam5OZ78ysGiGFN05iuleGTvXj6amCCdy2HmLF559wPcLhdXFhY4Fh7kh3ceoqGmmh/ceYjBi6NcvjLD4OhnmJaFiDA4Okrf4FmOnj7DT75zD1nTZP9NXVT6fGRsi39evszP9+wtDnRKsSF5FhHORiL8ZWiIx3t6WFmJUxsKMjU7j1KKofFxbmnfRdu2rQxfmqAuVMXSShxXWRmdLTv598nTWJbF3s4OPj5xikO338Yn/QMcPniAp8NhftTVRU99fXHybJpsWk5YWkv//Ly8GA7LdDzuJMtai9Za7HzT656Fls9V7XX/c7YtM4mE/GlwUM7MzRWVGoVy4uwFKVlg2VrLVDwuTxw9Kh9PTDgC/s8Cy9Zaeqem5Ne9vTIZj5cs0B56+DFRVQ1d0vvh6+zds3nJqUV4e2yMxUyGjupqdodCNPr9G4pstY5/IZXiYizGaCxGdXk597a3lzxUB8LnuePw/aiqhi5BYHjwaMkiXIsQz2aZjMc5NjPL9OoqLVVVtIaCBL1eFLCSzXJ5Jc74yjJbAwEONDezo6qKoNdbEsTc3AJdPV934otzG+B8ez8qrZn1oLKWxUQ8zkwySTxrgoIqj4ctPj87g1WUu1zXTSsKmjh0f16VqhgIwH3f/TaP/vKn7N7dhtfjKXkpAxTGPu+C5iqfc1EzzjPPvsQbR97LDzo//wOD52coFsOSeQAAAABJRU5ErkJggg=='" alt="" class="mx-auto mb-3 h-14 w-14 rounded-xl object-contain">
         <h2 id="authTitle" class="text-xl font-bold text-emerald-800 dark:text-emerald-300">Sign in to A·chik Chatbot</h2>
         <p id="authDescription" class="mt-1 text-sm text-slate-500 dark:text-slate-400">Sign in with Google to create your account or continue chatting.</p>
       </div>
@@ -352,23 +434,40 @@
     </div>
   </section>
 
+  <!-- MAIN BODY LAYOUT (FLEX-1 FULL HEIGHT DOWN TO BOTTOM BANNER) -->
   <div id="mainContentLayout" class="flex-1 w-full min-w-0 mx-auto flex overflow-hidden relative h-full min-h-0">
+
+    <!-- MOBILE & TABLET DRAWER BACKDROP -->
     <div id="drawerBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
+
+    <!-- SIDEBAR DRAWER -->
     <aside id="sidebarDrawer" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-80 flex flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 lg:bg-white/50 lg:dark:bg-slate-900/50 p-3.5 sm:p-4 gap-3 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0 shadow-2xl lg:shadow-none min-h-0">
+      
+      <!-- Drawer Header -->
       <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 lg:hidden">
         <span class="font-bold text-sm text-emerald-800 dark:text-emerald-400">Settings & Culture</span>
         <button id="closeDrawerBtn" class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
       </div>
+
+      <!-- Mode Selector -->
       <div>
         <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-1.5">Modes</h2>
         <div class="grid grid-cols-1 gap-1.5" id="modeSelector">
-          <button data-mode="dual" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition bg-emerald-600 text-white shadow-sm">💬 Smart Dual (Garo + English)</button>
-          <button data-mode="pure" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">🌿 Pure A·chik Focus</button>
-          <button data-mode="translate" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">🔄 Quick Translator</button>
+          <button data-mode="dual" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition bg-emerald-600 text-white shadow-sm">
+            💬 Smart Dual (Garo + English)
+          </button>
+          <button data-mode="pure" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
+            🌿 Pure A·chik Focus
+          </button>
+          <button data-mode="translate" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
+            🔄 Quick Translator
+          </button>
         </div>
       </div>
+
+      <!-- Common Expressions -->
       <div>
         <h2 class="text-xs uppercase tracking-wider font-semibold text-emerald-800 dark:text-emerald-400 mb-1.5">Common Expressions</h2>
         <div class="space-y-1.5">
@@ -386,13 +485,27 @@
           </button>
         </div>
       </div>
+
+      <!-- Orthography Note -->
       <div class="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200">
-        <p class="font-bold flex items-center gap-1 mb-0.5"><span>ℹ️</span> The Raka ( · ) Glottal Stop</p>
-        <p class="text-[11px] leading-relaxed text-amber-800 dark:text-amber-300">The middle dot represents the glottal stop. Distinct roots: <em>chaa</em> (grow) vs <em>cha·a</em> (eat).</p>
+        <p class="font-bold flex items-center gap-1 mb-0.5">
+          <span>ℹ️</span> The Raka ( · ) Glottal Stop
+        </p>
+        <p class="text-[11px] leading-relaxed text-amber-800 dark:text-amber-300">
+          The middle dot represents the glottal stop. Distinct roots: <em>chaa</em> (grow) vs <em>cha·a</em> (eat).
+        </p>
       </div>
+
+      <!-- SPONSORED PROMOTION & BANNER AD DIRECTLY BELOW IT -->
       <div class="mt-auto pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
-        <a href="[https://araplhn.org/4/155e2c27e0088395c28267e674074c2d](https://araplhn.org/4/155e2c27e0088395c28267e674074c2d)" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-full px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl hover:bg-emerald-100 transition shadow-sm">✨ Special Partner Offer — Click Here</a>
-        <a href="[https://uplcm.com/4/12100728](https://uplcm.com/4/12100728)" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-full px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl hover:bg-emerald-100 transition shadow-sm">✨ Special Offer — Click Here</a>
+        <a href="https://araplhn.org/4/155e2c27e0088395c28267e674074c2d" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-full px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl hover:bg-emerald-100 transition shadow-sm">
+          ✨ Special Partner Offer — Click Here
+        </a>
+        <a href="https://uplcm.com/4/12100728" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-full px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl hover:bg-emerald-100 transition shadow-sm">
+          ✨ Special Offer — Click Here
+        </a>
+
+        <!-- BANNER AD IN SIDEBAR DRAWER (SCALED DOWN DIRECTLY BELOW SPECIAL PARTNER OFFER) -->
         <div id="sidebarSquareAd" class="p-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center relative overflow-hidden">
           <div class="w-full flex items-center justify-between mb-1 px-1">
             <span class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">Advertisement</span>
@@ -409,40 +522,48 @@
                   'params' : {}
                 };
               </script>
-              <script src="[https://bauval.org/22/9f4f1cfe78a144f135a9bdcfc885e1a9](https://bauval.org/22/9f4f1cfe78a144f135a9bdcfc885e1a9)"></script>
+              <script src="https://bauval.org/22/9f4f1cfe78a144f135a9bdcfc885e1a9"></script>
             </div>
           </div>
         </div>
       </div>
+
     </aside>
 
+    <!-- CHAT CONTAINER: MAXIMUM HEIGHT FOR CHAT MESSAGES, PROMPT BOX SITUATED NEAR BOTTOM -->
     <main class="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-slate-50/50 dark:bg-slate-950">
+      
+      <!-- TOP NATIVE BANNER -->
       <div id="topAdStrip" class="ad-banner-top w-full bg-slate-100/70 dark:bg-slate-900/70 border-b border-slate-200/50 dark:border-slate-800/50 relative">
         <button type="button" onclick="closeAdBanner('topAdStrip')" class="absolute right-2 top-0.5 p-0.5 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         <div class="w-full max-w-md h-full flex items-center justify-center overflow-hidden">
           <div id="container-fe816a205ab9b5631883cc848108ce59"></div>
-          <script async="async" data-cfasync="false" src="[https://bauval.org/21/fe816a205ab9b5631883cc848108ce59](https://bauval.org/21/fe816a205ab9b5631883cc848108ce59)"></script>
+          <script async="async" data-cfasync="false" src="https://bauval.org/21/fe816a205ab9b5631883cc848108ce59"></script>
         </div>
       </div>
 
+      <!-- CHAT MESSAGES CONTAINER (FILLS AVAILABLE VERTICAL SPACE) -->
       <div id="messagesContainer" class="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 md:p-6 space-y-4">
+        
+        <!-- Welcome Message -->
         <div class="flex min-w-0 gap-2.5 sm:gap-3 max-w-[92%] sm:max-w-2xl md:max-w-3xl">
-          <img src="/logo.png" onerror="this.onerror=null; this.src='data:image/png;base64,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';" 
-          alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1" />
+          <img src="/logo.png" onerror="this.onerror=null; this.src='data:image/png;base64,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'" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1" />
           <div class="space-y-2">
             <div class="p-3.5 sm:p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm">
               <p class="font-semibold text-emerald-700 dark:text-emerald-400 text-sm sm:text-base mb-1">Rimchaksoa! Anga Na·simangni Ripeng.</p>
-              <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-2 whitespace-pre-wrap">I am your conversational A·chik companion from <span style="color: pink;">North Garo Hills</span>. Talk with me, share your thoughts, ask about any subject, or explore Garo folklore, customs, philosophy, and history. Whether chatting in casual Garo, nuanced English, or translating deep ideas, I am here to converse with you. Maiko agangrikna namnika? (What would you like to discuss?)</p>
+              <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-2 whitespace-pre-wrap">I am your conversational A·chik companion from <span style="color: pink;">North Garo Hills</span></strong>. Talk with me, share your thoughts, ask about any subject, or explore Garo folklore, customs, philosophy, and history. Whether chatting in casual Garo, nuanced English, or translating deep ideas, I am here to converse with you. Maiko agangrikna namnika? (What would you like to discuss?)</p>
               <div class="text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-2 flex items-center gap-1.5">
-                <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span> Powered by Gitchiesa Matchota.
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+                Powered by Gitchiesa Matchota ·
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- PROMPT MESSAGE INPUT BAR (BORDER LINE SITS RIGHT ABOVE BOTTOM AD STRIP) -->
       <div class="p-1.5 sm:p-2 border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md safe-bottom flex-shrink-0">
         <div class="max-w-5xl mx-auto">
           <div id="filePreview" class="hidden mb-1 flex flex-wrap items-center gap-1" aria-live="polite"></div>
@@ -452,23 +573,52 @@
           <button type="button" id="attachFileBtn" class="h-10 w-10 sm:h-11 sm:w-11 flex-shrink-0 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition" aria-label="Attach files" title="Attach PDF, Excel, Word, images, or text files (up to 5 files, 12 MB total)">
             <svg class="mx-auto h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.82-2.83l8.49-8.48"></path></svg>
           </button>
+          
           <div class="relative min-w-0 flex-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-300 dark:border-slate-700 focus-within:border-emerald-500 dark:focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 shadow-sm transition">
-            <textarea id="messageInput" rows="1" placeholder="Converse in English or Garo (A·chik), discuss anything, share thoughts..." class="w-full min-w-0 pl-3 pr-20 sm:pl-4 sm:pr-24 py-2 sm:py-2.5 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-48 overflow-y-auto text-base md:text-sm leading-relaxed"></textarea>
+            
+            <textarea
+              id="messageInput"
+              rows="1"
+              placeholder="Converse in English or Garo (A·chik), discuss anything, share thoughts..."
+              class="w-full min-w-0 pl-3 pr-20 sm:pl-4 sm:pr-24 py-2 sm:py-2.5 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-48 overflow-y-auto text-base md:text-sm leading-relaxed"
+            ></textarea>
+            
             <div class="absolute right-1.5 bottom-1.5 sm:right-2 sm:bottom-2 flex items-center gap-1">
-              <button type="button" onclick="insertChar('·')" class="px-2 py-0.5 rounded-lg text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 transition min-h-[30px] flex items-center justify-center" title="Insert Raka Glottal Stop (·)">[ · ]</button>
-              <button type="button" id="micBtn" class="p-1 rounded-lg text-slate-400 hover:text-emerald-600 transition min-h-[30px] min-w-[30px] flex items-center justify-center" title="Voice Input">
+              <button
+                type="button"
+                onclick="insertChar('·')"
+                class="px-2 py-0.5 rounded-lg text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 transition min-h-[30px] flex items-center justify-center"
+                title="Insert Raka Glottal Stop (·)"
+              >
+                [ · ]
+              </button>
+
+              <button
+                type="button"
+                id="micBtn"
+                class="p-1 rounded-lg text-slate-400 hover:text-emerald-600 transition min-h-[30px] min-w-[30px] flex items-center justify-center"
+                title="Voice Input"
+              >
                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 02-3-3V5a3 3 0 116 0v6a3 3 0 02-3 3z"></path></svg>
               </button>
             </div>
           </div>
-          <button type="submit" id="sendBtn" class="h-10 sm:h-11 px-3 sm:px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-medium rounded-xl flex items-center justify-center shadow-md shadow-emerald-600/20 transition disabled:opacity-50 disabled:pointer-events-none flex-shrink-0" aria-label="Send message">
+
+          <button
+            type="submit"
+            id="sendBtn"
+            class="h-10 sm:h-11 px-3 sm:px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-medium rounded-xl flex items-center justify-center shadow-md shadow-emerald-600/20 transition disabled:opacity-50 disabled:pointer-events-none flex-shrink-0"
+            aria-label="Send message"
+          >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
           </button>
         </form>
       </div>
+
     </main>
   </div>
 
+  <!-- SLIM 32px HORIZONTAL BOTTOM BANNER (SCALED DOWN) -->
   <div id="bottomAdStrip" class="bottom-ad-strip w-full bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800/80 relative">
     <button type="button" onclick="closeAdBanner('bottomAdStrip')" class="absolute right-2 top-0.5 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -483,28 +633,31 @@
           'params' : {}
         };
       </script>
-      <script src="[https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee](https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee)"></script>
+      <script src="https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee"></script>
     </div>
   </div>
 
+  <!-- AdSense Dynamic Loader -->
   <script>
     (() => {
-      const clientId = "_ADSENSE_CLIENT_ID_";
+      const clientId = "__ADSENSE_CLIENT_ID__";
       if (!/^ca-pub-\d+$/.test(clientId)) return;
+
       const script = document.createElement("script");
       script.async = true;
       script.crossOrigin = "anonymous";
-      script.src = `[https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=$](https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=$){encodeURIComponent(clientId)}`;
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(clientId)}`;
       script.onerror = () => console.error("AdSense script failed to load.");
       document.head.append(script);
     })();
   </script>
 
+  <!-- Hilltops Ads -->
   <script>
     (function(armhyl){
       var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
       s.settings = armhyl || {};
-      s.src = "//[fond-appointment.com/b/XjVLs.dHGplL0fY/WGcE/ketmi9VujZeUIlPkqP_TBcJ1JMrjTMf1AMbzOcRtZNizCUUyqM/zzUN0tMBQm](https://fond-appointment.com/b/XjVLs.dHGplL0fY/WGcE/ketmi9VujZeUIlPkqP_TBcJ1JMrjTMf1AMbzOcRtZNizCUUyqM/zzUN0tMBQm)";
+      s.src = "\/\/fond-appointment.com\/b\/XjVLs.dHGplL0fY\/WGcE\/ketmi9VujZeUIlPkqP_TBcJ1JMrjTMf1AMbzOcRtZNizCUUyqM\/zzUN0tMBQm";
       s.async = true;
       s.referrerPolicy = 'no-referrer-when-downgrade';
       l.parentNode.insertBefore(s, l);
@@ -514,7 +667,7 @@
     (function(armhyl){
       var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
       s.settings = armhyl || {};
-      s.src = "//[fond-appointment.com/bnXrV.s/dBG/la0zYHWtcn/-eLmt9YubZJUGlikUP/TKcW1CM/jzMe1/MGjIERt/NKz/U/y_MvzgUdy/NzQG](https://fond-appointment.com/bnXrV.s/dBG/la0zYHWtcn/-eLmt9YubZJUGlikUP/TKcW1CM/jzMe1/MGjIERt/NKz/U/y_MvzgUdy/NzQG)";
+      s.src = "\/\/fond-appointment.com\/bnXrV.s\/dBG\/la0zYHWtcn\/-eLmt9YubZJUGlikUP\/TKcW1CM\/jzMe1\/MGjIERt\/NKz\/U\/y_MvzgUdy\/NzQG";
       s.async = true;
       s.referrerPolicy = 'no-referrer-when-downgrade';
       l.parentNode.insertBefore(s, l);
@@ -524,7 +677,7 @@
     (function(armhyl){
       var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
       s.settings = armhyl || {};
-      s.src = "//[fond-appointment.com/bCXNVxsTd.Gflb0MYMWecT/teHmX9Tu-ZeUQlZkRP/TGc/1hMkjEMW1EMUDFUntYNMz-UGyEMWz/ULwwOYQY](https://fond-appointment.com/bCXNVxsTd.Gflb0MYMWecT/teHmX9Tu-ZeUQlZkRP/TGc/1hMkjEMW1EMUDFUntYNMz-UGyEMWz/ULwwOYQY)";
+      s.src = "\/\/fond-appointment.com\/bCXNVxsTd.Gflb0MYMWecT\/teHmX9Tu-ZeUQlZkRP\/TGc\/1hMkjEMW1EMUDFUntYNMz-UGyEMWz\/ULwwOYQY";
       s.async = true;
       s.referrerPolicy = 'no-referrer-when-downgrade';
       l.parentNode.insertBefore(s, l);
@@ -534,14 +687,16 @@
     (function(armhyl){
       var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
       s.settings = armhyl || {};
-      s.src = "//[fond-appointment.com/bRXWV.srdMGTlX0fYiW-cE/yeJmb9JuFZpU/lXk/PdTYcR1/MdjdMD0dOHD/k/tcNez_U/yvMbzeQt5pMlwJ](https://fond-appointment.com/bRXWV.srdMGTlX0fYiW-cE/yeJmb9JuFZpU/lXk/PdTYcR1/MdjdMD0dOHD/k/tcNez_U/yvMbzeQt5pMlwJ)";
+      s.src = "\/\/fond-appointment.com\/bRXWV.srdMGTlX0fYiW-cE\/yeJmb9JuFZpU\/lXk\/PdTYcR1\/MdjdMD0dOHD\/k\/tcNez_U\/yvMbzeQt5pMlwJ";
       s.async = true;
       s.referrerPolicy = 'no-referrer-when-downgrade';
       l.parentNode.insertBefore(s, l);
     })({})
   </script>
 
+  <!-- Application Logic -->
   <script>
+
     const ORIGINAL_BOT_LOGO = "/logo.png";
     const ORIGINAL_BOT_LOGO_FALLBACK = "data:image/png;base64,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";
 
@@ -592,6 +747,7 @@
     const signedInUser = document.getElementById('signedInUser');
     const logoutBtn = document.getElementById('logoutBtn');
 
+    // 15-SECOND AD REFRESH & AUTO-REOPEN SYSTEM
     const AD_RELOAD_INTERVAL = 15000;
     const adReopenTimers = {};
 
@@ -615,9 +771,11 @@
     function closeAdBanner(elementId) {
       const el = document.getElementById(elementId);
       if (!el) return;
+
       if (adReopenTimers[elementId]) {
         clearTimeout(adReopenTimers[elementId]);
       }
+
       el.style.transition = 'all 0.25s ease-out';
       el.style.opacity = '0';
       el.style.maxHeight = '0px';
@@ -626,9 +784,11 @@
       el.style.margin = '0px';
       el.style.border = 'none';
       el.style.overflow = 'hidden';
+
       setTimeout(() => {
         el.style.display = 'none';
       }, 250);
+
       adReopenTimers[elementId] = setTimeout(() => {
         reopenAdBanner(elementId);
       }, AD_RELOAD_INTERVAL);
@@ -637,13 +797,17 @@
     function reopenAdBanner(elementId) {
       const el = document.getElementById(elementId);
       if (!el) return;
+
       el.style.display = 'flex';
       el.style.removeProperty('border');
       el.style.removeProperty('margin');
       el.style.removeProperty('padding');
+
       void el.offsetWidth;
+
       el.style.transition = 'all 0.25s ease-in';
       el.style.opacity = '1';
+
       if (elementId === 'bottomAdStrip') {
         el.style.height = '32px';
         el.style.maxHeight = '32px';
@@ -656,6 +820,7 @@
         el.style.height = 'auto';
         el.style.maxHeight = '';
       }
+
       refreshAdContainer(elementId);
     }
 
@@ -672,6 +837,7 @@
       });
     }, AD_RELOAD_INTERVAL);
 
+    // Feedback & Rating elements
     const openFeedbackBtn = document.getElementById('openFeedbackBtn');
     const closeFeedbackBtn = document.getElementById('closeFeedbackBtn');
     const feedbackModal = document.getElementById('feedbackModal');
@@ -740,10 +906,12 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
+
         if (!response.ok) {
           const errData = await response.json().catch(() => ({}));
           throw new Error(errData.error || `Server responded with ${response.status}`);
         }
+
         feedbackStatus.textContent = 'Thank you! Your feedback has been sent to the developer.';
         feedbackStatus.className = 'text-xs text-emerald-600 dark:text-emerald-400 font-medium';
         document.getElementById('feedbackMessage').value = '';
@@ -1415,9 +1583,11 @@
       }
     }
 
+    // AUTHENTIC CONVERSATIONAL INTELLIGENCE ENGINE (NO REPEATING, TRUE DIALOGUE)
     function generateConversantResponse(userText) {
       const lower = userText.toLowerCase().trim();
 
+      // Greetings & Introductions
       if (/\b(hi|hello|hey|yo|pringnam|salnam|attamnam|walnam)\b/i.test(lower)) {
         return {
           garo: "Namgipa pring! Anga nang·ko kusi ong·e rimchaksoa. Da·alo nang·ni salara maikai re·angenga? Pilak kamrang namtokenga ma?",
@@ -1428,6 +1598,7 @@
         };
       }
 
+      // Asking how the bot is doing
       if (/\b(how are you|how do you do|an·sengma|ansengma|an·senga|doing today)\b/i.test(lower)) {
         return {
           garo: "Anga namen an·sengtebale donga, sing·ahani gimin mitela! Nang·baksa iandake agangrikna man·aniara angna dal·begipa kusi ong·ani. Na·an da·al maiko dakaia? Songdong-a·song ba rorimolanirang namtokenga ma?",
@@ -1438,6 +1609,7 @@
         };
       }
 
+      // Who are you / Identity
       if (/\b(who are you|what can you do|your name|biming|mai dakna|introduce yourself)\b/i.test(lower)) {
         return {
           garo: "Angara A·chik Chatbot North Garo Hills ni, A·chik ku·sik aro culture-ni bidingo nang·ni ripeng ong·a. Anga nang·na kattarangko pe·skana, Wangala aro A·chik a·dokni gimin aganna, aro nang·baksa pilak bidingo agangrikangkuna donga. Na·a A·chik a·dokni gimin ba ku·sikni gimin maiko ma·sina sika?",
@@ -1448,6 +1620,7 @@
         };
       }
 
+      // Wangala, Festival, Music, Drums
       if (/\b(wangala|festival|dance|dama|chroka|drums|songjinma)\b/i.test(lower)) {
         return {
           garo: "Wangalaara chinga A·chikrangni a·ba chekmano manigipa dal·batgipa festival ong·a! Iao Saljong Misi Saljong (Pattigipa Mite)-na mitelpilani daka. Dama ritchasa doka, kram aro adil silangchi git ring·e a·bri buringrang gam·ata.\n\nNa·a Wangala manianio dambeng dokako ba chrokaniko nikman·aha ma? Nang·ni namnikbatgipa chrokaniara badia?",
@@ -1458,6 +1631,7 @@
         };
       }
 
+      // Food, Cuisine, Cooking
       if (/\b(food|eat|curry|nakham|wak|do·o|meat|rice|cha·ani|cha·a)\b/i.test(lower)) {
         return {
           garo: "A·chik cha·aniara namen cha·toa aro be·enna namen nambega! Nakham bichi, do·o kappa kalchi-chi song·gipa, wak kitchi aro bret sam·dik rang namen an·sengata.\n\nDa·alo na·a maini cha·aniko cha·aha? Na·a Nakham bichi ba Kappa-ko cha·na namnikama?",
@@ -1468,6 +1642,7 @@
         };
       }
 
+      // Meghalaya, Hills, Tura, Nokrek, Landscape
       if (/\b(tura|williamnagar|baghmara|meghalaya|nokrek|peak|balpakram|hill|hills|a·bri)\b/i.test(lower)) {
         return {
           garo: "A·chik a·dokara mikka, rang·san aro a·bri janggilrangchi dulpegipa nitobegipa biap ong·a. Tura Peak-oni a·bri chimongko nina ma·manti mikrono nitogipa a·gilsak nika. Nokrek Biosphere-o memang narang (citrus indica) dona, aro Balpakram-ara gisikrangni neng·takram ine chanchia.\n\nNa·a Tura-ona re·baahama ba Meghalaya-ni badia biapko nina namnikbata?",
@@ -1478,6 +1653,7 @@
         };
       }
 
+      // Clan, Matriliny, Family, Society
       if (/\b(clan|mahari|chra|nokma|matrilineal|mother|father|family|chatchi|nok)\b/i.test(lower)) {
         return {
           garo: "A·chik jatara ma·ani bidingchi songdonggipa (matrilineal) ong·a. Bi·sarang ma·ani chatchiko (Sangma, Marak, Momin, Shira, Arengh) ra·a, aro nok-jamni gam-jinrangko nokrom ong·gipa me·chik bi·sa man·a. Indiba nokdangni bidingo chra-panteprang (mama-jongrang) namen dal·begipa bilko ronga.\n\nNang·ni chatchiara maia, ba na·a ia ma·ani bidingchi cha·ani-ringaniko ma·sie namnika ma?",
@@ -1488,6 +1664,7 @@
         };
       }
 
+      // Emotions, Advice, Life, Work, Study
       if (/\b(sad|happy|tired|stress|work|study|learn|love|life|ka·saa|ka·tong)\b/i.test(lower)) {
         return {
           garo: "Nang·ni ka·tongni chanchianiko aganahani gimin mitela. Janggi tanganio salgipin an·sengani donga aro salgipin neng·nikanirang re·baa. Indiba ripeng baksa agangrikanio gisik an·sengpila aro ka·tong tom·tomata.\n\nIani bidingo na·a gipin maiko chanchia? Angko pilak kattarangko u·iatbo, anga nang·ko knachakna kusi ong·enga.",
@@ -1498,6 +1675,7 @@
         };
       }
 
+      // General default open-ended conversation (Engaging companion response)
       return {
         garo: `Nang·ni agangipa katti namen gisik-nangani ong·a! Iani bidingo chanchie nion, an·ching pilaknan gital u·ianiko ra·baani ong·a. Na·a iani bidingo maidake chanchichengaha? Mikkangchina iako maikai dakna nanganiko na·a nikenga?`,
         english: `That is a thought-provoking and interesting perspective you shared! Pondering this opens up a fascinating conversation between us. What originally sparked your thoughts on this, and how do you see things proceeding from here? Tell me your thoughts!`,
@@ -1537,13 +1715,13 @@ CRITICAL CONVERSATIONAL RULES:
 1. You are a CONVERSANT. NEVER simply repeat, mirror, or translate the user's input.
 2. ANSWER the user's questions, chat naturally, share perspectives, and ask engaging follow-up questions to sustain vibrant multi-turn dialogue.
 3. In "dual" mode:
-- "garo": Your conversational response written in natural, fluent A·chik Ku·sik (using standard Garo orthography with the Raka '.' glottal stop).
-- "english": Your conversational response translated/written in fluent English.
+   - "garo": Your conversational response written in natural, fluent A·chik Ku·sik (using standard Garo orthography with the Raka '·' glottal stop).
+   - "english": Your conversational response translated/written in fluent English.
 4. In "pure" mode:
-- "garo": Your detailed conversational response in pure A·chik Ku·sik.
-- "english": A clear English summary of your response.
+   - "garo": Your detailed conversational response in pure A·chik Ku·sik.
+   - "english": A clear English summary of your response.
 5. In "translate" mode:
-Only translate if the user explicitly commanded 'translate this:'. Otherwise, hold a natural conversation in both languages.
+   - Only translate if the user explicitly commanded 'translate this:'. Otherwise, hold a natural conversation in both languages.
 Always respond in JSON format:
 {
   "garo": "Your response in Garo",
@@ -1566,6 +1744,7 @@ Always respond in JSON format:
         let data;
         if (response && response.ok) {
           data = await response.json();
+          // Safety guard: ensure the API didn't accidentally just echo the user text
           if (!data.garo || data.garo.trim() === message.trim() || data.english.trim() === message.trim()) {
             data = generateConversantResponse(message);
           }
@@ -1620,6 +1799,7 @@ Always respond in JSON format:
     initTheme();
     initializeAuthentication();
 
+    // Anti-displacement guard: keep prompt box anchored right above the taskbar
     const layoutProtector = new MutationObserver(() => {
       document.body.childNodes.forEach(node => {
         if (node.nodeType === 1) {
@@ -1638,6 +1818,7 @@ Always respond in JSON format:
       });
     });
     layoutProtector.observe(document.body, { childList: true });
+
   </script>
 </body>
 </html>
