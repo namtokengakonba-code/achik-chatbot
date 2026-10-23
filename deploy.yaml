@@ -36,7 +36,7 @@ jobs:
             echo "::error::ADSENSE_CLIENT_ID must be a pub- or ca-pub- publisher ID followed by digits."
             exit 1
           fi
-          sed -i "s/__ADSENSE_CLIENT_ID__/${ADSENSE_CLIENT_ID}/g" public/index.html
+          sed -i "s/_ADSENSE_CLIENT_ID_/${ADSENSE_CLIENT_ID}/g" public/index.html
 
       - name: Apply D1 Migrations
         uses: cloudflare/wrangler-action@v3
