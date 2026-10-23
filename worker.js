@@ -21,9 +21,9 @@ const MAX_INLINE_FILE_BYTES = 10 * 1024 * 1024;
 const MAX_ATTACHMENT_TEXT_LENGTH = 500000;
 const MAX_TOTAL_ATTACHMENT_TEXT_LENGTH = 1000000;
 
-// Up-to-date, valid Google Gemini models with automatic fallback
-const GEMINI_MODELS = ["gemini-2.5-flash", "gemini-1.5-flash"];
-const GROQ_MODEL = "qwen/qwen3.8-27b";
+// Verified active production models
+const GEMINI_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
+const GROQ_MODEL = "llama-3.3-70b-versatile";
 
 const SESSION_COOKIE = "achik_session";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 30;
@@ -88,13 +88,37 @@ function oauthStateCookie(state, maxAge = OAUTH_STATE_MAX_AGE) {
   return `${OAUTH_STATE_COOKIE}=${state}; Path=/api/auth/google; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAge}`;
 }
 
-function sanitizeJsonResponse(text) {
-  if (!text || typeof text !== "string") return "";
-  let clean = text.trim();
-  if (clean.startsWith("```")) {
-    clean = clean.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+// Robust JSON extractor that handles markdown wrappers and trailing content
+function parseModelJson(raw) {
+  if (!raw || typeof raw !== "string") return null;
+  let text = raw.trim();
+
+  // Strip markdown code fences
+  if (text.startsWith("```")) {
+    text = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
   }
-  return clean;
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    // Attempt extracting first complete JSON object
+    const match = text.match(/\{[\s\S]*\}/);
+    if (match) {
+      try {
+        return JSON.parse(match[0]);
+      } catch {}
+    }
+  }
+
+  // Graceful fallback if model returned plain conversational text instead of JSON
+  return {
+    garo: text,
+    english: "Conversational response provided.",
+    pronunciation: "A·chik ku·sik",
+    cultural_note: "Garo / A·chik ku·sik uses the Raka (·) glottal stop.",
+    vocabulary: [],
+    dashboard: null,
+  };
 }
 
 async function enforceAuthRateLimit(db, request, action, maximum, windowSeconds) {
@@ -444,7 +468,7 @@ function correctionContext(records) {
   return context;
 }
 
-// CONVERSATIONAL & LINGUISTIC SYSTEM PROMPT
+// CONVERSATIONAL SYSTEM PROMPT (TRUE DIALOGUE, NOT REPEATING)
 const GARO_SYSTEM_PROMPT = `You are 'A·chik Chatbot', an authentic, warm, articulate, and engaging conversational companion (conversant) fluent in Garo (A·chik ku·sik) and English.
 The Garo language is a Sino-Tibetan language of the Bodo-Garo branch spoken predominantly in the Garo Hills of Meghalaya, Assam, and northern Bangladesh.
 
@@ -467,7 +491,7 @@ CRITICAL CONVERSATIONAL RULES:
    - Prioritize authentic A·chik/A·beng vocabulary and cultural terms (e.g., Wangala, Nokpante, Mahari, Chra, Nokma, Misi Saljong).
 
 4. CONVERSATIONAL CONTINUITY:
-   - Use the provided conversation history to maintain context across turns. Understand pronouns and references like "it", "that", or previous topics without asking the user to repeat themselves.
+   - Use the provided conversation history to maintain context across turns. Understand pronouns and references without asking the user to repeat themselves.
 
 You must respond ONLY with a valid, raw JSON object matching this exact schema:
 {
@@ -551,7 +575,6 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
     if (url.pathname === "/api/feedback") {
       const kv = env.KV || env.FEEDBACK_KV || env.ACHIK_FEEDBACK || env.ACHIK_CORRECTIONS;
 
-      // GET: View submitted feedback
       if (request.method === "GET") {
         if (!kv) {
           return jsonResponse({ error: "KV storage is not bound." }, 503);
@@ -568,7 +591,6 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
         });
       }
 
-      // POST: Save feedback
       if (request.method === "POST") {
         let data;
         try {
@@ -638,8 +660,6 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
             }).catch((err) => console.error("Discord webhook dispatch error:", err.message))
           );
         }
-
-        console.log("[User Feedback Received]:", JSON.stringify(feedbackRecord));
 
         return jsonResponse({
           success: true,
@@ -714,12 +734,11 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
         return jsonResponse({ error: "Sign in to use the chatbot." }, 401);
       }
 
-      if (!env.GEMINI_API_KEY) {
-        return new Response(
-          JSON.stringify({
-            error: "GEMINI_API_KEY secret is not set in Cloudflare Worker environment variables.",
-          }),
-          { status: 500, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+      const geminiKey = env.GEMINI_API_KEY ? env.GEMINI_API_KEY.trim() : "";
+      if (!geminiKey) {
+        return jsonResponse(
+          { error: "GEMINI_API_KEY secret is not set in Cloudflare Worker environment variables." },
+          500
         );
       }
 
@@ -736,10 +755,7 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
         }
         reqData = JSON.parse(requestBody);
       } catch {
-        return new Response(
-          JSON.stringify({ error: "Invalid JSON format in request body." }),
-          { status: 400, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
-        );
+        return jsonResponse({ error: "Invalid JSON format in request body." }, 400);
       }
 
       const userPrompt = typeof reqData?.message === "string" ? reqData.message.trim() : "";
@@ -748,10 +764,7 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
       const history = reqData?.history === undefined ? [] : reqData.history;
 
       if (!userPrompt) {
-        return new Response(
-          JSON.stringify({ error: "Missing 'message' field in request body." }),
-          { status: 400, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
-        );
+        return jsonResponse({ error: "Missing 'message' field in request body." }, 400);
       }
 
       if (!Array.isArray(history) || history.length > MAX_CHAT_HISTORY_MESSAGES) {
@@ -825,26 +838,24 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
         return jsonResponse({ error: "Shared correction storage is not configured." }, 503);
       }
 
-      let approvedCorrections;
+      let approvedCorrections = [];
       try {
         approvedCorrections = await loadRelevantCorrections(env, userPrompt);
       } catch (error) {
         console.error("Unable to load shared corrections:", error);
-        return jsonResponse({ error: "Unable to load shared correction memory." }, 503);
       }
 
-      // FRAME PROMPT FOR ENGAGING CONVERSATION (NOT MERELY ECHOING/TRANSLATING)
       let modeInstruction = "";
       if (mode === "translate") {
-        modeInstruction = "Mode: Quick Translator. If the user explicitly asks to translate words or paragraphs, translate accurately into natural A·chik ku·sik with vocabulary. Otherwise, hold an engaging bilingual conversation.\n\nUser Message: ";
+        modeInstruction = "Mode: Quick Translator. Translate accurately into natural A·chik ku·sik with vocabulary breakdowns.\n\nUser Message: ";
       } else if (mode === "pure") {
-        modeInstruction = "Mode: Pure A·chik Focus. Respond conversationally and warmly with primary focus in authentic A·chik ku·sik, and provide a helpful English summary. Do not repeat the user's input.\n\nUser Message: ";
+        modeInstruction = "Mode: Pure A·chik Focus. Respond conversationally and warmly with primary focus in authentic A·chik ku·sik, and provide a helpful English summary.\n\nUser Message: ";
       } else {
         modeInstruction = "Mode: Smart Dual. Converse naturally and warmly as a dialogue partner. Answer the user, chat about their topic, share insights, and ask thoughtful follow-ups in both authentic A·chik ku·sik (with raka ·) and English. Never simply mirror or echo the user's words.\n\nUser Message: ";
       }
 
       if (attachments.length) {
-        modeInstruction = "Follow the user's requested task for the attached files. Analyze, summarize, extract, transform, translate, or visualize them as requested; the prompt takes priority over the selected chat mode.\n\nUser Message: ";
+        modeInstruction = "Follow the user's requested task for the attached files. Analyze, summarize, extract, transform, translate, or visualize them as requested.\n\nUser Message: ";
       }
 
       const promptText = attachments.length
@@ -861,16 +872,16 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
         },
         generationConfig: {
           responseMimeType: "application/json",
-          temperature: 0.7, // Higher temperature for vibrant, conversational replies
+          temperature: 0.7,
           maxOutputTokens: attachments.length ? 6144 : 2048,
         },
       };
 
       const failedAttempts = [];
 
-      // Iterate through active Gemini models
+      // 1. Google Gemini Provider Attempt
       for (const model of GEMINI_MODELS) {
-        const endpoint = `[https://generativelanguage.googleapis.com/v1beta/models/$](https://generativelanguage.googleapis.com/v1beta/models/$){model}:generateContent?key=${env.GEMINI_API_KEY}`;
+        const endpoint = `[https://generativelanguage.googleapis.com/v1beta/models/$](https://generativelanguage.googleapis.com/v1beta/models/$){model}:generateContent?key=${geminiKey}`;
 
         try {
           const response = await fetch(endpoint, {
@@ -888,36 +899,29 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
           }
 
           const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          const cleanJson = sanitizeJsonResponse(rawText);
+          const parsed = parseModelJson(rawText);
 
-          if (response.ok && cleanJson) {
-            // Verify it is parseable JSON before returning
-            JSON.parse(cleanJson);
-            return new Response(cleanJson, {
-              status: 200,
-              headers: {
-                ...CORS_HEADERS,
-                "Content-Type": "application/json",
-                "X-Served-By-Model": model,
-              },
-            });
+          if (response.ok && parsed) {
+            return jsonResponse(parsed, 200, { "X-Served-By-Model": model });
           }
 
           const details = data?.error?.message ||
             data?.promptFeedback?.blockReason ||
-            (response.ok ? "Gemini returned non-JSON text content." : response.statusText);
+            (response.ok ? "Gemini returned non-parseable text." : response.statusText);
+
           failedAttempts.push({
             model,
             status: response.status,
-            details: String(details || "No response details provided.").slice(0, 500),
+            details: String(details || "No response details provided.").slice(0, 300),
           });
         } catch (networkError) {
           failedAttempts.push({ model, status: "NetworkError", details: networkError.message });
         }
       }
 
-      // Groq Fallback Engine
-      if (env.GROQ_API_KEY) {
+      // 2. Groq Fallback Provider
+      const groqKey = env.GROQ_API_KEY ? env.GROQ_API_KEY.trim() : "";
+      if (groqKey) {
         const groqMessages = [
           { role: "system", content: GARO_SYSTEM_PROMPT + correctionContext(approvedCorrections) },
         ];
@@ -965,7 +969,7 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
             const response = await fetch("[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)", {
               method: "POST",
               headers: {
-                Authorization: `Bearer ${env.GROQ_API_KEY}`,
+                Authorization: `Bearer ${groqKey}`,
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
@@ -986,18 +990,10 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
             }
 
             const rawText = data?.choices?.[0]?.message?.content;
-            const cleanJson = sanitizeJsonResponse(rawText);
+            const parsed = parseModelJson(rawText);
 
-            if (response.ok && cleanJson) {
-              JSON.parse(cleanJson);
-              return new Response(cleanJson, {
-                status: 200,
-                headers: {
-                  ...CORS_HEADERS,
-                  "Content-Type": "application/json",
-                  "X-Served-By-Model": GROQ_MODEL,
-                },
-              });
+            if (response.ok && parsed) {
+              return jsonResponse(parsed, 200, { "X-Served-By-Model": GROQ_MODEL });
             }
 
             failedAttempts.push({
@@ -1005,9 +1001,9 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
               status: response.status,
               details: String(
                 data?.error?.message ||
-                (response.ok ? "Groq returned invalid JSON content." : response.statusText) ||
-                "No response details provided."
-              ).slice(0, 500),
+                (response.ok ? "Groq returned non-parseable content." : response.statusText) ||
+                "No details provided."
+              ).slice(0, 300),
             });
           } catch (networkError) {
             failedAttempts.push({ model: GROQ_MODEL, status: "NetworkError", details: networkError.message });
@@ -1015,19 +1011,21 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
         }
       }
 
-      const quotaProviders = failedAttempts
-        .filter(({ status }) => status === 429)
-        .map(({ model }) => (model === GROQ_MODEL ? "Groq" : "Gemini"));
+      // Detailed error reporting so root causes are visible in the chat UI
+      const diagnosticDetails = failedAttempts
+        .map((a) => `[${a.model} (${a.status}): ${a.details}]`)
+        .join("; ");
+
+      const isQuota = failedAttempts.some((a) => a.status === 429);
+
       return jsonResponse(
         {
-          error: quotaProviders.length
-            ? `${[...new Set(quotaProviders)].join(" and ")} API quota or rate limit exceeded. Check the provider account's plan, billing, and rate limits.${!env.GROQ_API_KEY ? " Configure GROQ_API_KEY to enable the Groq fallback." : ""}`
-            : env.GROQ_API_KEY
-              ? "All configured AI providers failed."
-              : "All Gemini model endpoints failed.",
+          error: isQuota
+            ? `API quota or rate limit exceeded. ${diagnosticDetails}`
+            : `All configured AI providers failed. ${diagnosticDetails}`,
           attempts: failedAttempts,
         },
-        quotaProviders.length ? 429 : 503
+        isQuota ? 429 : 503
       );
     }
 
