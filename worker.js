@@ -21,16 +21,16 @@ const MAX_INLINE_FILE_BYTES = 10 * 1024 * 1024;
 const MAX_ATTACHMENT_TEXT_LENGTH = 500000;
 const MAX_TOTAL_ATTACHMENT_TEXT_LENGTH = 1000000;
 
-// Verified active production models
-const GEMINI_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
-const GROQ_MODEL = "llama-3.3-70b-versatile";
+// Production models with automatic fallback
+const GEMINI_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash"];
+const GROQ_MODELS = ["llama-3.1-8b-instant", "llama-3.3-70b-versatile"];
 
 const SESSION_COOKIE = "achik_session";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 30;
 const OAUTH_STATE_COOKIE = "achik_oauth_state";
 const OAUTH_STATE_MAX_AGE = 600;
 
-// Strips markdown links [url](url) if rich text was pasted into the code
+// Strips accidental markdown link syntax if rich text is pasted
 function cleanUrl(raw) {
   if (!raw || typeof raw !== "string") return "";
   const match = raw.match(/\((https?:\/\/[^)]+)\)/);
@@ -561,7 +561,7 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
         JSON.stringify({
           status: "healthy",
           service: "achik-chatbot",
-          models_available: [...GEMINI_MODELS, ...(env.GROQ_API_KEY ? [GROQ_MODEL] : [])],
+          models_available: [...GEMINI_MODELS, ...(env.GROQ_API_KEY ? GROQ_MODELS : [])],
           shared_corrections: Boolean(env.ACHIK_CORRECTIONS),
           timestamp: new Date().toISOString(),
         }),
@@ -738,9 +738,11 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
       }
 
       const geminiKey = env.GEMINI_API_KEY ? env.GEMINI_API_KEY.trim() : "";
-      if (!geminiKey) {
+      const groqKey = env.GROQ_API_KEY ? env.GROQ_API_KEY.trim() : "";
+
+      if (!geminiKey && !groqKey) {
         return jsonResponse(
-          { error: "GEMINI_API_KEY secret is not set in Cloudflare Worker environment variables." },
+          { error: "No AI provider keys (GEMINI_API_KEY or GROQ_API_KEY) configured." },
           500
         );
       }
@@ -882,50 +884,51 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
 
       const failedAttempts = [];
 
-      // 1. Google Gemini Provider Attempt (Cleaned of all markdown formatting)
-      for (const model of GEMINI_MODELS) {
-        const rawEndpoint = "[https://generativelanguage.googleapis.com/v1beta/models/](https://generativelanguage.googleapis.com/v1beta/models/)" + model + ":generateContent?key=" + geminiKey;
-        const endpoint = cleanUrl(rawEndpoint);
+      // 1. Google Gemini Provider Attempt
+      if (geminiKey) {
+        for (const model of GEMINI_MODELS) {
+          const rawEndpoint = "[https://generativelanguage.googleapis.com/v1beta/models/](https://generativelanguage.googleapis.com/v1beta/models/)" + model + ":generateContent?key=" + geminiKey;
+          const endpoint = cleanUrl(rawEndpoint);
 
-        try {
-          const response = await fetch(endpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
-
-          const responseText = await response.text();
-          let data;
           try {
-            data = JSON.parse(responseText);
-          } catch {
-            data = null;
+            const response = await fetch(endpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            const responseText = await response.text();
+            let data;
+            try {
+              data = JSON.parse(responseText);
+            } catch {
+              data = null;
+            }
+
+            const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            const parsed = parseModelJson(rawText);
+
+            if (response.ok && parsed) {
+              return jsonResponse(parsed, 200, { "X-Served-By-Model": model });
+            }
+
+            const details = data?.error?.message ||
+              data?.promptFeedback?.blockReason ||
+              (response.ok ? "Gemini returned non-parseable text." : response.statusText);
+
+            failedAttempts.push({
+              model,
+              status: response.status,
+              details: String(details || "No response details provided.").slice(0, 300),
+            });
+          } catch (networkError) {
+            const safeMessage = networkError.message.replace(geminiKey, "[REDACTED_KEY]");
+            failedAttempts.push({ model, status: "NetworkError", details: safeMessage });
           }
-
-          const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          const parsed = parseModelJson(rawText);
-
-          if (response.ok && parsed) {
-            return jsonResponse(parsed, 200, { "X-Served-By-Model": model });
-          }
-
-          const details = data?.error?.message ||
-            data?.promptFeedback?.blockReason ||
-            (response.ok ? "Gemini returned non-parseable text." : response.statusText);
-
-          failedAttempts.push({
-            model,
-            status: response.status,
-            details: String(details || "No response details provided.").slice(0, 300),
-          });
-        } catch (networkError) {
-          const safeMessage = networkError.message.replace(geminiKey, "[REDACTED_KEY]");
-          failedAttempts.push({ model, status: "NetworkError", details: safeMessage });
         }
       }
 
-      // 2. Groq Fallback Provider (Cleaned of all markdown formatting)
-      const groqKey = env.GROQ_API_KEY ? env.GROQ_API_KEY.trim() : "";
+      // 2. Groq Fallback Provider
       if (groqKey) {
         const groqMessages = [
           { role: "system", content: GARO_SYSTEM_PROMPT + correctionContext(approvedCorrections) },
@@ -965,55 +968,57 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
 
         if (groqUnsupportedAttachment) {
           failedAttempts.push({
-            model: GROQ_MODEL,
+            model: "groq",
             status: "UnsupportedAttachment",
             details: groqUnsupportedAttachment,
           });
         } else {
-          try {
-            const groqEndpoint = cleanUrl("[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)");
-            const response = await fetch(groqEndpoint, {
-              method: "POST",
-              headers: {
-                Authorization: "Bearer " + groqKey,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                model: GROQ_MODEL,
-                messages: groqMessages,
-                temperature: 0.7,
-                max_completion_tokens: attachments.length ? 6144 : 2048,
-                response_format: { type: "json_object" },
-              }),
-            });
-
-            const responseText = await response.text();
-            let data;
+          for (const groqModel of GROQ_MODELS) {
             try {
-              data = JSON.parse(responseText);
-            } catch {
-              data = null;
+              const groqEndpoint = cleanUrl("[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)");
+              const response = await fetch(groqEndpoint, {
+                method: "POST",
+                headers: {
+                  Authorization: "Bearer " + groqKey,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  model: groqModel,
+                  messages: groqMessages,
+                  temperature: 0.7,
+                  max_completion_tokens: attachments.length ? 6144 : 2048,
+                  response_format: { type: "json_object" },
+                }),
+              });
+
+              const responseText = await response.text();
+              let data;
+              try {
+                data = JSON.parse(responseText);
+              } catch {
+                data = null;
+              }
+
+              const rawText = data?.choices?.[0]?.message?.content;
+              const parsed = parseModelJson(rawText);
+
+              if (response.ok && parsed) {
+                return jsonResponse(parsed, 200, { "X-Served-By-Model": groqModel });
+              }
+
+              failedAttempts.push({
+                model: groqModel,
+                status: response.status,
+                details: String(
+                  data?.error?.message ||
+                  (response.ok ? "Groq returned non-parseable content." : response.statusText) ||
+                  "No details provided."
+                ).slice(0, 300),
+              });
+            } catch (networkError) {
+              const safeMessage = networkError.message.replace(groqKey, "[REDACTED_KEY]");
+              failedAttempts.push({ model: groqModel, status: "NetworkError", details: safeMessage });
             }
-
-            const rawText = data?.choices?.[0]?.message?.content;
-            const parsed = parseModelJson(rawText);
-
-            if (response.ok && parsed) {
-              return jsonResponse(parsed, 200, { "X-Served-By-Model": GROQ_MODEL });
-            }
-
-            failedAttempts.push({
-              model: GROQ_MODEL,
-              status: response.status,
-              details: String(
-                data?.error?.message ||
-                (response.ok ? "Groq returned non-parseable content." : response.statusText) ||
-                "No details provided."
-              ).slice(0, 300),
-            });
-          } catch (networkError) {
-            const safeMessage = networkError.message.replace(groqKey, "[REDACTED_KEY]");
-            failedAttempts.push({ model: GROQ_MODEL, status: "NetworkError", details: safeMessage });
           }
         }
       }
