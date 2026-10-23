@@ -466,7 +466,7 @@
           </button>
         </div>
         <p class="mt-2 text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
-          Select Quick Translator and paste text to translate each sentence into Garo, keeping the original order and line breaks. Song lyrics must be your own, public-domain, or authorized.
+          Quick Translator translates each sentence into Garo and checks up to 12 key terms using online dictionary results (not exhaustive); those terms are sent to Firecrawl. Song lyrics must be your own, public-domain, or authorized.
         </p>
       </div>
 
@@ -1453,6 +1453,27 @@
         `;
       }
 
+      let dictionarySourcesHtml = '';
+      if (Array.isArray(data.dictionarySources) && data.dictionarySources.length) {
+        const sourceLinks = data.dictionarySources.slice(0, 10).map((source) => {
+          try {
+            const sourceUrl = new URL(source.url);
+            if (!['http:', 'https:'].includes(sourceUrl.protocol)) return '';
+            return `<li><a href="${escapeAttr(sourceUrl.href)}" target="_blank" rel="noopener noreferrer" class="text-emerald-700 dark:text-emerald-300 underline">${escapeHtml(source.title || sourceUrl.hostname)}</a></li>`;
+          } catch {
+            return '';
+          }
+        }).filter(Boolean);
+        if (sourceLinks.length) {
+          dictionarySourcesHtml = `
+            <div class="mt-2 border-t border-slate-100 dark:border-slate-800 pt-2">
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Online dictionary lookup sources</span>
+              <ul class="mt-1 list-inside list-disc space-y-0.5 text-[11px]">${sourceLinks.join('')}</ul>
+            </div>
+          `;
+        }
+      }
+
       el.innerHTML = `
         <img src="${ORIGINAL_BOT_LOGO}" onerror="this.onerror=null; this.src='${ORIGINAL_BOT_LOGO_FALLBACK}';" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1">
         <div class="space-y-2 flex-1 min-w-0">
@@ -1474,6 +1495,7 @@
             </div>
             ${vocabHtml}
             ${culturalHtml}
+            ${dictionarySourcesHtml}
           </div>
         </div>
       `;
@@ -1727,13 +1749,17 @@
         if (response && response.ok) {
           data = await response.json();
           // Safety guard: ensure the API didn't accidentally just echo the user text
-          if (!data.garo || data.garo.trim() === message.trim() || data.english.trim() === message.trim()) {
+          if (!data.garo || data.garo.trim() === message.trim() ||
+              (activeMode !== 'translate' && data.english.trim() === message.trim())) {
             data = generateConversantResponse(message);
           }
         } else if (response) {
           const err = await response.json().catch(() => ({ error: 'Request rejected' }));
           throw new Error(err.error || `HTTP ${response.status}`);
         } else {
+          if (activeMode === 'translate') {
+            throw new Error('Translation needs the online dictionary search and AI services. Please check your connection and try again.');
+          }
           data = generateConversantResponse(message);
         }
 
