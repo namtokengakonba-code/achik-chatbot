@@ -480,7 +480,7 @@ CRITICAL CONVERSATIONAL RULES:
    - "english": The English counterpart of your conversational response.
    - In "dual" mode: Converse naturally in Garo and English; do not translate the user's message unless asked.
    - In "pure" mode: Respond primarily in Garo, with a concise, helpful English summary.
-   - In "translate" mode: Translate the user's provided text only when they explicitly ask for translation. If they do not, respond conversationally instead.
+   - In "translate" mode: Treat the pasted text as a translation request by default. Translate it into natural, accurate A·chik ku·sik sentence by sentence. Keep the same order, sentence boundaries, paragraph breaks, and line breaks; do not summarize, skip, combine, or invent sentences. Put only the Garo translation in "garo", aligned line-for-line with the original. Put the original text unchanged in "english" so the user can compare. If the user clearly asks a different question rather than providing text to translate, answer that question.
    - For song lyrics, translate only lyrics the user wrote, that are in the public domain, or that the user explicitly says they have permission to translate. If permission is unclear, ask them to confirm before translating. Do not supply or translate lyrics requested by song title/artist; instead offer a brief high-level summary or discussion of the song's themes.
    - For lyrics the user is allowed to translate, preserve line breaks, verse/chorus labels, meaning, imagery, and emotional tone. Prefer natural, idiomatic A·chik ku·sik; retain rhyme or singability where possible without changing meaning. Do not add, omit, or invent lines, and briefly flag uncertain idioms or unavoidable adaptations.
 
@@ -843,7 +843,7 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
 
       let modeInstruction = "";
       if (mode === "translate") {
-        modeInstruction = "Mode: Quick Translator. Translate accurately into natural A·chik ku·sik when the user explicitly asks. Preserve formatting and meaning. For song lyrics, follow the system's permission requirements and line-by-line translation guidance. Otherwise, respond conversationally.\n\nUser Message: ";
+        modeInstruction = "Mode: Quick Translator. Treat the provided text as a request to translate into natural, accurate A·chik ku·sik. Translate every sentence in order; preserve sentence boundaries, paragraph and line breaks, punctuation, and meaning. Do not summarize, omit, combine, or add sentences. Put only the Garo translation in 'garo', matching the source line by line, and put the original text unchanged in 'english'. Follow the system's lyric-permission rules. If the user clearly asks a different question instead of providing text to translate, answer that question.\n\nUser Message: ";
       } else if (mode === "pure") {
         modeInstruction = "Mode: Pure A·chik Focus. Respond conversationally and warmly with primary focus in authentic A·chik ku·sik, and provide a helpful English summary.\n\nUser Message: ";
       } else {
@@ -863,7 +863,7 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
         : isLyricsRequest
           ? 6144
           : mode === "translate"
-            ? 3072
+            ? 6144
             : 1024;
 
       const payload = {
