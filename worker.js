@@ -21,9 +21,9 @@ const MAX_INLINE_FILE_BYTES = 10 * 1024 * 1024;
 const MAX_ATTACHMENT_TEXT_LENGTH = 500000;
 const MAX_TOTAL_ATTACHMENT_TEXT_LENGTH = 1000000;
 
-// Verified active production models
-const GEMINI_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
-const GROQ_MODEL = "llama-3.3-70b-versatile";
+// Current production models, ordered by preference
+const GEMINI_MODELS = ["gemini-3.8-flash", "gemini-3.6-flash"];
+const GROQ_MODEL = "qwen/qwen3.8-27b";
 
 const SESSION_COOKIE = "achik_session";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 30;
