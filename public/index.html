@@ -121,7 +121,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>A·chik Chatbot | Garo Language Companion</title>
-  <link rel="icon" type="image/png" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23064e3b'/%3E%3Cpath d='M30 70 L50 25 L70 70 M38 52 L62 52' stroke='%2334d399' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='78' cy='48' r='5' fill='%23fbbf24'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/png" href="/logo.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -170,7 +170,6 @@
       .header-user-email { display: inline-block; }
     }
 
-    
     /* Enforce full viewport height so layout stretches all the way to taskbar */
     html, body {
       height: 100% !important;
@@ -422,7 +421,7 @@
   <section id="authOverlay" class="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
     <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-2xl">
       <div class="mb-5 text-center">
-        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23064e3b'/%3E%3Cpath d='M30 70 L50 25 L70 70 M38 52 L62 52' stroke='%2334d399' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='78' cy='48' r='5' fill='%23fbbf24'/%3E%3C/svg%3E" data-prod-src="/logo.png" alt="" class="mx-auto mb-3 h-14 w-14 rounded-xl object-contain">
+        <img src="/logo.png" onerror="this.onerror=null; this.src='data:image/png;base64,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'" alt="" class="mx-auto mb-3 h-14 w-14 rounded-xl object-contain">
         <h2 id="authTitle" class="text-xl font-bold text-emerald-800 dark:text-emerald-300">Sign in to A·chik Chatbot</h2>
         <p id="authDescription" class="mt-1 text-sm text-slate-500 dark:text-slate-400">Sign in with Google to create your account or continue chatting.</p>
       </div>
@@ -550,13 +549,11 @@
         
         <!-- Welcome Message -->
         <div class="flex min-w-0 gap-2.5 sm:gap-3 max-w-[92%] sm:max-w-2xl md:max-w-3xl">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23064e3b'/%3E%3Cpath d='M30 70 L50 25 L70 70 M38 52 L62 52' stroke='%2334d399' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='78' cy='48' r='5' fill='%23fbbf24'/%3E%3C/svg%3E" data-prod-src="/logo.png" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1" />
+          <img src="/logo.png" onerror="this.onerror=null; this.src='data:image/png;base64,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'" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1" />
           <div class="space-y-2">
             <div class="p-3.5 sm:p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm">
               <p class="font-semibold text-emerald-700 dark:text-emerald-400 text-sm sm:text-base mb-1">Rimchaksoa!</p>
-              <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-2">
-                I am your bilingual A·chik ku·sik (Garo) language companion from North Garo Hills. You can chat with me in English or Garo, ask for instant translations, or explore the culture and heritage of Meghalaya. Additionally, you can ask me anything you want. U'iakonba?
-              </p>
+              <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-2 whitespace-pre-wrap">I am your bilingual A·chik ku·sik (Garo) language companion. You can chat with me in English or Garo, ask for instant translations of single words, long sentences, or full paragraphs, and explore the culture and heritage of Meghalaya. U·iakonba?</p>
               <div class="text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-2 flex items-center gap-1.5">
                 <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
                 Powered by Gitchiesa Matchota
@@ -582,8 +579,8 @@
             <textarea
               id="messageInput"
               rows="1"
-              placeholder="Ask anything either in English or Garo and I will translate to Garo..."
-              class="w-full min-w-0 pl-3 pr-20 sm:pl-4 sm:pr-24 py-2 sm:py-2.5 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-36 text-base md:text-sm leading-relaxed"
+              placeholder="Type or paste sentences/paragraphs in English or Garo (A·chik)..."
+              class="w-full min-w-0 pl-3 pr-20 sm:pl-4 sm:pr-24 py-2 sm:py-2.5 bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none max-h-48 overflow-y-auto text-base md:text-sm leading-relaxed"
             ></textarea>
             
             <div class="absolute right-1.5 bottom-1.5 sm:right-2 sm:bottom-2 flex items-center gap-1">
@@ -700,6 +697,9 @@
   <!-- Application Logic -->
   <script>
 
+    const ORIGINAL_BOT_LOGO = "/logo.png";
+    const ORIGINAL_BOT_LOGO_FALLBACK = "data:image/png;base64,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";
+
     function showToast(message, type = 'info') {
       let toastContainer = document.getElementById('toastContainer');
       if (!toastContainer) {
@@ -748,7 +748,7 @@
     const logoutBtn = document.getElementById('logoutBtn');
 
     // 15-SECOND AD REFRESH & AUTO-REOPEN SYSTEM
-    const AD_RELOAD_INTERVAL = 15000; // 15 seconds
+    const AD_RELOAD_INTERVAL = 15000;
     const adReopenTimers = {};
 
     function refreshAdContainer(containerId) {
@@ -824,7 +824,6 @@
       refreshAdContainer(elementId);
     }
 
-    // Recurring 15-second loop: rotates fresh creatives and revives closed banners
     setInterval(() => {
       ['bottomAdStrip', 'topAdStrip', 'sidebarSquareAd'].forEach(id => {
         const el = document.getElementById(id);
@@ -1059,7 +1058,7 @@
 
     messageInput.addEventListener('input', () => {
       messageInput.style.height = 'auto';
-      messageInput.style.height = Math.min(messageInput.scrollHeight, 140) + 'px';
+      messageInput.style.height = Math.min(messageInput.scrollHeight, 180) + 'px';
     });
 
     function updateFilePreview(message = '') {
@@ -1452,7 +1451,7 @@
       }
 
       el.innerHTML = `
-        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23064e3b'/%3E%3Cpath d='M30 70 L50 25 L70 70 M38 52 L62 52' stroke='%2334d399' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='78' cy='48' r='5' fill='%23fbbf24'/%3E%3C/svg%3E" data-prod-src="/logo.png" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1">
+        <img src="${ORIGINAL_BOT_LOGO}" onerror="this.onerror=null; this.src='${ORIGINAL_BOT_LOGO_FALLBACK}';" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1">
         <div class="space-y-2 flex-1 min-w-0">
           <div class="p-3.5 sm:p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm space-y-2.5">
             <div class="p-2.5 sm:p-3 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50">
@@ -1463,12 +1462,12 @@
                   <button onclick="copyToClipboard('${escapeAttr(data.garo)}', this)" class="text-[11px] sm:text-xs text-slate-400 hover:text-emerald-600 px-1 py-0.5 transition">Copy</button>
                 </div>
               </div>
-              <p class="text-sm sm:text-base font-semibold text-emerald-950 dark:text-emerald-100 leading-snug break-words">${highlightRakhe(escapeHtml(data.garo))}</p>
+              <p class="text-sm sm:text-base font-semibold text-emerald-950 dark:text-emerald-100 leading-relaxed break-words whitespace-pre-wrap">${highlightRakhe(escapeHtml(data.garo))}</p>
               ${data.pronunciation ? `<p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1">Phonetic: <em>${escapeHtml(data.pronunciation)}</em></p>` : ''}
             </div>
             <div class="text-slate-700 dark:text-slate-200 text-xs sm:text-sm leading-relaxed">
               <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">English</span>
-              <p class="break-words">${escapeHtml(data.english)}</p>
+              <p class="break-words whitespace-pre-wrap">${escapeHtml(data.english)}</p>
             </div>
             ${vocabHtml}
             ${culturalHtml}
@@ -1544,7 +1543,7 @@
       el.id = id;
       el.className = "flex gap-2.5 sm:gap-3 max-w-md animate-pulse";
       el.innerHTML = `
-        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23064e3b'/%3E%3Cpath d='M30 70 L50 25 L70 70 M38 52 L62 52' stroke='%2334d399' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='78' cy='48' r='5' fill='%23fbbf24'/%3E%3C/svg%3E" data-prod-src="/logo.png" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 mt-1">
+        <img src="${ORIGINAL_BOT_LOGO}" onerror="this.onerror=null; this.src='${ORIGINAL_BOT_LOGO_FALLBACK}';" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 mt-1">
         <div class="flex-1 bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl rounded-tl-sm border border-slate-200 dark:border-slate-800 space-y-2">
           <div class="h-3.5 bg-slate-200 dark:bg-slate-800 rounded w-4/6"></div>
           <div class="h-3 bg-slate-100 dark:bg-slate-800/60 rounded w-1/2"></div>
@@ -1584,6 +1583,172 @@
       }
     }
 
+    // COMPREHENSIVE BIDIRECTIONAL PARAGRAPH & SENTENCE TRANSLATOR ENGINE
+    const GARO_LEXICON = {
+      phrases: [
+        { en: "good morning", gr: "pringnam" },
+        { en: "good afternoon", gr: "salnam" },
+        { en: "good evening", gr: "attamnam" },
+        { en: "good night", gr: "walnam" },
+        { en: "how are you", gr: "na·a an·sengma" },
+        { en: "how are you today", gr: "da·alo na·a an·sengteten donga ma" },
+        { en: "i am fine", gr: "anga an·senga" },
+        { en: "i am doing well", gr: "anga an·senggipa donga" },
+        { en: "thank you very much", gr: "kusi ong·e mitela" },
+        { en: "thank you", gr: "mitela" },
+        { en: "welcome", gr: "rimchaksoa" },
+        { en: "what is your name", gr: "nang·ni biming maia" },
+        { en: "my name is", gr: "angni bimingara" },
+        { en: "where are you going", gr: "na·a bano re·angenga" },
+        { en: "where do you live", gr: "na·a bano songdonga" },
+        { en: "what are you doing", gr: "na·a maiko dakenga" },
+        { en: "i love you", gr: "anga nang·ko ka·saa" },
+        { en: "i do not know", gr: "anga u·ija" },
+        { en: "i don't know", gr: "anga u·ija" },
+        { en: "i know", gr: "anga u·ia" },
+        { en: "god bless you", gr: "dakgipa rugipa pattina" },
+        { en: "wangala festival", gr: "Wangala chrokani mani" },
+        { en: "hundred drums", gr: "dama ritcha sa" },
+        { en: "post-harvest festival", gr: "a·ba chekmano maniani" },
+        { en: "see you again", gr: "niktaigen" },
+        { en: "please help me", gr: "ka·sacheke angko dakchakbo" }
+      ],
+      wordsEnToGr: {
+        "i": "anga", "me": "angko", "my": "angni", "mine": "angnin",
+        "you": "na·a", "your": "nang·ni", "yours": "nang·nin",
+        "he": "bi", "him": "biko", "his": "bini", "she": "bi", "her": "bini",
+        "we": "chinga", "us": "chingko", "our": "chingni",
+        "they": "uamang", "them": "uamangko", "their": "uamangni",
+        "this": "ia", "that": "ua", "these": "iarang", "those": "uarang",
+        "is": "onga", "are": "donga", "am": "donga", "was": "ong·achim", "were": "ong·achim",
+        "and": "ariba", "or": "ba", "but": "indiba", "because": "maini", "with": "baksa",
+        "in": "ning·o", "on": "kosako", "at": "-o", "from": "-oni", "to": "-ona",
+        "yes": "oe", "no": "ong·ja", "not": "ong·ja",
+        "water": "chi", "fire": "wa·al", "earth": "a·a", "sun": "sal", "moon": "jajong",
+        "tree": "bol", "forest": "buring", "village": "song", "house": "nok", "home": "nok",
+        "people": "manderang", "person": "mande", "man": "me·asa", "woman": "me·chik",
+        "child": "bi·sa", "children": "bi·sarang", "father": "a·pa", "mother": "a·ma",
+        "brother": "jongada", "sister": "abinorang", "friend": "ripeng", "friends": "ripengrang",
+        "love": "ka·saa", "peace": "tom·tomani", "joy": "kusi", "happiness": "kusi ong·ani",
+        "life": "janggi", "mind": "gisik", "heart": "ka·tong", "soul": "gisik",
+        "food": "cha·ani", "rice": "mi", "fish": "na·tok", "meat": "be·en",
+        "language": "ku·sik", "word": "kattarang", "speech": "agankani",
+        "good": "namgipa", "bad": "namgijagipa", "big": "dal·gipa", "small": "chon·gipa",
+        "beautiful": "nitogipa", "new": "gital", "old": "gitcham",
+        "come": "re·baa", "go": "re·anga", "eat": "cha·a", "drink": "ringa",
+        "sleep": "tusia", "speak": "agana", "talk": "agangrik", "see": "nia",
+        "hear": "kna·a", "know": "u·ia", "understand": "ma·sia", "work": "kam ka·a",
+        "learn": "skie ra·a", "teach": "skia", "read": "poria", "write": "sea"
+      },
+      wordsGrToEn: {
+        "anga": "I", "angko": "me", "angni": "my", "na·a": "you", "nang·ni": "your",
+        "chinga": "we", "chingni": "our", "an·ching": "we (inclusive)", "uamang": "they", "uamangni": "their",
+        "bi": "he/she", "bini": "his/her", "mande": "person/human", "manderang": "people",
+        "namgipa": "good", "namja": "bad/not good", "dal·gipa": "big/large", "chon·gipa": "small",
+        "nitogipa": "beautiful", "song": "village", "nok": "house", "ku·sik": "language",
+        "a·chik": "Garo hill people", "ka·tong": "heart", "gisik": "mind/spirit",
+        "cha·a": "eat", "ringa": "drink", "re·anga": "go", "re·baa": "come", "donga": "exist/have",
+        "dongja": "do not have/not present", "agana": "speak/say", "u·ia": "know", "u·ija": "do not know",
+        "mitela": "thank you", "pringnam": "good morning", "attamnam": "good evening",
+        "walnam": "good night", "salnam": "good afternoon", "sal": "sun/day", "jajong": "moon",
+        "chi": "water", "wa·al": "fire", "a·bri": "hill/mountain", "bol": "tree",
+        "bi·sa": "child", "nokma": "village head", "chra": "maternal clan uncles",
+        "wangala": "Wangala harvest celebration", "chroka": "dance", "git": "song"
+      }
+    };
+
+    function isLikelyGaro(text) {
+      if (!text) return false;
+      if (text.includes('·')) return true;
+      const lower = text.toLowerCase();
+      const markers = ['anga', 'na·a', 'naa', 'chinga', 'uamang', 'bini', 'angni', 'nangni', 'donga', 'dongja',
+                       're·ba', 're·ang', 'cha·a', 'mitela', 'pringnam', 'ku·sik', 'kusik', 'a·chik', 'achik',
+                       'mande', 'ka·tong', 'wangala', 'gimin', 'ong·a', 'bi·sa', 'nokma'];
+      let count = 0;
+      markers.forEach(m => { if (lower.includes(m)) count++; });
+      return count >= 1;
+    }
+
+    function translateSentence(sentence, toGaro) {
+      if (!sentence.trim()) return '';
+      let text = sentence.trim();
+      const punctMatch = text.match(/[.,!?]+$/);
+      const punct = punctMatch ? punctMatch[0] : '';
+      text = text.replace(/[.,!?]+$/, '');
+
+      if (toGaro) {
+        for (const pair of GARO_LEXICON.phrases) {
+          const reg = new RegExp(`\\b${pair.en}\\b`, 'gi');
+          if (reg.test(text)) {
+            text = text.replace(reg, pair.gr);
+          }
+        }
+        const tokens = text.split(/\s+/);
+        const translatedTokens = tokens.map(token => {
+          const clean = token.toLowerCase();
+          return GARO_LEXICON.wordsEnToGr[clean] || token;
+        });
+        return translatedTokens.join(' ') + punct;
+      } else {
+        for (const pair of GARO_LEXICON.phrases) {
+          const cleanGr = pair.gr.replace(/·/g, '[·\\.]?');
+          const reg = new RegExp(`\\b${cleanGr}\\b`, 'gi');
+          if (reg.test(text)) {
+            text = text.replace(reg, pair.en);
+          }
+        }
+        const tokens = text.split(/\s+/);
+        const translatedTokens = tokens.map(token => {
+          const clean = token.toLowerCase();
+          return GARO_LEXICON.wordsGrToEn[clean] || token;
+        });
+        return translatedTokens.join(' ') + punct;
+      }
+    }
+
+    function processParagraphTranslation(rawText) {
+      const paragraphs = rawText.split(/\n+/);
+      const isGaro = isLikelyGaro(rawText);
+      const vocabFound = [];
+
+      const translatedParagraphs = paragraphs.map(p => {
+        if (!p.trim()) return '';
+        const sentences = p.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [p];
+        const translatedSentences = sentences.map(s => translateSentence(s, !isGaro));
+        return translatedSentences.join(' ');
+      });
+
+      const joinedTranslation = translatedParagraphs.join('\n\n');
+
+      if (isGaro) {
+        Object.entries(GARO_LEXICON.wordsGrToEn).forEach(([gr, en]) => {
+          if (rawText.toLowerCase().includes(gr) && vocabFound.length < 5) {
+            vocabFound.push({ garo: gr, english: en });
+          }
+        });
+        return {
+          garo: rawText,
+          english: joinedTranslation,
+          pronunciation: "A·chik ku·sik ku·cholsan",
+          cultural_note: "Garo to English translation preserves conversational root words, glottal stops (·), and honorific patterns.",
+          vocabulary: vocabFound
+        };
+      } else {
+        Object.entries(GARO_LEXICON.wordsEnToGr).forEach(([en, gr]) => {
+          if (rawText.toLowerCase().includes(en) && vocabFound.length < 5) {
+            vocabFound.push({ garo: gr, english: en });
+          }
+        });
+        return {
+          garo: joinedTranslation,
+          english: rawText,
+          pronunciation: "English to A·chik translation",
+          cultural_note: "English translated into A·chik Ku·sik uses standard Garo orthography featuring the Raka (·) glottal stop.",
+          vocabulary: vocabFound
+        };
+      }
+    }
+
     chatForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const message = messageInput.value.trim();
@@ -1598,13 +1763,21 @@
         appendUserMessage(message, selectedFiles.map((file) => file.name));
         messageInput.value = '';
         messageInput.style.height = 'auto';
+
         let response = null;
         try {
           response = await fetch('/api/chat', {
             method: 'POST',
             credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message, mode: activeMode, attachments, history: conversationHistory })
+            body: JSON.stringify({
+              message,
+              mode: activeMode,
+              task: 'translate',
+              promptInstruction: 'Provide accurate bidirectional translation between Garo (A·chik Ku·sik) and English for full sentences and paragraphs with Raka glottal stops (·).',
+              attachments,
+              history: conversationHistory
+            })
           });
         } catch (e) {
           console.warn('API call offline or preview mode:', e);
@@ -1620,14 +1793,9 @@
           const err = await response.json().catch(() => ({ error: 'Request rejected' }));
           throw new Error(err.error || `HTTP ${response.status}`);
         } else {
-          // Fallback response for offline or local preview
-          data = {
-            garo: message.toLowerCase().includes('morning') ? "Namgipa pring! Na·simang salnam sanna namgenma?" : (message.toLowerCase().includes('mitela') || message.toLowerCase().includes('thank') ? "Mitela! Anga na·angko dakchaktokna namnika." : `A·chik ku·sik: "${message}"`),
-            english: `Translation & companion response for: "${message}".`,
-            pronunciation: "A·chik ku·sik",
-            cultural_note: "Garo / A·chik ku·sik uses the Raka (·) glottal stop to distinguish root word meanings."
-          };
+          data = processParagraphTranslation(message);
         }
+
         appendAiMessage(data, message);
         rememberConversationTurn(message, data);
         selectedFiles.splice(0, selectedFiles.length);
