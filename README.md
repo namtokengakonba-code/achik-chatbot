@@ -6,7 +6,9 @@ Anyone can use **Correct this answer** below a chatbot response to submit a corr
 
 Community submissions are reference context, not automatic model retraining: the model's weights do not change. Because submissions are public and immediate, corrections may be inaccurate or misleading; the chatbot is instructed to treat them as community guidance rather than verified facts.
 
-The `ACHIK_CORRECTIONS` KV namespace is configured in `wrangler.jsonc`. Gemini 3.8 Flash is the primary model. If it is unavailable or rate-limited, the Worker can use Groq's `qwen/qwen3.8-27b` as a fallback. Groq is optional: create an API key in GroqCloud and set it as the `GROQ_API_KEY` Worker secret (`npx wrangler secret put GROQ_API_KEY`). For local development, add `GEMINI_API_KEY` and, if using the fallback, `GROQ_API_KEY` to `.dev.vars` (which is ignored by Git), then run `npm run dev`. Groq's free usage and rate limits depend on its current account terms. Text and up to three images can use the fallback; PDF requests still require Gemini.
+The chatbot is designed for natural Garo-English conversation, with a separate translation mode. It uses Gemini 3.6 Flash first for faster replies and retries with Gemini 3.8 Flash when needed. If Gemini is unavailable or rate-limited, the Worker can use Groq's `qwen/qwen3.8-27b` as a fallback. Groq is optional: create an API key in GroqCloud and set it as the `GROQ_API_KEY` Worker secret (`npx wrangler secret put GROQ_API_KEY`). For local development, add `GEMINI_API_KEY` and, if using the fallback, `GROQ_API_KEY` to `.dev.vars` (which is ignored by Git), then run `npm run dev`. Groq's free usage and rate limits depend on its current account terms. Text and up to three images can use the fallback; PDF requests still require Gemini.
+
+Song lyrics can be translated when they are user-authored, public domain, or the user confirms they have permission. For other songs, the chatbot can discuss themes or provide a high-level summary instead of translating or reproducing lyrics. Authorized lyric translations aim to preserve line structure, meaning, and tone.
 
 ## File analysis and dashboards
 

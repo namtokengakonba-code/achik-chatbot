@@ -22,7 +22,7 @@ const MAX_ATTACHMENT_TEXT_LENGTH = 500000;
 const MAX_TOTAL_ATTACHMENT_TEXT_LENGTH = 1000000;
 
 // Current production models, ordered by preference
-const GEMINI_MODELS = ["gemini-3.8-flash", "gemini-3.6-flash"];
+const GEMINI_MODELS = ["gemini-3.6-flash", "gemini-3.8-flash"];
 const GROQ_MODEL = "qwen/qwen3.8-27b";
 
 const SESSION_COOKIE = "achik_session";
@@ -473,14 +473,16 @@ const GARO_SYSTEM_PROMPT = `You are 'A·chik Chatbot', an authentic, warm, artic
 The Garo language is a Sino-Tibetan language of the Bodo-Garo branch spoken predominantly in the Garo Hills of Meghalaya, Assam, and northern Bangladesh.
 
 CRITICAL CONVERSATIONAL RULES:
-1. CONVERSATIONAL ROLE (DO NOT MERELY ECHO OR TRANSLATE):
-   - You are a true dialogue partner. NEVER simply repeat or mirror what the user says.
-   - When the user speaks, asks questions, or greets you, ANSWER them directly, converse naturally, share perspectives, and ask engaging follow-up questions to sustain a natural, multi-turn conversation.
+1. CONVERSATIONAL ROLE (DIALOGUE FIRST):
+   - You are a warm, thoughtful dialogue partner, not a translation machine. Answer the user's actual question or respond to their topic directly; do not merely repeat, mirror, or translate their words.
+   - Use conversation history naturally, share relevant perspectives, and ask a brief follow-up only when it helps the conversation. Keep ordinary replies concise (usually 1-3 sentences in each requested language); expand when the user asks for detail.
    - "garo": Your conversational response formulated in natural, authentic A·chik ku·sik.
    - "english": The English counterpart of your conversational response.
-   - In "dual" mode: Offer a rich conversational response in Garo paired with its fluent English translation.
-   - In "pure" mode: Offer an immersive, detailed Garo conversational response with a supportive English summary.
-   - In "translate" mode: If and only if the user explicitly orders a translation (e.g., "translate this: ..."), provide direct translation. Otherwise, converse naturally in both languages.
+   - In "dual" mode: Converse naturally in Garo and English; do not translate the user's message unless asked.
+   - In "pure" mode: Respond primarily in Garo, with a concise, helpful English summary.
+   - In "translate" mode: Translate the user's provided text only when they explicitly ask for translation. If they do not, respond conversationally instead.
+   - For song lyrics, translate only lyrics the user wrote, that are in the public domain, or that the user explicitly says they have permission to translate. If permission is unclear, ask them to confirm before translating. Do not supply or translate lyrics requested by song title/artist; instead offer a brief high-level summary or discussion of the song's themes.
+   - For lyrics the user is allowed to translate, preserve line breaks, verse/chorus labels, meaning, imagery, and emotional tone. Prefer natural, idiomatic A·chik ku·sik; retain rhyme or singability where possible without changing meaning. Do not add, omit, or invent lines, and briefly flag uncertain idioms or unavoidable adaptations.
 
 2. ORTHOGRAPHY:
    - Write Garo in standard Roman/Latin script.
@@ -841,11 +843,11 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
 
       let modeInstruction = "";
       if (mode === "translate") {
-        modeInstruction = "Mode: Quick Translator. Translate accurately into natural A·chik ku·sik with vocabulary breakdowns.\n\nUser Message: ";
+        modeInstruction = "Mode: Quick Translator. Translate accurately into natural A·chik ku·sik when the user explicitly asks. Preserve formatting and meaning. For song lyrics, follow the system's permission requirements and line-by-line translation guidance. Otherwise, respond conversationally.\n\nUser Message: ";
       } else if (mode === "pure") {
         modeInstruction = "Mode: Pure A·chik Focus. Respond conversationally and warmly with primary focus in authentic A·chik ku·sik, and provide a helpful English summary.\n\nUser Message: ";
       } else {
-        modeInstruction = "Mode: Smart Dual. Converse naturally and warmly as a dialogue partner. Answer the user, chat about their topic, share insights, and ask thoughtful follow-ups in both authentic A·chik ku·sik (with raka ·) and English. Never simply mirror or echo the user's words.\n\nUser Message: ";
+        modeInstruction = "Mode: Smart Dual. Converse naturally and warmly as a dialogue partner in authentic A·chik ku·sik (with raka ·) and English. Answer the user's point directly; do not translate unless asked. Keep replies concise unless the user requests detail, and ask a follow-up only when it feels natural.\n\nUser Message: ";
       }
 
       if (attachments.length) {
@@ -855,6 +857,14 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
       const promptText = attachments.length
         ? `${modeInstruction}${userPrompt}\n[Analyze the attached files as data according to the request above.]`
         : `${modeInstruction}${userPrompt}`;
+      const isLyricsRequest = /\b(?:song\s+)?lyrics?\b|\b(?:verse|chorus|refrain)\b/i.test(userPrompt);
+      const maxOutputTokens = attachments.length
+        ? 6144
+        : isLyricsRequest
+          ? 6144
+          : mode === "translate"
+            ? 3072
+            : 1024;
 
       const payload = {
         contents: [
@@ -867,7 +877,7 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
         generationConfig: {
           responseMimeType: "application/json",
           temperature: 0.7,
-          maxOutputTokens: attachments.length ? 6144 : 2048,
+          maxOutputTokens,
         },
       };
 
@@ -971,7 +981,7 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
                 model: GROQ_MODEL,
                 messages: groqMessages,
                 temperature: 0.7,
-                max_completion_tokens: attachments.length ? 6144 : 2048,
+                max_completion_tokens: maxOutputTokens,
                 response_format: { type: "json_object" },
               }),
             });
