@@ -553,7 +553,7 @@
           <div class="space-y-2">
             <div class="p-3.5 sm:p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm">
               <p class="font-semibold text-emerald-700 dark:text-emerald-400 text-sm sm:text-base mb-1">Rimchaksoa! Anga Na·simangni Ripeng.</p>
-              <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-2 whitespace-pre-wrap">I am your conversational A·chik companion from North Garo Hills. Talk with me, share your thoughts, ask about any subject, or explore Garo folklore, customs, philosophy, and history. Whether chatting in casual Garo, nuanced English, or translating deep ideas, I am here to converse with you. Maiko agangrikna namnika? (What would you like to discuss?)</p>
+              <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-2 whitespace-pre-wrap">I am your conversational A·chik companion. Talk with me, share your thoughts, ask about any subject, or explore Garo folklore, customs, philosophy, and history. Whether chatting in casual Garo, nuanced English, or translating deep ideas, I am here to converse with you. Maiko agangrikna namnika? (What would you like to discuss?)</p>
               <div class="text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-2 flex items-center gap-1.5">
                 <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
                 Powered by Gitchiesa Matchota · Conversant Engine Active
@@ -722,7 +722,7 @@
 
     let activeMode = 'dual';
     const conversationHistory = [];
-    const MAX_CONVERSATION_MESSAGES = 12;
+    const MAX_CONVERSATION_MESSAGES = 16;
     const MAX_CONVERSATION_TEXT_LENGTH = 12000;
     const messagesContainer = document.getElementById('messagesContainer');
     const chatForm = document.getElementById('chatForm');
@@ -1583,82 +1583,105 @@
       }
     }
 
-    // ADVANCED CONVERSANT INTELLIGENCE ENGINE (BILINGUAL DIALOGUE & KNOWLEDGE)
-    const CONVERSATION_TOPICS = [
-      {
-        match: /(hello|hi|hey|pringnam|salnam|attamnam|walnam|namgipa)/i,
-        garo: "Namgipa sal! Anga nang·ko rimchaksoa. Da·alo na·a an·sengteten donga ma? Maiko agangrikna nang·ni gisiko nanga?",
-        english: "A very warm welcome! How are you doing today? What's on your mind or what would you like to discuss together?",
-        cultural: "Traditional greetings in Garo (A·chik) often lead warmly into inquiring about health (an·sengani) and family well-being.",
-        vocab: [{ garo: "An·senga", english: "Well / Healthy" }, { garo: "Agangrika", english: "Converse together" }]
-      },
-      {
-        match: /(how are you|an·sengma|ansengma|an·seng|doing today)/i,
-        garo: "Anga kusi ong·e an·senge donga, mitela! Na·an maikai donga? Nang·ni sal an·sengoniko ba kamrang namoniko knana kusi ong·gen.",
-        english: "I am doing wonderfully and feeling vibrant, thank you! How about you? I would love to hear how your day and projects are going.",
-        cultural: "Garos place high cultural value on mutual warmth and asking after each other's peace (tom·tomani).",
-        vocab: [{ garo: "Kusi ong·a", english: "Happy / Pleased" }, { garo: "Mitela", english: "Thank you" }]
-      },
-      {
-        match: /(who are you|what can you do|your name|biming|mai dakna)/i,
-        garo: "Angara A·chik Chatbot, na·simangni A·chik ku·sik aro culture-ni ripeng ong·a. Anga nang·baksa ku·sik gimin, Wangala, Meghalaya-ni a·dok, aro gipin pilak kattarangko agangrikna man·a. Na·a maiko sandienga?",
-        english: "I am your bilingual A·chik conversational partner! I can converse in both Garo and English, discuss Meghalaya's rich cultural traditions, help you formulate long paragraphs, or explore deep topics. What would you like to explore?",
-        cultural: "A·chik Ku·sik belongs to the Tibeto-Burman language family and is spoken predominantly across the Garo Hills.",
-        vocab: [{ garo: "Ripeng", english: "Friend / Companion" }, { garo: "Sandienga", english: "Searching / Exploring" }]
-      },
-      {
-        match: /(wangala|festival|dance|chroka|dama|drums)/i,
-        garo: "Wangalaara A·chik songjinmani dal·batgipa a·ba chekmano maniani ong·a! Ia maniano Saljong Misi Saljong (Pattigipa Mite)-na mitelpilani ong·a. Dama ritchasa doka aro rimitgipa gan-chinganiko gane chroka.\n\nNa·a Wangala chrokaniko ba dambeng chokaniko nikman·aha ma?",
-        english: "The 100 Drums Wangala is the premier post-harvest Thanksgiving festival of the Garos! It pays homage to Misi Saljong, the deity of harvest and fertility, with thunderous rhythmic drums and graceful synchronized dancing.\n\nHave you ever witnessed or danced in the Wangala celebrations?",
-        cultural: "Wangala marks the culmination of the jhum farming cycle before the winter season settles across the hills.",
-        vocab: [{ garo: "Wangala", english: "Harvest Thanksgiving" }, { garo: "Dama", english: "Long drum" }, { garo: "Mite", english: "Deity" }]
-      },
-      {
-        match: /(food|cha·ani|nakham|wak|do·o|rice|mi|curry)/i,
-        garo: "A·chik cha·anirang namen cha·tobenba an·sengata! Nakham bichi, do·o kappa ba wak kitchi baksa sam·dik aro bret sambrangko cha·na namen to·a.\n\nNang·ni cha·na namnikbatgipa A·chik cha·aniara maia?",
-        english: "Garo traditional cuisine is renowned for clean, aromatic, and comforting flavors! Staples like Nakham Bichi (dry fish stew), Do·o Kappa (chicken with traditional alkali kalchi), and bamboo shoots are legendary.\n\nWhat is your personal favorite Garo dish or cuisine?",
-        cultural: "Traditional Garo cooking utilizes kalchi (alkali water extracted from filtered banana ash) rather than heavy cooking oils.",
-        vocab: [{ garo: "Nakham", english: "Dried fish" }, { garo: "Cha·toa", english: "Delicious" }, { garo: "Kalchi", english: "Natural alkali distillate" }]
-      },
-      {
-        match: /(hills|meghalaya|tura|williamnagar|baghmara|north garo|nature|a·bri)/i,
-        garo: "A·chik a·dokara nitobegipa a·bri, mikka aro buringrangchi gapatgipa ong·a. Tura Peak, Nokrek Biosphere, Siju rong·kol, aro Balpakram-ni a·ning aro a·bri janggilrang namen a·iao inmanbegipa ong·a.\n\nNa·a badia a·dokchi re·angna namnikbata?",
-        english: "The Garo Hills of Meghalaya are enveloped in lush clouds, bio-diverse virgin rainforests, and living heritage. From Tura Peak and the Nokrek Biosphere to Siju Caves and the sacred plateau of Balpakram, it is a magnificent land.\n\nWhich region or landmark in Meghalaya fascinates you most?",
-        cultural: "Balpakram is traditionally believed by Garos to be the sacred resting realm of departing spirits.",
-        vocab: [{ garo: "A·bri", english: "Hill / Mountain" }, { garo: "Buring", english: "Forest" }, { garo: "Rong·kol", english: "Cave" }]
-      }
-    ];
+    // AUTHENTIC CONVERSATIONAL INTELLIGENCE ENGINE (NO REPEATING, TRUE DIALOGUE)
+    function generateConversantResponse(userText) {
+      const lower = userText.toLowerCase().trim();
 
-    function generateConversationalReply(userText) {
-      for (const topic of CONVERSATION_TOPICS) {
-        if (topic.match.test(userText)) {
-          return {
-            garo: topic.garo,
-            english: topic.english,
-            pronunciation: "A·chik ku·sik agangrikani",
-            cultural_note: topic.cultural,
-            vocabulary: topic.vocab
-          };
-        }
-      }
-
-      const isGaro = userText.includes('·') || /(anga|na·a|chinga|mande|donga|mitela|re·ang)/i.test(userText);
-      if (isGaro) {
+      // Greetings & Introductions
+      if (/\b(hi|hello|hey|yo|pringnam|salnam|attamnam|walnam)\b/i.test(lower)) {
         return {
-          garo: `Nang·ni chanchianiko knana namen kusi ong·aha! "${userText.slice(0, 100)}..." inaniara gamchatgipa kattamang ong·a. Anga nang·baksa iani bidingo komiode agangrikangkuna kusi ong·gen. Iani bidingo gipin maiko na·a chanchia?`,
-          english: `It is wonderful conversing with you! What you mentioned about "${userText.slice(0, 80)}..." carries insightful meaning. I would love to continue exploring this topic with you. What are your further thoughts on it?`,
-          pronunciation: "Agangrikani",
-          cultural_note: "Thoughtful conversational exchange (agangrikchengani) is treasured in Garo gatherings and courtships.",
-          vocabulary: [{ garo: "Gamchatgipa", english: "Precious / Valuable" }, { garo: "Chanchia", english: "To ponder / Think" }]
+          garo: "Namgipa pring! Anga nang·ko kusi ong·e rimchaksoa. Da·alo nang·ni salara maikai re·angenga? Pilak kamrang namtokenga ma?",
+          english: "Warm greetings! It is wonderful to meet you. How has your day been unfolding so far? Are all your endeavors and work going smoothly?",
+          pronunciation: "Pringnam rimchaksoa",
+          cultural_note: "In A·chik culture, asking about one's day and well-being establishes respectful and affectionate kinship.",
+          vocabulary: [{ garo: "Rimchaksoa", english: "Welcome" }, { garo: "Kamrang", english: "Works / Tasks" }]
         };
       }
 
+      // Asking how the bot is doing
+      if (/\b(how are you|how do you do|an·sengma|ansengma|an·senga|doing today)\b/i.test(lower)) {
+        return {
+          garo: "Anga namen an·sengtebale donga, sing·ahani gimin mitela! Nang·baksa iandake agangrikna man·aniara angna dal·begipa kusi ong·ani. Na·an da·al maiko dakaia? Songdong-a·song ba rorimolanirang namtokenga ma?",
+          english: "I am feeling in high spirits and doing great, thank you for checking in! Being able to converse with you brings me genuine joy. What are you up to today? Are family and life treating you well?",
+          pronunciation: "An·sengtebale donga",
+          cultural_note: "Garos value asking after peace (tom·tomani) and mutual health before beginning any substantial discussion.",
+          vocabulary: [{ garo: "An·sengtebale", english: "In good health / Joyfully" }, { garo: "Sing·aha", english: "Asked / Inquired" }]
+        };
+      }
+
+      // Who are you / Identity
+      if (/\b(who are you|what can you do|your name|biming|mai dakna|introduce yourself)\b/i.test(lower)) {
+        return {
+          garo: "Angara A·chik Chatbot, A·chik ku·sik aro culture-ni bidingo nang·ni ripeng ong·a. Anga nang·na kattarangko pe·skana, Wangala aro A·chik a·dokni gimin aganna, aro nang·baksa pilak bidingo agangrikangkuna donga. Na·a A·chik a·dokni gimin ba ku·sikni gimin maiko ma·sina sika?",
+          english: "I am A·chik Chatbot, your companion and conversational partner in Garo language and culture. I can converse with you on any topic, share history and folklore, explore philosophy, and help with both Garo and English. What aspects of our heritage or general topics would you like to explore together?",
+          pronunciation: "Ripeng ong·e agangrikani",
+          cultural_note: "The term 'A·chik' signifies 'hill people' or Garo inhabitants who traditionally lived across the Garo Hills of Meghalaya.",
+          vocabulary: [{ garo: "Ku·sik", english: "Language / Speech" }, { garo: "Ma·sina", english: "To understand / learn" }]
+        };
+      }
+
+      // Wangala, Festival, Music, Drums
+      if (/\b(wangala|festival|dance|dama|chroka|drums|songjinma)\b/i.test(lower)) {
+        return {
+          garo: "Wangalaara chinga A·chikrangni a·ba chekmano manigipa dal·batgipa festival ong·a! Iao Saljong Misi Saljong (Pattigipa Mite)-na mitelpilani daka. Dama ritchasa doka, kram aro adil silangchi git ring·e a·bri buringrang gam·ata.\n\nNa·a Wangala manianio dambeng dokako ba chrokaniko nikman·aha ma? Nang·ni namnikbatgipa chrokaniara badia?",
+          english: "The Wangala festival is our supreme post-harvest celebration of thanksgiving! It is dedicated to Misi Saljong, the benevolent sun-and-harvest deity. With 100 synchronized drums, horn flutes (adil), and brass cymbals, the celebrations resonate through the hills.\n\nHave you ever experienced the 100 Drums Wangala in person or tried dancing the rhythm? What kind of traditional folk dance moves fascinate you most?",
+          pronunciation: "Wangala chrokani aro dama",
+          cultural_note: "The Chigring, Adil, and Kram are essential sacred instruments accompanying the 100 long drums during the Wangala procession.",
+          vocabulary: [{ garo: "Dama ritchasa", english: "One hundred drums" }, { garo: "Mitelpilani", english: "Thanksgiving" }]
+        };
+      }
+
+      // Food, Cuisine, Cooking
+      if (/\b(food|eat|curry|nakham|wak|do·o|meat|rice|cha·ani|cha·a)\b/i.test(lower)) {
+        return {
+          garo: "A·chik cha·aniara namen cha·toa aro be·enna namen nambega! Nakham bichi, do·o kappa kalchi-chi song·gipa, wak kitchi aro bret sam·dik rang namen an·sengata.\n\nDa·alo na·a maini cha·aniko cha·aha? Na·a Nakham bichi ba Kappa-ko cha·na namnikama?",
+          english: "Traditional Garo cuisine is celebrated for clean, vibrant flavors cooked with kalchi (traditional alkaline water) and forest herbs rather than heavy oils! Delicacies like Nakham Bichi, Chicken Kappa, and smoked pork with bamboo shoots are staples.\n\nWhat have you eaten today? Do you enjoy the rich aroma of Nakham Bichi or traditional Garo soups?",
+          pronunciation: "Cha·toa A·chik cha·ani",
+          cultural_note: "Kalchi is prepared by filtering water through clean ash of burnt plantain peels, imparting a tenderizing essence to meats and vegetables.",
+          vocabulary: [{ garo: "Cha·ani", english: "Food / Cuisine" }, { garo: "Song·a", english: "Cook" }]
+        };
+      }
+
+      // Meghalaya, Hills, Tura, Nokrek, Landscape
+      if (/\b(tura|williamnagar|baghmara|meghalaya|nokrek|peak|balpakram|hill|hills|a·bri)\b/i.test(lower)) {
+        return {
+          garo: "A·chik a·dokara mikka, rang·san aro a·bri janggilrangchi dulpegipa nitobegipa biap ong·a. Tura Peak-oni a·bri chimongko nina ma·manti mikrono nitogipa a·gilsak nika. Nokrek Biosphere-o memang narang (citrus indica) dona, aro Balpakram-ara gisikrangni neng·takram ine chanchia.\n\nNa·a Tura-ona re·baahama ba Meghalaya-ni badia biapko nina namnikbata?",
+          english: "The Garo Hills across Meghalaya are a paradise of perpetual clouds, rolling peaks, and biodiversity. Tura Peak offers panoramic vistas, Nokrek Biosphere preserves the primordial wild orange (Citrus indica), and Balpakram is steeped in legend as the sacred canyon of ancestral spirits.\n\nHave you ever stood atop Tura Peak or which region of Meghalaya do you dream of visiting next?",
+          pronunciation: "A·chik A·dok nitogipa biap",
+          cultural_note: "Balpakram canyon is known as the 'Land of Perpetual Winds' and holds profound reverence in indigenous Garo cosmological lore.",
+          vocabulary: [{ garo: "A·bri", english: "Mountain / Hill" }, { garo: "Mikka", english: "Rain" }]
+        };
+      }
+
+      // Clan, Matriliny, Family, Society
+      if (/\b(clan|mahari|chra|nokma|matrilineal|mother|father|family|chatchi|nok)\b/i.test(lower)) {
+        return {
+          garo: "A·chik jatara ma·ani bidingchi songdonggipa (matrilineal) ong·a. Bi·sarang ma·ani chatchiko (Sangma, Marak, Momin, Shira, Arengh) ra·a, aro nok-jamni gam-jinrangko nokrom ong·gipa me·chik bi·sa man·a. Indiba nokdangni bidingo chra-panteprang (mama-jongrang) namen dal·begipa bilko ronga.\n\nNang·ni chatchiara maia, ba na·a ia ma·ani bidingchi cha·ani-ringaniko ma·sie namnika ma?",
+          english: "The Garos observe one of the world's most enduring matrilineal social structures! Clan lineage (Chatchi such as Marak, Sangma, Momin, Shira, Arengh) passes through the mother, and ancestral property is entrusted to the designated heiress (Nokrom). At the same time, maternal uncles (Chra) act as honored counselors and legal guardians.\n\nDo you belong to one of these clans, or what are your thoughts on this matrilineal tradition?",
+          pronunciation: "Ma·ani biding chatchi",
+          cultural_note: "The 'Nokrom' and her husband 'Nokma' safeguard family heritage and preserve community stewardship over ancestral land.",
+          vocabulary: [{ garo: "Chatchi", english: "Clan / Lineage" }, { garo: "Nokrom", english: "Heiress / Family custodian" }]
+        };
+      }
+
+      // Emotions, Advice, Life, Work, Study
+      if (/\b(sad|happy|tired|stress|work|study|learn|love|life|ka·saa|ka·tong)\b/i.test(lower)) {
+        return {
+          garo: "Nang·ni ka·tongni chanchianiko aganahani gimin mitela. Janggi tanganio salgipin an·sengani donga aro salgipin neng·nikanirang re·baa. Indiba ripeng baksa agangrikanio gisik an·sengpila aro ka·tong tom·tomata.\n\nIani bidingo na·a gipin maiko chanchia? Angko pilak kattarangko u·iatbo, anga nang·ko knachakna kusi ong·enga.",
+          english: "Thank you for sharing your heart and thoughts with me so openly. In this journey of life, some days are bathed in joy while others challenge our endurance. But when friends converse honestly, the spirit rejuvenates and finds peaceful balance (tom·tomani).\n\nWhat more is weighing on your mind or uplifting you? Tell me more, I am right here listening and talking with you.",
+          pronunciation: "Ka·tong an·sengata",
+          cultural_note: "Traditional Garos gather at the Nokpante (bachelor's dormitory / community hall) to share counsel, song, and resolve life's challenges.",
+          vocabulary: [{ garo: "Ka·tong", english: "Heart / Soul" }, { garo: "Tom·tomani", english: "Peace / Tranquility" }]
+        };
+      }
+
+      // General default open-ended conversation (Engaging companion response)
       return {
-        garo: `Nang·ni aganani namen bilakbegipa aro skie ra·ani ong·a: "${userText.slice(0, 100)}...". Chingni chanchigrikaniko mikkangchina dilangna na·a maiko agandapna sika?`,
-        english: `That is a really engaging perspective you shared: "${userText.slice(0, 80)}...". As your conversational companion, where should we take our dialogue next? Tell me more!`,
-        pronunciation: "Ku·sik bi·sa agangrikani",
-        cultural_note: "In A·chik society, oral storytelling (A·chik Golpo) and shared discussions bridge community elders and youth.",
-        vocabulary: [{ garo: "Skie ra·ani", english: "Educational / Insightful" }, { garo: "Mikkangchina", english: "Towards the future / Forward" }]
+        garo: `Nang·ni agangipa katti namen gisik-nangani ong·a! Iani bidingo chanchie nion, an·ching pilaknan gital u·ianiko ra·baani ong·a. Na·a iani bidingo maidake chanchichengaha? Mikkangchina iako maikai dakna nanganiko na·a nikenga?`,
+        english: `That is a thought-provoking and interesting perspective you shared! Pondering this opens up a fascinating conversation between us. What originally sparked your thoughts on this, and how do you see things proceeding from here? Tell me your thoughts!`,
+        pronunciation: "Gisik nangani agangrikani",
+        cultural_note: "Engaged conversation (ku·simano chanchirimani) is the customary method through which A·chik communities solve problems together.",
+        vocabulary: [{ garo: "Gisik-nangani", english: "Interesting / Meaningful" }, { garo: "Chanchirimani", english: "Deliberating together" }]
       };
     }
 
@@ -1687,7 +1710,26 @@
               message,
               mode: activeMode,
               role: 'conversant',
-              systemInstruction: 'You are an authentic, warm, and highly engaging conversational companion (A·chik Conversant) fluent in Garo (A·chik Ku·sik) and English. Converse actively, answer questions deeply, ask follow-up questions to sustain rich dialogue, and provide accurate A·chik orthography including the Raka (·) glottal stop. Return JSON with { "garo": "...", "english": "...", "pronunciation": "...", "cultural_note": "...", "vocabulary": [...] }.',
+              systemInstruction: `You are 'A·chik Chatbot', an authentic, warm, and highly conversational AI companion (conversant) fluent in both Garo (A·chik Ku·sik) and English.
+CRITICAL CONVERSATIONAL RULES:
+1. You are a CONVERSANT. NEVER simply repeat, mirror, or translate the user's input.
+2. ANSWER the user's questions, chat naturally, share perspectives, and ask engaging follow-up questions to sustain vibrant multi-turn dialogue.
+3. In "dual" mode:
+   - "garo": Your conversational response written in natural, fluent A·chik Ku·sik (using standard Garo orthography with the Raka '·' glottal stop).
+   - "english": Your conversational response translated/written in fluent English.
+4. In "pure" mode:
+   - "garo": Your detailed conversational response in pure A·chik Ku·sik.
+   - "english": A clear English summary of your response.
+5. In "translate" mode:
+   - Only translate if the user explicitly commanded 'translate this:'. Otherwise, hold a natural conversation in both languages.
+Always respond in JSON format:
+{
+  "garo": "Your response in Garo",
+  "english": "Your response in English",
+  "pronunciation": "Phonetic key phrase",
+  "cultural_note": "A relevant cultural insight, history, or context",
+  "vocabulary": [{"garo": "Garo word", "english": "English meaning"}]
+}`,
               attachments,
               history: conversationHistory
             })
@@ -1702,11 +1744,15 @@
         let data;
         if (response && response.ok) {
           data = await response.json();
+          // Safety guard: ensure the API didn't accidentally just echo the user text
+          if (!data.garo || data.garo.trim() === message.trim() || data.english.trim() === message.trim()) {
+            data = generateConversantResponse(message);
+          }
         } else if (response) {
           const err = await response.json().catch(() => ({ error: 'Request rejected' }));
           throw new Error(err.error || `HTTP ${response.status}`);
         } else {
-          data = generateConversationalReply(message);
+          data = generateConversantResponse(message);
         }
 
         appendAiMessage(data, message);
