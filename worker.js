@@ -30,6 +30,14 @@ const SESSION_MAX_AGE = 60 * 60 * 24 * 30;
 const OAUTH_STATE_COOKIE = "achik_oauth_state";
 const OAUTH_STATE_MAX_AGE = 600;
 
+// Strips markdown links [url](url) if rich text was pasted into the code
+function cleanUrl(raw) {
+  if (!raw || typeof raw !== "string") return "";
+  const match = raw.match(/\((https?:\/\/[^)]+)\)/);
+  if (match) return match[1].trim();
+  return raw.replace(/[\[\]]/g, "").trim();
+}
+
 function jsonResponse(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
     status,
@@ -88,12 +96,10 @@ function oauthStateCookie(state, maxAge = OAUTH_STATE_MAX_AGE) {
   return `${OAUTH_STATE_COOKIE}=${state}; Path=/api/auth/google; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAge}`;
 }
 
-// Robust JSON extractor that handles markdown wrappers and trailing content
 function parseModelJson(raw) {
   if (!raw || typeof raw !== "string") return null;
   let text = raw.trim();
 
-  // Strip markdown code fences
   if (text.startsWith("```")) {
     text = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
   }
@@ -212,7 +218,7 @@ async function startGoogleSignIn(request, env) {
   `).bind(await sha256(state), verifier, expiresAt).run();
 
   const redirectUri = new URL("/api/auth/google/callback", request.url);
-  const authorizationUrl = new URL("[https://accounts.google.com/o/oauth2/v2/auth](https://accounts.google.com/o/oauth2/v2/auth)");
+  const authorizationUrl = new URL(cleanUrl("[https://accounts.google.com/o/oauth2/v2/auth](https://accounts.google.com/o/oauth2/v2/auth)"));
   authorizationUrl.search = new URLSearchParams({
     client_id: env.GOOGLE_CLIENT_ID,
     redirect_uri: redirectUri.href,
@@ -260,7 +266,7 @@ async function completeGoogleSignIn(request, env, url) {
   const redirectUri = new URL("/api/auth/google/callback", request.url);
   let tokenResponse;
   try {
-    tokenResponse = await fetch("[https://oauth2.googleapis.com/token](https://oauth2.googleapis.com/token)", {
+    tokenResponse = await fetch(cleanUrl("[https://oauth2.googleapis.com/token](https://oauth2.googleapis.com/token)"), {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
@@ -294,7 +300,7 @@ async function completeGoogleSignIn(request, env, url) {
 
   let profileResponse;
   try {
-    profileResponse = await fetch("[https://openidconnect.googleapis.com/v1/userinfo](https://openidconnect.googleapis.com/v1/userinfo)", {
+    profileResponse = await fetch(cleanUrl("[https://openidconnect.googleapis.com/v1/userinfo](https://openidconnect.googleapis.com/v1/userinfo)"), {
       headers: { Authorization: `Bearer ${tokens.access_token}` },
     });
   } catch (error) {
@@ -466,7 +472,6 @@ function correctionContext(records) {
   return context;
 }
 
-// CONVERSATIONAL SYSTEM PROMPT (TRUE DIALOGUE, NOT REPEATING)
 const GARO_SYSTEM_PROMPT = `You are 'A·chik Chatbot', an authentic, warm, articulate, and engaging conversational companion (conversant) fluent in Garo (A·chik ku·sik) and English.
 The Garo language is a Sino-Tibetan language of the Bodo-Garo branch spoken predominantly in the Garo Hills of Meghalaya, Assam, and northern Bangladesh.
 
@@ -649,7 +654,7 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
         if (env.DISCORD_WEBHOOK_URL && ctx?.waitUntil) {
           const starIcons = "⭐".repeat(rating);
           ctx.waitUntil(
-            fetch(env.DISCORD_WEBHOOK_URL, {
+            fetch(cleanUrl(env.DISCORD_WEBHOOK_URL), {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -877,13 +882,10 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
 
       const failedAttempts = [];
 
-      // 1. Google Gemini Provider Attempt (Clean string concatenation)
+      // 1. Google Gemini Provider Attempt (Cleaned of all markdown formatting)
       for (const model of GEMINI_MODELS) {
-        const endpoint =
-          "[https://generativelanguage.googleapis.com/v1beta/models/](https://generativelanguage.googleapis.com/v1beta/models/)" +
-          encodeURIComponent(model) +
-          ":generateContent?key=" +
-          encodeURIComponent(geminiKey);
+        const rawEndpoint = "[https://generativelanguage.googleapis.com/v1beta/models/](https://generativelanguage.googleapis.com/v1beta/models/)" + model + ":generateContent?key=" + geminiKey;
+        const endpoint = cleanUrl(rawEndpoint);
 
         try {
           const response = await fetch(endpoint, {
@@ -917,11 +919,12 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
             details: String(details || "No response details provided.").slice(0, 300),
           });
         } catch (networkError) {
-          failedAttempts.push({ model, status: "NetworkError", details: networkError.message });
+          const safeMessage = networkError.message.replace(geminiKey, "[REDACTED_KEY]");
+          failedAttempts.push({ model, status: "NetworkError", details: safeMessage });
         }
       }
 
-      // 2. Groq Fallback Provider (Clean direct URL)
+      // 2. Groq Fallback Provider (Cleaned of all markdown formatting)
       const groqKey = env.GROQ_API_KEY ? env.GROQ_API_KEY.trim() : "";
       if (groqKey) {
         const groqMessages = [
@@ -968,7 +971,7 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
           });
         } else {
           try {
-            const groqEndpoint = "[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)";
+            const groqEndpoint = cleanUrl("[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)");
             const response = await fetch(groqEndpoint, {
               method: "POST",
               headers: {
@@ -1009,7 +1012,8 @@ Sitemap: [https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml](https:/
               ).slice(0, 300),
             });
           } catch (networkError) {
-            failedAttempts.push({ model: GROQ_MODEL, status: "NetworkError", details: networkError.message });
+            const safeMessage = networkError.message.replace(groqKey, "[REDACTED_KEY]");
+            failedAttempts.push({ model: GROQ_MODEL, status: "NetworkError", details: safeMessage });
           }
         }
       }
