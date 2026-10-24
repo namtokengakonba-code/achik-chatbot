@@ -1309,8 +1309,91 @@
 
       const chartEntries = Array.isArray(dashboard.charts) ? dashboard.charts.slice(0, 4) : [];
       chartEntries.forEach((chartData, chartIndex) => {
+        if (chartData?.type === 'venn') {
+          const sets = chartData.sets;
+          const regions = chartData.regions;
+          if (!Array.isArray(sets) || (sets.length !== 2 && sets.length !== 3) ||
+              sets.some((set) => typeof set !== 'string' || !set.trim()) ||
+              new Set(sets).size !== sets.length || !Array.isArray(regions) ||
+              regions.length !== (1 << sets.length) - 1 || regions.length > 7) return;
+          const regionsByMask = new Map();
+          for (const region of regions) {
+            if (!Array.isArray(region?.sets) || !region.sets.length ||
+                !Number.isFinite(region.value) || region.value < 0 ||
+                new Set(region.sets).size !== region.sets.length ||
+                region.sets.some((set) => !sets.includes(set))) return;
+            const mask = sets.reduce((value, set, index) =>
+              region.sets.includes(set) ? value | (1 << index) : value, 0);
+            if (regionsByMask.has(mask)) return;
+            regionsByMask.set(mask, region);
+          }
+          for (let mask = 1; mask < (1 << sets.length); mask += 1) {
+            if (!regionsByMask.has(mask)) return;
+          }
+
+          const chartCard = document.createElement('div');
+          chartCard.className = 'mt-4 rounded-xl border border-slate-200 dark:border-slate-700 p-3';
+          const chartTitle = document.createElement('h4');
+          chartTitle.className = 'mb-2 text-sm font-semibold text-slate-700 dark:text-slate-200';
+          chartTitle.textContent = typeof chartData.title === 'string' ? chartData.title.slice(0, 120) : `Chart ${chartIndex + 1}`;
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('viewBox', '0 0 360 250');
+          svg.setAttribute('role', 'img');
+          svg.setAttribute('aria-label', `${sets.join(' and ')} Venn diagram`);
+          svg.setAttribute('class', 'mx-auto h-64 w-full max-w-md text-slate-700 dark:text-slate-200');
+          const circlePositions = sets.length === 2
+            ? [{ x: 145, y: 125 }, { x: 215, y: 125 }]
+            : [{ x: 145, y: 105 }, { x: 215, y: 105 }, { x: 180, y: 165 }];
+          const colors = ['#059669', '#0ea5e9', '#f59e0b'];
+          circlePositions.forEach(({ x, y }, index) => {
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', x);
+            circle.setAttribute('cy', y);
+            circle.setAttribute('r', sets.length === 2 ? 78 : 72);
+            circle.setAttribute('fill', colors[index]);
+            circle.setAttribute('fill-opacity', '0.14');
+            circle.setAttribute('stroke', colors[index]);
+            circle.setAttribute('stroke-width', '2');
+            svg.appendChild(circle);
+          });
+          const regionPositions = sets.length === 2
+            ? { 1: [125, 128], 2: [235, 128], 3: [180, 128] }
+            : { 1: [112, 76], 2: [248, 76], 4: [180, 222], 3: [180, 83], 5: [142, 157], 6: [218, 157], 7: [180, 137] };
+          for (const [mask, region] of regionsByMask) {
+            const [x, y] = regionPositions[mask];
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', x);
+            text.setAttribute('y', y);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('font-size', '14');
+            text.setAttribute('font-weight', '700');
+            text.setAttribute('fill', 'currentColor');
+            const regionName = sets.filter((_, index) => mask & (1 << index)).join(' and ');
+            const accessibleTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+            accessibleTitle.textContent = `${regionName}: ${region.value}`;
+            text.append(accessibleTitle, document.createTextNode(String(region.value)));
+            svg.appendChild(text);
+          }
+          sets.forEach((set, index) => {
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', sets.length === 2 ? (index === 0 ? 80 : 280) : (index === 0 ? 80 : index === 1 ? 280 : 180));
+            label.setAttribute('y', sets.length === 2 ? 32 : (index === 2 ? 246 : 25));
+            label.setAttribute('text-anchor', 'middle');
+            label.setAttribute('font-size', '12');
+            label.setAttribute('font-weight', '600');
+            label.setAttribute('fill', 'currentColor');
+            label.textContent = set.slice(0, 40);
+            svg.appendChild(label);
+          });
+          chartCard.append(chartTitle, svg);
+          card.appendChild(chartCard);
+          return;
+        }
+
+        const isScatter = chartData?.type === 'scatter' || chartData?.type === 'scatterPlot';
         const chartStyles = [
           { value: 'bar', label: 'Bar' },
+          { value: 'histogram', label: 'Histogram' },
           { value: 'bar3d', label: '3D Columns' },
           { value: 'horizontalBar', label: 'Horizontal bar' },
           { value: 'stackedBar', label: 'Stacked bar' },
@@ -1320,17 +1403,20 @@
           { value: 'doughnut', label: 'Doughnut' },
           { value: 'polarArea', label: 'Polar area' },
           { value: 'radar', label: 'Radar' },
-          { value: 'scatterPlot', label: 'Scatter plot' }
+          ...(isScatter ? [{ value: 'scatter', label: 'Scatter plot' }] : [])
         ];
         const validTypes = chartStyles.map(({ value }) => value);
-        if (!chartData || !Array.isArray(chartData.labels) || chartData.labels.length < 1 ||
-            chartData.labels.length > 50 || !Array.isArray(chartData.datasets) ||
+        if (!chartData || (!isScatter && (!Array.isArray(chartData.labels) || chartData.labels.length < 1 ||
+            chartData.labels.length > 50)) || !Array.isArray(chartData.datasets) ||
             !chartData.datasets.length || chartData.datasets.length > 5) return;
         const datasets = chartData.datasets.filter((dataset) =>
           dataset && typeof dataset.label === 'string' &&
           Array.isArray(dataset.data) &&
-          dataset.data.length === chartData.labels.length &&
-          dataset.data.every((value) => typeof value === 'number' && Number.isFinite(value))
+          (isScatter
+            ? dataset.data.length > 0 && dataset.data.length <= 50 &&
+              dataset.data.every((point) => Number.isFinite(point?.x) && Number.isFinite(point?.y))
+            : dataset.data.length === chartData.labels.length &&
+              dataset.data.every((value) => typeof value === 'number' && Number.isFinite(value)))
         );
         if (!datasets.length) return;
 
@@ -1349,7 +1435,8 @@
           option.textContent = label;
           typeSelect.appendChild(option);
         });
-        const initialType = validTypes.includes(chartData.type) ? chartData.type : 'bar';
+        const requestedType = chartData.type === 'scatterPlot' ? 'scatter' : chartData.type;
+        const initialType = validTypes.includes(requestedType) ? requestedType : 'bar';
         typeSelect.value = initialType;
         const chartControls = document.createElement('div');
         chartControls.className = 'flex flex-wrap items-center gap-2';
@@ -1372,7 +1459,7 @@
             const isCircular = ['pie', 'doughnut', 'polarArea'].includes(style);
             const isArea = style === 'area';
             const chartType = isArea ? 'line' :
-              style === 'horizontalBar' || style === 'stackedBar' || style === 'bar3d' ? 'bar' : style;
+              style === 'horizontalBar' || style === 'stackedBar' || style === 'bar3d' || style === 'histogram' ? 'bar' : style;
             const chartDatasets = datasets.map((dataset, index) => {
               const color = palette[index % palette.length];
               return {
@@ -1384,15 +1471,15 @@
                 borderColor: color,
                 borderWidth: 2,
                 tension: 0.25,
-                fill: isArea
+                fill: isArea,
+                ...(style === 'histogram' ? { barPercentage: 1, categoryPercentage: 1 } : {})
               };
             });
             return new window.Chart(canvas, {
               type: chartType,
-              data: {
-                labels: chartData.labels.map((label) => String(label).slice(0, 80)),
-                datasets: chartDatasets
-              },
+              data: isScatter
+                ? { datasets: chartDatasets }
+                : { labels: chartData.labels.map((label) => String(label).slice(0, 80)), datasets: chartDatasets },
               options: {
                 responsive: true,
                 maintainAspectRatio: false,

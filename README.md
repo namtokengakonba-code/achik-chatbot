@@ -10,7 +10,11 @@ The chatbot is designed for natural Garo-English conversation, with a separate t
 
 Song lyrics can be translated when they are user-authored, public domain, or the user confirms they have permission. For other songs, the chatbot can discuss themes or provide a high-level summary instead of translating or reproducing lyrics. Authorized lyric translations aim to preserve line structure, meaning, and tone.
 
-## File analysis and dashboards
+## File analysis, visualizations, and problem solving
+
+Signed-in users can ask for step-by-step arithmetic, algebra, and word-problem solutions, including age, speed-distance-time, simple or compound interest, and upstream/downstream problems. The chatbot should show equations, substitutions, reasoning, answers, and units, and ask for missing values instead of guessing.
+
+Users can request charts directly in chat or ask for analysis of attached data. Interactive dashboards support bar charts, histograms, line charts, pie charts, doughnut charts, scatter plots, and two- or three-set Venn diagrams. The chatbot should not invent factual chart data when the required values are missing.
 
 Signed-in users can attach up to five PDF, Excel (`.xlsx`/`.xls`), Word (`.docx`), image (JPEG, PNG, WebP, GIF), CSV/TSV, or plain-text files and ask a prompt about them. Files are limited to 10 MB each and 12 MB total; extracted text is limited to 500,000 characters per file and 1,000,000 characters per request. PDF/image files are sent to Gemini as file data; spreadsheets and Word documents are extracted in the browser before their text is sent. If Gemini is unavailable, Groq can be used for text and up to three images; PDF analysis requires Gemini. The chatbot can analyze the provided data and return an interactive dashboard with metrics and switchable charts when requested or useful. Attachments are sent to the selected AI provider for processing and are not stored by this app.
 
