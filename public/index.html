@@ -697,6 +697,44 @@
     })({})
   </script>
 
+  <!-- Additional ad tags rotate one per tab visit and load after the page is idle. -->
+  <script>
+    (() => {
+      const adUrls = [
+        "https://fond-appointment.com/bcXpVzsyd.GTlQ0yYgWHcs/Bepm/9_u_Z/UdlBkCPnTIcC1TMRjYM/1fMCzGcDtYN-zCUZyyMSzRUx0tMbQE",
+        "https://fond-appointment.com/bPXXV.sid/GYlj0tYZWicj/fe_mc9kucZ/UXl/knPyTyct1rMZjmMm1wM/jgEAtqNczOUiy/M/zgUuybNYQC",
+        "https://fond-appointment.com/bXXNVSs.dPG/l/0XYgW-cr/Xe/mi9/uBZZUilxkqP/TSc/1VM/jrMk1_M/DdUlt/NezyUNyZMGz/UdwSOmQj",
+        "https://fond-appointment.com/b.X_VHsWdQGql/0/YBW/cw/ne/mY9cuBZNUvlvkHPoTxcv1/MtjsMz0pOZDXkPtbNhzBUpysMpzdQs5wMkwg"
+      ];
+      const storageKey = 'achik_additional_ad_rotation';
+      let index = 0;
+      try {
+        index = Number(sessionStorage.getItem(storageKey) || 0) % adUrls.length;
+        sessionStorage.setItem(storageKey, String(index + 1));
+      } catch {}
+
+      const loadAd = () => {
+        if (document.visibilityState !== 'visible') {
+          document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') loadAd();
+          }, { once: true });
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = adUrls[index];
+        script.async = true;
+        script.referrerPolicy = 'no-referrer-when-downgrade';
+        document.body.appendChild(script);
+      };
+
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadAd, { timeout: 6000 });
+      } else {
+        setTimeout(loadAd, 6000);
+      }
+    })();
+  </script>
+
   <!-- Application Logic -->
   <script>
 
