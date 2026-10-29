@@ -536,12 +536,12 @@
     <!-- CHAT CONTAINER: MAXIMUM HEIGHT FOR CHAT MESSAGES, PROMPT BOX SITUATED NEAR BOTTOM -->
     <main class="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-slate-50/50 dark:bg-slate-950">
       
-      <!-- TOP NATIVE BANNER -->
-      <div id="topAdStrip" class="ad-banner-top w-full bg-slate-100/70 dark:bg-slate-900/70 border-b border-slate-200/50 dark:border-slate-800/50 relative">
-        <button type="button" onclick="closeAdBanner('topAdStrip')" class="absolute right-2 top-0.5 p-0.5 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
+      <!-- TOP BANNER MATCHING THE BOTTOM BANNER -->
+      <div id="topAdStrip" class="bottom-ad-strip w-full bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800/80 relative">
+        <button type="button" onclick="closeAdBanner('topAdStrip')" class="absolute right-2 top-0.5 p-1 text-slate-400 hover:text-red-500 rounded z-30 transition" title="Close Ad">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
-        <div class="w-full max-w-md h-full flex items-center justify-center overflow-hidden">
+        <div class="bottom-ad-scaler" id="topAdScaler">
           <div id="container-fe816a205ab9b5631883cc848108ce59"></div>
           <script async="async" data-cfasync="false" src="https://bauval.org/21/fe816a205ab9b5631883cc848108ce59"></script>
         </div>
@@ -849,14 +849,10 @@
       el.style.transition = 'all 0.25s ease-in';
       el.style.opacity = '1';
 
-      if (elementId === 'bottomAdStrip') {
+      if (elementId === 'bottomAdStrip' || elementId === 'topAdStrip') {
         el.style.height = '32px';
         el.style.maxHeight = '32px';
         el.style.minHeight = '32px';
-      } else if (elementId === 'topAdStrip') {
-        el.style.height = '38px';
-        el.style.maxHeight = '38px';
-        el.style.minHeight = '38px';
       } else if (elementId === 'sidebarSquareAd') {
         el.style.height = 'auto';
         el.style.maxHeight = '';
@@ -1661,7 +1657,7 @@
       const correctionButton = document.createElement('button');
       correctionButton.type = 'button';
       correctionButton.className = 'text-[11px] font-medium text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400';
-      correctionButton.textContent = 'Teach the chatbot';
+      correctionButton.textContent = 'Provide Your Corrections here';
       const correctionForm = document.createElement('form');
       correctionForm.className = 'hidden mt-2 space-y-2';
       const correctionInput = document.createElement('textarea');
