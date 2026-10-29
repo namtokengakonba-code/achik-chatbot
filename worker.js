@@ -14,7 +14,6 @@ const MAX_CORRECTION_LENGTH = 2000;
 const MAX_FEEDBACK_LENGTH = 2000;
 const MAX_APPROVED_CORRECTIONS = 20;
 const MAX_CHAT_BODY_BYTES = 18 * 1024 * 1024;
-const MAX_CHAT_HISTORY_MESSAGES = 12;
 const MAX_CHAT_HISTORY_TEXT_LENGTH = 12000;
 const MAX_CHAT_FILES = 5;
 const MAX_INLINE_FILE_BYTES = 10 * 1024 * 1024;
@@ -938,10 +937,8 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
         return jsonResponse({ error: "Missing 'message' field in request body." }, 400);
       }
 
-      if (!Array.isArray(history) || history.length > MAX_CHAT_HISTORY_MESSAGES) {
-        return jsonResponse({
-          error: `Conversation history must contain no more than ${MAX_CHAT_HISTORY_MESSAGES} messages.`,
-        }, 400);
+      if (!Array.isArray(history)) {
+        return jsonResponse({ error: "Conversation history must be an array." }, 400);
       }
       for (let index = 0; index < history.length; index += 1) {
         const entry = history[index];

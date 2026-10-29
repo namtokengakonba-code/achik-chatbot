@@ -772,7 +772,6 @@
 
     let activeMode = 'dual';
     const conversationHistory = [];
-    const MAX_CONVERSATION_MESSAGES = 16;
     const MAX_CONVERSATION_TEXT_LENGTH = 12000;
     const messagesContainer = document.getElementById('messagesContainer');
     const chatForm = document.getElementById('chatForm');
@@ -1763,9 +1762,6 @@
         { role: 'user', text: historyText(userText) },
         { role: 'model', text: historyText(JSON.stringify(assistantData)) }
       );
-      if (conversationHistory.length > MAX_CONVERSATION_MESSAGES) {
-        conversationHistory.splice(0, conversationHistory.length - MAX_CONVERSATION_MESSAGES);
-      }
     }
 
     // AUTHENTIC CONVERSATIONAL INTELLIGENCE ENGINE (NO REPEATING, TRUE DIALOGUE)
