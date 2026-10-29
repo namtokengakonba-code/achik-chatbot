@@ -2,7 +2,7 @@
 
 ## Shared learning and Garo dialect
 
-The chatbot prioritizes the A·we (A'we) dialect of Garo (A·chik ku·sik), uses Roman-script orthography, and keeps Garo responses separate from English. Users can use **Teach a correction** below a chatbot response to submit an A·we correction or trusted knowledge. Each submission is saved immediately in Cloudflare KV and can guide relevant future answers for everyone. There is no admin approval step.
+The chatbot prioritizes the A·we (A'we) dialect of Garo (A·chik ku·sik), uses Roman-script orthography, and displays Garo first in its own box followed by English in a separate box. Users can use **Teach the chatbot** below a response to submit an A·we correction or trusted knowledge. Each submission is saved immediately in Cloudflare KV and can guide relevant future answers for everyone. There is no admin approval step.
 
 Shared submissions are retrieval context, not automatic model retraining: the model's weights do not change. Because submissions are public and immediate, corrections may be inaccurate or misleading; the chatbot is instructed to treat them as community guidance rather than verified facts. Do not submit private information.
 
