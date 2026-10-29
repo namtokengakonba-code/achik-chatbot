@@ -1562,7 +1562,7 @@
           <div class="p-3.5 sm:p-4 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm space-y-2.5">
             <div class="p-2.5 sm:p-3 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50">
               <div class="flex items-center justify-between mb-1">
-                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">A·chik Ku·sik</span>
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">Garo (A·we)</span>
                 <div class="flex items-center gap-1">
                   <button onclick="speakText('${escapeAttr(data.garo)}')" class="p-1 text-slate-400 hover:text-emerald-600 rounded transition" title="Listen Audio">🔊</button>
                   <button onclick="copyToClipboard('${escapeAttr(data.garo)}', this)" class="text-[11px] sm:text-xs text-slate-400 hover:text-emerald-600 px-1 py-0.5 transition">Copy</button>
@@ -1571,8 +1571,8 @@
               <p class="text-sm sm:text-base font-semibold text-emerald-950 dark:text-emerald-100 leading-relaxed break-words whitespace-pre-wrap">${highlightRakhe(escapeHtml(data.garo))}</p>
               ${data.pronunciation ? `<p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1">Phonetic: <em>${escapeHtml(data.pronunciation)}</em></p>` : ''}
             </div>
-            <div class="text-slate-700 dark:text-slate-200 text-xs sm:text-sm leading-relaxed">
-              <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">English</span>
+            <div class="p-2.5 sm:p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs sm:text-sm leading-relaxed">
+              <span class="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">English</span>
               <p class="break-words whitespace-pre-wrap">${escapeHtml(data.english)}</p>
             </div>
             ${vocabHtml}
