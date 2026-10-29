@@ -459,14 +459,14 @@
             💬 Smart Dual (Garo + English)
           </button>
           <button data-mode="pure" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
-            🌿 Pure A·chik Focus
+            🌿 Pure A·we Focus
           </button>
           <button data-mode="translate" class="mode-btn text-left px-3 py-2 rounded-xl text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
             🔄 Quick Translator
           </button>
         </div>
         <p class="mt-2 text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
-          Quick Translator translates each sentence into Garo and checks up to 12 key terms using online dictionary results (not exhaustive); those terms are sent to Firecrawl. Song lyrics must be your own, public-domain, or authorized.
+          Replies prioritize the A·we dialect of Garo. Quick Translator checks up to 12 key terms using online dictionary results (not exhaustive); those terms are sent to Firecrawl. Song lyrics must be your own, public-domain, or authorized.
         </p>
       </div>
 
@@ -788,34 +788,9 @@
     const signedInUser = document.getElementById('signedInUser');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // 15-SECOND AD REFRESH & AUTO-REOPEN SYSTEM
-    const AD_RELOAD_INTERVAL = 15000;
-    const adReopenTimers = {};
-
-    function refreshAdContainer(containerId) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      const iframes = container.querySelectorAll('iframe');
-      iframes.forEach(iframe => {
-        try {
-          if (iframe.src) {
-            const url = new URL(iframe.src);
-            url.searchParams.set('_r', Date.now());
-            iframe.src = url.toString();
-          }
-        } catch (e) {
-          iframe.src = iframe.src;
-        }
-      });
-    }
-
     function closeAdBanner(elementId) {
       const el = document.getElementById(elementId);
       if (!el) return;
-
-      if (adReopenTimers[elementId]) {
-        clearTimeout(adReopenTimers[elementId]);
-      }
 
       el.style.transition = 'all 0.25s ease-out';
       el.style.opacity = '0';
@@ -829,54 +804,7 @@
       setTimeout(() => {
         el.style.display = 'none';
       }, 250);
-
-      adReopenTimers[elementId] = setTimeout(() => {
-        reopenAdBanner(elementId);
-      }, AD_RELOAD_INTERVAL);
     }
-
-    function reopenAdBanner(elementId) {
-      const el = document.getElementById(elementId);
-      if (!el) return;
-
-      el.style.display = 'flex';
-      el.style.removeProperty('border');
-      el.style.removeProperty('margin');
-      el.style.removeProperty('padding');
-
-      void el.offsetWidth;
-
-      el.style.transition = 'all 0.25s ease-in';
-      el.style.opacity = '1';
-
-      if (elementId === 'bottomAdStrip') {
-        el.style.height = '32px';
-        el.style.maxHeight = '32px';
-        el.style.minHeight = '32px';
-      } else if (elementId === 'topAdStrip') {
-        el.style.height = '38px';
-        el.style.maxHeight = '38px';
-        el.style.minHeight = '38px';
-      } else if (elementId === 'sidebarSquareAd') {
-        el.style.height = 'auto';
-        el.style.maxHeight = '';
-      }
-
-      refreshAdContainer(elementId);
-    }
-
-    setInterval(() => {
-      ['bottomAdStrip', 'topAdStrip', 'sidebarSquareAd'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-          if (el.style.display === 'none' || el.style.opacity === '0') {
-            reopenAdBanner(id);
-          } else if (el.offsetParent !== null) {
-            refreshAdContainer(id);
-          }
-        }
-      });
-    }, AD_RELOAD_INTERVAL);
 
     // Feedback & Rating elements
     const openFeedbackBtn = document.getElementById('openFeedbackBtn');
@@ -1600,6 +1528,34 @@
         }
       }
 
+      let webSourcesHtml = '';
+      if (data.webSearchStatus === 'unavailable' || data.webSearchStatus === 'no_results') {
+        const statusText = data.webSearchStatus === 'unavailable'
+          ? 'Live web search is unavailable; this answer may not reflect current information.'
+          : 'No relevant web sources were found; this answer is based on the chatbot’s existing knowledge.';
+        webSourcesHtml = `
+          <p class="mt-2 border-t border-slate-100 dark:border-slate-800 pt-2 text-[11px] text-amber-700 dark:text-amber-300">${escapeHtml(statusText)}</p>
+        `;
+      } else if (Array.isArray(data.webSources) && data.webSources.length) {
+        const sourceLinks = data.webSources.slice(0, 5).map((source) => {
+          try {
+            const sourceUrl = new URL(source.url);
+            if (!['http:', 'https:'].includes(sourceUrl.protocol)) return '';
+            return `<li><a href="${escapeAttr(sourceUrl.href)}" target="_blank" rel="noopener noreferrer" class="text-emerald-700 dark:text-emerald-300 underline">${escapeHtml(source.title || sourceUrl.hostname)}</a></li>`;
+          } catch {
+            return '';
+          }
+        }).filter(Boolean);
+        if (sourceLinks.length) {
+          webSourcesHtml = `
+            <div class="mt-2 border-t border-slate-100 dark:border-slate-800 pt-2">
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Web sources</span>
+              <ul class="mt-1 list-inside list-disc space-y-0.5 text-[11px]">${sourceLinks.join('')}</ul>
+            </div>
+          `;
+        }
+      }
+
       el.innerHTML = `
         <img src="${ORIGINAL_BOT_LOGO}" onerror="this.onerror=null; this.src='${ORIGINAL_BOT_LOGO_FALLBACK}';" alt="Bot Logo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white flex-shrink-0 shadow mt-1">
         <div class="space-y-2 flex-1 min-w-0">
@@ -1622,6 +1578,7 @@
             ${vocabHtml}
             ${culturalHtml}
             ${dictionarySourcesHtml}
+            ${webSourcesHtml}
           </div>
         </div>
       `;
@@ -1632,19 +1589,19 @@
       const correctionButton = document.createElement('button');
       correctionButton.type = 'button';
       correctionButton.className = 'text-[11px] font-medium text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400';
-      correctionButton.textContent = 'Correct this answer';
+      correctionButton.textContent = 'Teach a correction';
       const correctionForm = document.createElement('form');
       correctionForm.className = 'hidden mt-2 space-y-2';
       const correctionInput = document.createElement('textarea');
       correctionInput.required = true;
       correctionInput.maxLength = 2000;
       correctionInput.rows = 3;
-      correctionInput.placeholder = 'Write the corrected answer or explain what should change';
+      correctionInput.placeholder = 'Share an A·we Garo correction or trusted knowledge to guide future answers';
       correctionInput.className = 'w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-2.5 text-xs outline-none focus:border-emerald-500';
       const submitCorrection = document.createElement('button');
       submitCorrection.type = 'submit';
       submitCorrection.className = 'rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-500 disabled:opacity-50';
-      submitCorrection.textContent = 'Save correction';
+      submitCorrection.textContent = 'Add to shared learning';
       const correctionStatus = document.createElement('p');
       correctionStatus.setAttribute('role', 'status');
       correctionStatus.className = 'text-[11px] text-slate-500 dark:text-slate-400';
@@ -1671,7 +1628,7 @@
           });
           const result = await response.json();
           if (!response.ok) throw new Error(result.error || `HTTP ${response.status}`);
-          correctionStatus.textContent = 'Saved. This correction can now guide future answers for everyone.';
+          correctionStatus.textContent = 'Saved. This shared example can guide relevant future replies; it does not retrain the model’s weights.';
           correctionInput.value = '';
           correctionButton.textContent = 'Correction saved';
           correctionButton.disabled = true;

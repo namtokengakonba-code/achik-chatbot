@@ -23,7 +23,7 @@ jobs:
 
       - name: Configure AdSense Auto ads
         env:
-          ADSENSE_CLIENT_ID: ${{ secrets.ADSENSE_CLIENT_ID || vars.ADSENSE_CLIENT_ID }}
+          ADSENSE_CLIENT_ID: ${{ secrets.ADSENSE_CLIENT_ID || vars.ADSENSE_CLIENT_ID || 'ca-pub-3812851391977576' }}
         run: |
           if [ -z "$ADSENSE_CLIENT_ID" ]; then
             echo "::error::Set ADSENSE_CLIENT_ID as a GitHub Actions secret or repository variable."
