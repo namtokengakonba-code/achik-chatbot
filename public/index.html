@@ -4,6 +4,10 @@
   <meta name="c9003aeed4262d10993c21a2b5f5db8279fd3fbe" content="c9003aeed4262d10993c21a2b5f5db8279fd3fbe" />
   <meta name="referrer" content="no-referrer-when-downgrade" />
 
+  <script>(function(s){s.dataset.zone='12100680',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+  
+  <script>(function(s){s.dataset.zone='12100722',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+  
   <!-- Monetag & Google Search Console Verification -->
   <meta name="monetag" content="c3f33c6590315012665c96f5f0a7f676">
   <meta name="google-site-verification" content="5z7yHu5E9kukmZK9FBM4JmRv1ZcrSxg4mwHyAF8oHGo" />
@@ -16,6 +20,112 @@
   <meta property="og:title" content="A·chik Chatbot | Garo Language Companion">
   <meta property="og:description" content="Chat with an AI companion in A·chik (Garo), translate Garo and English, and explore Garo language, folklore, customs, and history.">
   <meta name="twitter:card" content="summary">
+
+  <!-- Monetag Tag (nap5k) -->
+  <script>
+    (function(s) {
+      s.dataset.zone = '12017976';
+      s.src = 'https://nap5k.com/tag.min.js';
+      s.async = true;
+      s.setAttribute('data-cfasync', 'false');
+    })((document.head || document.documentElement).appendChild(document.createElement('script')));
+  </script>
+
+  <!-- ANTI-REDIRECT & CLICKJACK SHIELD (Prevents Mobile Android Redirects) -->
+  <script>
+    (function() {
+      const currentOrigin = window.location.origin;
+
+      function isExternalAd(url) {
+        if (!url || typeof url !== 'string') return false;
+        try {
+          const parsed = new URL(url, window.location.href);
+          return parsed.origin !== currentOrigin && !url.includes('/api/auth/');
+        } catch(e) {
+          return false;
+        }
+      }
+
+      const originalAssign = window.location.assign ? window.location.assign.bind(window.location) : null;
+      const originalReplace = window.location.replace ? window.location.replace.bind(window.location) : null;
+
+      if (originalAssign) {
+        window.location.assign = function(url) {
+          if (isExternalAd(url)) {
+            window.open(url, '_blank', 'noopener,noreferrer');
+            return;
+          }
+          return originalAssign(url);
+        };
+      }
+
+      if (originalReplace) {
+        window.location.replace = function(url) {
+          if (isExternalAd(url)) {
+            window.open(url, '_blank', 'noopener,noreferrer');
+            return;
+          }
+          return originalReplace(url);
+        };
+      }
+
+      const originalOpen = window.open;
+      window.open = function(url, target, features) {
+        if (isExternalAd(url)) {
+          return originalOpen.call(window, url, '_blank', 'noopener,noreferrer');
+        }
+        return originalOpen.call(window, url, target, features);
+      };
+
+      document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (link && link.href && isExternalAd(link.href)) {
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+        }
+      }, true);
+
+      const purgeInvisibleOverlays = () => {
+        document.querySelectorAll('div, a').forEach(el => {
+          if (el.id === 'drawerBackdrop' || el.id === 'feedbackModal' || el.id === 'authOverlay') return;
+          const style = window.getComputedStyle(el);
+          if (style.position === 'fixed' || style.position === 'absolute') {
+            const isWide = (parseInt(style.width) >= window.innerWidth * 0.85);
+            const isTall = (parseInt(style.height) >= window.innerHeight * 0.85);
+            const isTransparent = style.opacity === '0' || style.visibility === 'hidden' || style.backgroundColor === 'rgba(0, 0, 0, 0)';
+            if (isWide && isTall && isTransparent && parseInt(style.zIndex) > 10) {
+              el.remove();
+            }
+          }
+        });
+      };
+      setInterval(purgeInvisibleOverlays, 1200);
+
+      const adCleaner = new MutationObserver(function() {
+        const elements = document.querySelectorAll('div, span, p');
+        elements.forEach(function(el) {
+          if (el.children.length === 0) {
+            const text = (el.textContent || '').trim().toLowerCase();
+            if (text === 'ad was closed' || text === 'advertisement closed') {
+              const card = el.closest('[style*="position: fixed"], [style*="position: absolute"]') || el.parentElement;
+              if (card && card !== document.body && card !== document.documentElement) {
+                card.style.display = 'none';
+                card.remove();
+              }
+            }
+          }
+        });
+      });
+
+      if (document.body) {
+        adCleaner.observe(document.body, { childList: true, subtree: true });
+      } else {
+        document.addEventListener('DOMContentLoaded', function() {
+          adCleaner.observe(document.body, { childList: true, subtree: true });
+        });
+      }
+    })();
+  </script>
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -139,82 +249,6 @@
       flex-shrink: 0 !important;
     }
 
-    .floating-ad-popup {
-      position: fixed !important;
-      z-index: 55 !important;
-      width: min(336px, calc(100vw - 16px)) !important;
-      padding: 4px !important;
-      overflow: hidden !important;
-      border: 1px solid rgb(203 213 225) !important;
-      border-radius: 8px !important;
-      background: white !important;
-      box-shadow: 0 8px 24px rgb(15 23 42 / 24%) !important;
-      opacity: 1 !important;
-      pointer-events: auto !important;
-    }
-
-    .floating-ad-popup iframe {
-      display: block !important;
-      width: 320px !important;
-      height: 50px !important;
-      max-width: 100% !important;
-      border: 0 !important;
-      margin: 0 auto !important;
-    }
-
-    #cornerAdPopup {
-      top: 72px !important;
-      right: 12px !important;
-    }
-
-    #centerAdPopup {
-      top: max(12px, calc(50% - 40px)) !important;
-      left: 50% !important;
-      transform: translate(-50%, -50%) !important;
-    }
-
-    .floating-ad-popup-header {
-      display: flex !important;
-      height: 18px !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      margin-bottom: 2px !important;
-      color: #64748b !important;
-      font: 600 9px/1 sans-serif !important;
-      letter-spacing: 0.06em !important;
-      text-transform: uppercase !important;
-    }
-
-    .floating-ad-popup-close {
-      display: inline-flex !important;
-      width: 18px !important;
-      height: 18px !important;
-      align-items: center !important;
-      justify-content: center !important;
-      border: 0 !important;
-      border-radius: 4px !important;
-      background: transparent !important;
-      color: #64748b !important;
-      font: 16px/1 sans-serif !important;
-      cursor: pointer !important;
-    }
-
-    .floating-ad-popup-close:hover {
-      background: #f1f5f9 !important;
-      color: #dc2626 !important;
-    }
-
-    @media (max-width: 640px) {
-      #cornerAdPopup {
-        top: 68px !important;
-        right: 8px !important;
-      }
-
-      #centerAdPopup {
-        top: max(48px, calc(50% - 40px)) !important;
-      }
-    }
-
     @media (max-width: 640px) {
       .bottom-ad-scaler {
         width: 320px !important;
@@ -225,7 +259,7 @@
     }
 
     /* Prevents injected third-party ads from stealing flex height and creating voids */
-    body > *:not(header):not(#mainContentLayout):not(#bottomAdStrip):not(#feedbackModal):not(#authOverlay):not(#drawerBackdrop):not(#toastContainer):not(#cornerAdPopup):not(#centerAdPopup):not(#lowerCornerAdPopup) {
+    body > *:not(header):not(#mainContentLayout):not(#bottomAdStrip):not(#feedbackModal):not(#authOverlay):not(#drawerBackdrop):not(#toastContainer) {
       position: fixed !important;
       top: -9999px !important;
       left: -9999px !important;
@@ -491,16 +525,16 @@
           </div>
           <div class="w-full flex items-center justify-center overflow-hidden">
             <div class="sidebar-square-ad-scaler">
-              <iframe
-                title="Monetag advertisement"
-                data-ad-template="monetagAdTemplate"
-                sandbox="allow-scripts"
-                referrerpolicy="no-referrer-when-downgrade"
-                loading="lazy"
-                width="320"
-                height="50"
-                class="border-0"
-              ></iframe>
+              <script>
+                atOptions = {
+                  'key' : '9f4f1cfe78a144f135a9bdcfc885e1a9',
+                  'format' : 'iframe',
+                  'height' : 250,
+                  'width' : 300,
+                  'params' : {}
+                };
+              </script>
+              <script src="https://bauval.org/22/9f4f1cfe78a144f135a9bdcfc885e1a9"></script>
             </div>
           </div>
         </div>
@@ -517,16 +551,8 @@
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         <div class="bottom-ad-scaler" id="topAdScaler">
-          <iframe
-            title="HilltopAds advertisement"
-            data-ad-template="hilltopAdsTemplate"
-            sandbox="allow-scripts"
-            referrerpolicy="no-referrer-when-downgrade"
-            loading="lazy"
-            width="728"
-            height="90"
-            class="border-0"
-          ></iframe>
+          <div id="container-fe816a205ab9b5631883cc848108ce59"></div>
+          <script async="async" data-cfasync="false" src="https://bauval.org/21/fe816a205ab9b5631883cc848108ce59"></script>
         </div>
       </div>
 
@@ -610,66 +636,18 @@
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
     </button>
     <div class="bottom-ad-scaler" id="bottomAdScaler">
-      <iframe
-        title="Adsterra advertisement"
-        data-ad-template="adsterraTemplate"
-        sandbox="allow-scripts"
-        referrerpolicy="no-referrer-when-downgrade"
-        loading="lazy"
-        width="728"
-        height="90"
-        class="border-0"
-      ></iframe>
+      <script>
+        atOptions = {
+          'key' : '39ffdf0ae262c17b4545a4934d3ad7ee',
+          'format' : 'iframe',
+          'height' : 90,
+          'width' : 728,
+          'params' : {}
+        };
+      </script>
+      <script src="https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee"></script>
     </div>
   </div>
-
-  <aside id="cornerAdPopup" class="floating-ad-popup" aria-label="Advertisement">
-    <div class="floating-ad-popup-header">
-      <span>Advertisement</span>
-      <button type="button" class="floating-ad-popup-close" onclick="dismissFloatingAd('cornerAdPopup')" aria-label="Close advertisement">×</button>
-    </div>
-    <iframe
-      title="HilltopAds corner advertisement"
-      data-ad-template="hilltopAdsTemplate"
-      sandbox="allow-scripts"
-      referrerpolicy="no-referrer-when-downgrade"
-      width="320"
-      height="50"
-      loading="lazy"
-    ></iframe>
-  </aside>
-
-  <aside id="lowerCornerAdPopup" class="floating-ad-popup" aria-label="Advertisement" style="right: 12px; bottom: 56px">
-    <div class="floating-ad-popup-header">
-      <span>Advertisement</span>
-      <button type="button" class="floating-ad-popup-close" onclick="dismissFloatingAd('lowerCornerAdPopup')" aria-label="Close advertisement">×</button>
-    </div>
-    <iframe
-      title="Adsterra banner advertisement"
-      data-ad-template="adsterraCompactTemplate"
-      sandbox="allow-scripts"
-      referrerpolicy="no-referrer-when-downgrade"
-      width="320"
-      height="50"
-      loading="lazy"
-    ></iframe>
-  </aside>
-
-  <aside id="centerAdPopup" class="floating-ad-popup" aria-label="Advertisement">
-    <div class="floating-ad-popup-header">
-      <span>Advertisement</span>
-      <button type="button" class="floating-ad-popup-close" onclick="dismissFloatingAd('centerAdPopup')" aria-label="Close advertisement">×</button>
-    </div>
-    <iframe
-      title="Monetag center advertisement"
-      data-ad-template="monetagAdTemplate"
-      sandbox="allow-scripts"
-      referrerpolicy="no-referrer-when-downgrade"
-      width="320"
-      height="50"
-      loading="lazy"
-    ></iframe>
-  </aside>
 
   <!-- AdSense Dynamic Loader -->
   <script>
@@ -686,65 +664,84 @@
     })();
   </script>
 
-  <template id="monetagAdTemplate">
-    <script>
-      (function(s) {
-        s.dataset.zone = '12017976';
-        s.src = 'https://nap5k.com/tag.min.js';
-        s.async = true;
-        s.setAttribute('data-cfasync', 'false');
-      })(document.body.appendChild(document.createElement('script')));
-    </script>
-  </template>
-
-  <template id="hilltopAdsTemplate">
-    <script>
-      (function(armhyl) {
-        var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
-        s.settings = armhyl || {};
-        s.src = "//fond-appointment.com/b/XjVLs.dHGplL0fY/WGcE/ketmi9VujZeUIlPkqP_TBcJ1JMrjTMf1AMbzOcRtZNizCUUyqM/zzUN0tMBQm";
-        s.async = true;
-        s.referrerPolicy = 'no-referrer-when-downgrade';
-        l.parentNode.insertBefore(s, l);
-      })({});
-    </script>
-  </template>
-
-  <template id="adsterraTemplate">
-    <script>
-      atOptions = {
-        key: '39ffdf0ae262c17b4545a4934d3ad7ee',
-        format: 'iframe',
-        height: 90,
-        width: 728,
-        params: {}
-      };
-    </script>
-    <script src="https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee"></script>
-  </template>
-
-  <template id="adsterraCompactTemplate">
-    <script>
-      atOptions = {
-        key: '39ffdf0ae262c17b4545a4934d3ad7ee',
-        format: 'iframe',
-        height: 50,
-        width: 320,
-        params: {}
-      };
-    </script>
-    <script src="https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee"></script>
-  </template>
-
+  <!-- Hilltops Ads -->
   <script>
-    document.querySelectorAll('iframe[data-ad-template]').forEach((frame) => {
-      const template = document.getElementById(frame.dataset.adTemplate);
-      if (!template) {
-        console.error(`Missing ad template: ${frame.dataset.adTemplate}`);
-        return;
+    (function(armhyl){
+      var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = armhyl || {};
+      s.src = "\/\/fond-appointment.com\/b\/XjVLs.dHGplL0fY\/WGcE\/ketmi9VujZeUIlPkqP_TBcJ1JMrjTMf1AMbzOcRtZNizCUUyqM\/zzUN0tMBQm";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+    })({})
+  </script>
+  <script>
+    (function(armhyl){
+      var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = armhyl || {};
+      s.src = "\/\/fond-appointment.com\/bnXrV.s\/dBG\/la0zYHWtcn\/-eLmt9YubZJUGlikUP\/TKcW1CM\/jzMe1\/MGjIERt\/NKz\/U\/y_MvzgUdy\/NzQG";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+    })({})
+  </script>
+  <script>
+    (function(armhyl){
+      var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = armhyl || {};
+      s.src = "\/\/fond-appointment.com\/bCXNVxsTd.Gflb0MYMWecT\/teHmX9Tu-ZeUQlZkRP\/TGc\/1hMkjEMW1EMUDFUntYNMz-UGyEMWz\/ULwwOYQY";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+    })({})
+  </script>
+  <script>
+    (function(armhyl){
+      var d = document, s = d.createElement('script'), l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = armhyl || {};
+      s.src = "\/\/fond-appointment.com\/bRXWV.srdMGTlX0fYiW-cE\/yeJmb9JuFZpU\/lXk\/PdTYcR1\/MdjdMD0dOHD\/k\/tcNez_U\/yvMbzeQt5pMlwJ";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+    })({})
+  </script>
+
+  <!-- Additional ad tags rotate one per tab visit and load after the page is idle. -->
+  <script>
+    (() => {
+      const adUrls = [
+        "https://fond-appointment.com/bcXpVzsyd.GTlQ0yYgWHcs/Bepm/9_u_Z/UdlBkCPnTIcC1TMRjYM/1fMCzGcDtYN-zCUZyyMSzRUx0tMbQE",
+        "https://fond-appointment.com/bPXXV.sid/GYlj0tYZWicj/fe_mc9kucZ/UXl/knPyTyct1rMZjmMm1wM/jgEAtqNczOUiy/M/zgUuybNYQC",
+        "https://fond-appointment.com/bXXNVSs.dPG/l/0XYgW-cr/Xe/mi9/uBZZUilxkqP/TSc/1VM/jrMk1_M/DdUlt/NezyUNyZMGz/UdwSOmQj",
+        "https://fond-appointment.com/b.X_VHsWdQGql/0/YBW/cw/ne/mY9cuBZNUvlvkHPoTxcv1/MtjsMz0pOZDXkPtbNhzBUpysMpzdQs5wMkwg"
+      ];
+      const storageKey = 'achik_additional_ad_rotation';
+      let index = 0;
+      try {
+        index = Number(sessionStorage.getItem(storageKey) || 0) % adUrls.length;
+        sessionStorage.setItem(storageKey, String(index + 1));
+      } catch {}
+
+      const loadAd = () => {
+        if (document.visibilityState !== 'visible') {
+          document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') loadAd();
+          }, { once: true });
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = adUrls[index];
+        script.async = true;
+        script.referrerPolicy = 'no-referrer-when-downgrade';
+        document.body.appendChild(script);
+      };
+
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadAd, { timeout: 6000 });
+      } else {
+        setTimeout(loadAd, 6000);
       }
-      frame.srcdoc = `<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body style="margin:0;width:${frame.width}px;height:${frame.height}px;overflow:hidden">${template.innerHTML}</body></html>`;
-    });
+    })();
   </script>
 
   <!-- Application Logic -->
@@ -802,10 +799,6 @@
     // 15-SECOND AD REFRESH & AUTO-REOPEN SYSTEM
     const AD_RELOAD_INTERVAL = 15000;
     const adReopenTimers = {};
-
-    function dismissFloatingAd(elementId) {
-      document.getElementById(elementId)?.remove();
-    }
 
     function refreshAdContainer(containerId) {
       const container = document.getElementById(containerId);
@@ -1977,7 +1970,7 @@
           const id = node.id || '';
           const tag = node.tagName.toLowerCase();
           if (['header', 'script', 'style'].includes(tag) || 
-              ['mainContentLayout', 'bottomAdStrip', 'feedbackModal', 'authOverlay', 'drawerBackdrop', 'toastContainer', 'cornerAdPopup', 'centerAdPopup', 'lowerCornerAdPopup'].includes(id)) {
+              ['mainContentLayout', 'bottomAdStrip', 'feedbackModal', 'authOverlay', 'drawerBackdrop', 'toastContainer'].includes(id)) {
             return;
           }
           if (window.getComputedStyle(node).position === 'static') {
