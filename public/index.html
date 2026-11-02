@@ -142,21 +142,21 @@
     .floating-ad-popup {
       position: fixed !important;
       z-index: 55 !important;
-      width: min(336px, calc(100vw - 16px)) !important;
-      padding: 4px !important;
+      width: min(320px, calc(100vw - 24px)) !important;
+      padding: 8px !important;
       overflow: hidden !important;
       border: 1px solid rgb(203 213 225) !important;
-      border-radius: 8px !important;
+      border-radius: 12px !important;
       background: white !important;
-      box-shadow: 0 8px 24px rgb(15 23 42 / 24%) !important;
+      box-shadow: 0 16px 40px rgb(15 23 42 / 30%) !important;
       opacity: 1 !important;
       pointer-events: auto !important;
     }
 
     .floating-ad-popup iframe {
       display: block !important;
-      width: 320px !important;
-      height: 50px !important;
+      width: 300px !important;
+      height: 250px !important;
       max-width: 100% !important;
       border: 0 !important;
       margin: 0 auto !important;
@@ -168,34 +168,34 @@
     }
 
     #centerAdPopup {
-      top: max(12px, calc(50% - 40px)) !important;
+      top: max(12px, calc(50% - 148px)) !important;
       left: 50% !important;
-      transform: translate(-50%, -50%) !important;
+      transform: translateX(-50%) !important;
     }
 
     .floating-ad-popup-header {
       display: flex !important;
-      height: 18px !important;
+      height: 24px !important;
       align-items: center !important;
       justify-content: space-between !important;
-      margin-bottom: 2px !important;
+      margin-bottom: 4px !important;
       color: #64748b !important;
-      font: 600 9px/1 sans-serif !important;
-      letter-spacing: 0.06em !important;
+      font: 600 10px/1.2 sans-serif !important;
+      letter-spacing: 0.08em !important;
       text-transform: uppercase !important;
     }
 
     .floating-ad-popup-close {
       display: inline-flex !important;
-      width: 18px !important;
-      height: 18px !important;
+      width: 24px !important;
+      height: 24px !important;
       align-items: center !important;
       justify-content: center !important;
       border: 0 !important;
-      border-radius: 4px !important;
+      border-radius: 6px !important;
       background: transparent !important;
       color: #64748b !important;
-      font: 16px/1 sans-serif !important;
+      font: 20px/1 sans-serif !important;
       cursor: pointer !important;
     }
 
@@ -211,7 +211,13 @@
       }
 
       #centerAdPopup {
-        top: max(48px, calc(50% - 40px)) !important;
+        top: max(12px, calc(50% - 148px)) !important;
+      }
+    }
+
+    @media (max-height: 400px) {
+      #centerAdPopup iframe {
+        height: calc(100dvh - 72px) !important;
       }
     }
 
@@ -225,7 +231,7 @@
     }
 
     /* Prevents injected third-party ads from stealing flex height and creating voids */
-    body > *:not(header):not(#mainContentLayout):not(#bottomAdStrip):not(#feedbackModal):not(#authOverlay):not(#drawerBackdrop):not(#toastContainer):not(#cornerAdPopup):not(#centerAdPopup):not(#lowerCornerAdPopup) {
+    body > *:not(header):not(#mainContentLayout):not(#bottomAdStrip):not(#feedbackModal):not(#authOverlay):not(#drawerBackdrop):not(#toastContainer):not(#cornerAdPopup):not(#centerAdPopup) {
       position: fixed !important;
       top: -9999px !important;
       left: -9999px !important;
@@ -633,8 +639,8 @@
       data-ad-template="hilltopAdsTemplate"
       sandbox="allow-scripts"
       referrerpolicy="no-referrer-when-downgrade"
-      width="320"
-      height="50"
+      width="300"
+      height="250"
       loading="lazy"
     ></iframe>
   </aside>
@@ -649,24 +655,8 @@
       data-ad-template="monetagAdTemplate"
       sandbox="allow-scripts"
       referrerpolicy="no-referrer-when-downgrade"
-      width="320"
-      height="50"
-      loading="lazy"
-    ></iframe>
-  </aside>
-
-  <aside id="lowerCornerAdPopup" class="floating-ad-popup" aria-label="Advertisement" style="right: 12px; bottom: 56px">
-    <div class="floating-ad-popup-header">
-      <span>Advertisement</span>
-      <button type="button" class="floating-ad-popup-close" onclick="dismissFloatingAd('lowerCornerAdPopup')" aria-label="Close advertisement">×</button>
-    </div>
-    <iframe
-      title="Adsterra banner advertisement"
-      data-ad-template="adsterraCompactTemplate"
-      sandbox="allow-scripts"
-      referrerpolicy="no-referrer-when-downgrade"
-      width="320"
-      height="50"
+      width="300"
+      height="250"
       loading="lazy"
     ></iframe>
   </aside>
@@ -717,19 +707,6 @@
         format: 'iframe',
         height: 90,
         width: 728,
-        params: {}
-      };
-    </script>
-    <script src="https://bauval.org/22/39ffdf0ae262c17b4545a4934d3ad7ee"></script>
-  </template>
-
-  <template id="adsterraCompactTemplate">
-    <script>
-      atOptions = {
-        key: '39ffdf0ae262c17b4545a4934d3ad7ee',
-        format: 'iframe',
-        height: 50,
-        width: 320,
         params: {}
       };
     </script>
@@ -1977,7 +1954,7 @@
           const id = node.id || '';
           const tag = node.tagName.toLowerCase();
           if (['header', 'script', 'style'].includes(tag) || 
-              ['mainContentLayout', 'bottomAdStrip', 'feedbackModal', 'authOverlay', 'drawerBackdrop', 'toastContainer', 'cornerAdPopup', 'centerAdPopup', 'lowerCornerAdPopup'].includes(id)) {
+              ['mainContentLayout', 'bottomAdStrip', 'feedbackModal', 'authOverlay', 'drawerBackdrop', 'toastContainer', 'cornerAdPopup', 'centerAdPopup'].includes(id)) {
             return;
           }
           if (window.getComputedStyle(node).position === 'static') {
