@@ -23,6 +23,7 @@ const MAX_DICTIONARY_SEARCH_RESULTS = 5;
 const MAX_DICTIONARY_TERMS = 12;
 const MAX_GENERAL_WEB_RESULTS = 5;
 const MAX_FIRECRAWL_QUERY_LENGTH = 500;
+const MAX_LEGACY_CORRECTIONS_TO_SCAN = 100;
 
 // Current production models, ordered by preference
 const GEMINI_MODELS = ["gemini-3.6-flash", "gemini-3.8-flash"];
@@ -396,13 +397,21 @@ async function handleAuthRequest(request, env, url) {
 }
 
 function correctionMetadata(record) {
-  return {
+  const metadata = {
     status: record.status,
-    question: record.question.slice(0, 64),
-    correction: record.correction.slice(0, 100),
+    questionTerms: correctionSearchTerms(record.question),
+    correctionTerms: correctionSearchTerms(record.correction),
     approvedAt: record.approvedAt || "",
     submittedAt: record.submittedAt,
   };
+  while (new TextEncoder().encode(JSON.stringify(metadata)).byteLength > 900) {
+    const terms = metadata.correctionTerms.length >= metadata.questionTerms.length
+      ? metadata.correctionTerms
+      : metadata.questionTerms;
+    if (!terms.length) break;
+    terms.pop();
+  }
+  return metadata;
 }
 
 async function listCorrectionKeys(env) {
@@ -422,25 +431,64 @@ async function listCorrectionKeys(env) {
   return keys;
 }
 
+function correctionSearchTerms(text) {
+  const commonWords = new Set([
+    "about", "after", "again", "also", "and", "are", "because", "been", "before",
+    "being", "but", "can", "could", "did", "does", "for", "from", "had", "has",
+    "have", "her", "here", "him", "his", "how", "into", "its", "just", "like",
+    "more", "most", "not", "our", "out", "over", "she", "should", "some", "than",
+    "that", "the", "their", "them", "then", "there", "these", "they", "this",
+    "those", "through", "too", "under", "very", "was", "were", "what", "when",
+    "where", "which", "who", "will", "with", "would", "you", "your",
+  ]);
+  const terms = text.toLowerCase().match(/[\p{L}\p{N}][\p{L}\p{N}·'’-]*/gu) || [];
+  return [...new Set(terms
+    .map((term) => term.replace(/^[·'’-]+|[·'’-]+$/g, ""))
+    .filter((term) => term.length > 2 && !commonWords.has(term))
+    .map((term) => term.slice(0, 24)))];
+}
+
 function correctionRelevance(record, prompt) {
-  const terms = prompt.toLowerCase().match(/[\p{L}\p{N}]{3,}/gu) || [];
-  const recordText = `${record.question} ${record.correction}`.toLowerCase();
-  return new Set(terms).size
-    ? [...new Set(terms)].reduce((score, term) => score + (recordText.includes(term) ? 1 : 0), 0)
-    : 0;
+  const queryTerms = correctionSearchTerms(prompt);
+  if (!queryTerms.length) return 0;
+
+  const questionTerms = new Set(record.questionTerms || correctionSearchTerms(record.question || ""));
+  const correctionTerms = new Set(record.correctionTerms || correctionSearchTerms(record.correction || ""));
+  return queryTerms.reduce((score, term) =>
+    score + (questionTerms.has(term) ? 3 : correctionTerms.has(term) ? 1 : 0), 0);
 }
 
 async function loadRelevantCorrections(env, prompt) {
   const keys = await listCorrectionKeys(env);
-  const candidates = keys
-    .filter(({ metadata }) => metadata?.status === "approved")
-    .map((entry) => ({
-      entry,
-      score: correctionRelevance(
-        { question: entry.metadata.question, correction: entry.metadata.correction },
-        prompt
-      ),
-    }))
+  const approvedKeys = keys.filter(({ metadata }) => metadata?.status === "approved");
+  const legacyKeys = approvedKeys
+    .filter(({ metadata }) =>
+      !Array.isArray(metadata.questionTerms) || !Array.isArray(metadata.correctionTerms)
+    )
+    .sort((a, b) =>
+      (b.metadata.approvedAt || "").localeCompare(a.metadata.approvedAt || "")
+    )
+    .slice(0, MAX_LEGACY_CORRECTIONS_TO_SCAN);
+  const legacyRecords = await Promise.all(legacyKeys
+    .map(async (entry) => ({
+      name: entry.name,
+      record: await env.ACHIK_CORRECTIONS.get(entry.name, "json"),
+    })));
+  const legacyByKey = new Map(legacyRecords.map(({ name, record }) => [name, record]));
+  const candidates = approvedKeys
+    .map((entry) => {
+      const legacyRecord = legacyByKey.get(entry.name);
+      const metadata = entry.metadata;
+      const record = {
+        questionTerms: metadata.questionTerms || correctionSearchTerms(legacyRecord?.question || metadata.question || ""),
+        correctionTerms: metadata.correctionTerms || correctionSearchTerms(legacyRecord?.correction || metadata.correction || ""),
+      };
+      return {
+        entry,
+        record: legacyRecord,
+        score: correctionRelevance(record, prompt),
+      };
+    })
     .filter(({ score }) => score > 0)
     .sort((a, b) =>
       b.score - a.score ||
@@ -448,7 +496,9 @@ async function loadRelevantCorrections(env, prompt) {
     )
     .slice(0, MAX_APPROVED_CORRECTIONS);
   const records = await Promise.all(
-    candidates.map(({ entry }) => env.ACHIK_CORRECTIONS.get(entry.name, "json"))
+    candidates.map(({ entry, record }) =>
+      record || env.ACHIK_CORRECTIONS.get(entry.name, "json")
+    )
   );
   return records.filter(Boolean);
 }
