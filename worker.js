@@ -22,6 +22,7 @@ const MAX_TOTAL_ATTACHMENT_TEXT_LENGTH = 1000000;
 const MAX_DICTIONARY_SEARCH_RESULTS = 5;
 const MAX_DICTIONARY_TERMS = 12;
 const MAX_GENERAL_WEB_RESULTS = 5;
+const MAX_FIRECRAWL_QUERY_LENGTH = 500;
 
 // Current production models, ordered by preference
 const GEMINI_MODELS = ["gemini-3.6-flash", "gemini-3.8-flash"];
@@ -575,6 +576,7 @@ async function searchGeneralWeb(env, text) {
     throw new Error("Live web search is not configured. Set the FIRECRAWL_API_KEY Worker secret.");
   }
 
+  const isCurrentEventsQuery = /\b(?:current affairs|latest news|news today|today'?s news|headlines|breaking news)\b/i.test(text);
   const response = await fetch("https://api.firecrawl.dev/v2/search", {
     method: "POST",
     headers: {
@@ -582,9 +584,11 @@ async function searchGeneralWeb(env, text) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      query: text.slice(0, 5000),
+      query: text.slice(0, MAX_FIRECRAWL_QUERY_LENGTH),
       limit: MAX_GENERAL_WEB_RESULTS,
-      sources: [{ type: "web" }],
+      sources: isCurrentEventsQuery
+        ? [{ type: "news" }, { type: "web", tbs: "qdr:m" }]
+        : [{ type: "web" }],
       scrapeOptions: {
         formats: [{ type: "markdown" }],
         onlyMainContent: true,
@@ -605,12 +609,14 @@ async function searchGeneralWeb(env, text) {
     throw new Error(`Live web search failed (HTTP ${response.status}): ${details}`);
   }
 
-  const results = data?.data?.web || data?.web || [];
-  if (!Array.isArray(results)) {
+  const searchData = data?.data || data;
+  const webResults = searchData?.web || [];
+  const newsResults = isCurrentEventsQuery ? searchData?.news || [] : [];
+  if (!Array.isArray(webResults) || !Array.isArray(newsResults)) {
     throw new Error("Live web search returned an unexpected result format.");
   }
   const seenUrls = new Set();
-  return results.slice(0, MAX_GENERAL_WEB_RESULTS).filter((result) => {
+  return [...newsResults, ...webResults].slice(0, MAX_GENERAL_WEB_RESULTS).filter((result) => {
     if (typeof result?.url !== "string" || !/^https?:\/\//i.test(result.url)) return false;
     if (seenUrls.has(result.url)) return false;
     seenUrls.add(result.url);
