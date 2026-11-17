@@ -594,7 +594,7 @@ async function searchGeneralWeb(env, text) {
         onlyMainContent: true,
       },
     }),
-    signal: AbortSignal.timeout(12000),
+    signal: AbortSignal.timeout(30000),
   });
   const responseText = await response.text();
   let data;
@@ -1034,12 +1034,14 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
       let webSources = [];
       let webSearchAttempted = false;
       let webSearchUnavailable = false;
+      let webSearchError = "";
       if (mode !== "translate" && !attachments.length && shouldSearchGeneralWeb(userPrompt)) {
         webSearchAttempted = true;
         try {
           webSources = await searchGeneralWeb(env, userPrompt);
         } catch (error) {
           webSearchUnavailable = true;
+          webSearchError = String(error?.message || error).slice(0, 240);
           console.error("Unable to search the web for a chat answer:", error);
         }
       }
@@ -1121,8 +1123,11 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
                   : webSources.length
                     ? "complete"
                     : "no_results";
+                if (webSearchError) parsed.webSearchError = webSearchError;
+                else delete parsed.webSearchError;
               } else {
                 delete parsed.webSearchStatus;
+                delete parsed.webSearchError;
               }
             }
             return jsonResponse(parsed, 200, { "X-Served-By-Model": model });
@@ -1234,8 +1239,11 @@ Sitemap: https://achik-chatbot.namtokengakonba.workers.dev/sitemap.xml`;
                     : webSources.length
                       ? "complete"
                       : "no_results";
+                  if (webSearchError) parsed.webSearchError = webSearchError;
+                  else delete parsed.webSearchError;
                 } else {
                   delete parsed.webSearchStatus;
+                  delete parsed.webSearchError;
                 }
               }
               return jsonResponse(parsed, 200, { "X-Served-By-Model": GROQ_MODEL });

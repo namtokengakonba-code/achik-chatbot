@@ -1607,7 +1607,7 @@
       let webSourcesHtml = '';
       if (data.webSearchStatus === 'unavailable' || data.webSearchStatus === 'no_results') {
         const statusText = data.webSearchStatus === 'unavailable'
-          ? 'Live web search is unavailable; this answer may not reflect current information.'
+          ? `Live web search is unavailable; this answer may not reflect current information.${data.webSearchError ? ` ${data.webSearchError}` : ''}`
           : 'No relevant web sources were found; this answer is based on the chatbot’s existing knowledge.';
         webSourcesHtml = `
           <p class="mt-2 border-t border-slate-100 dark:border-slate-800 pt-2 text-[11px] text-amber-700 dark:text-amber-300">${escapeHtml(statusText)}</p>
