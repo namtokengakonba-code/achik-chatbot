@@ -16,6 +16,7 @@
   "keywords": [],
   "type": "module",
   "dependencies": {
+    "firecrawl": "^4.54.0",
     "node": "^22.23.3"
   }
 }
